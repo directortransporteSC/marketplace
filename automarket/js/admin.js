@@ -216,7 +216,7 @@ function clearForm() {
 function handleImages(e) {
   const files=[...e.target.files];
   const total=currentUrls.length+pendingFiles.length+files.length;
-  if(total>12){showToast('Máximo 12 fotos','error');return;}
+  if(total>25){showToast('Máximo 25 fotos','error');return;}
   pendingFiles=[...pendingFiles,...files];
   renderImgPreview();
 }

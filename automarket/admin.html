@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>SpecialUsadosMarket — Panel Administrador</title>
+  <title>AutoMarket — Panel Administrador</title>
   <link rel="icon" href="assets/specialcar.png"/>
   <link rel="stylesheet" href="css/styles.css"/>
 </head>
@@ -15,7 +15,7 @@
     <div class="login-card">
       <div class="login-logo">
         <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:26px;height:26px;object-fit:contain"/></span>
-        SpecialUsados
+        AutoMarket
       </div>
       <p class="login-sub">Panel de administración</p>
       <div class="login-hint">
@@ -45,7 +45,7 @@
   <nav class="navbar">
     <div class="nav-logo">
       <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:24px;height:24px;object-fit:contain"/></span>
-      SpecialUsados<em>Market</em>
+      Auto<em>Market</em>
     </div>
     <div class="nav-right">
       <span class="nav-role-badge admin" id="adminUserLabel">⚙️ Admin</span>
@@ -205,7 +205,7 @@
           <div class="img-upload-zone">
             <div class="upload-icon">📷</div>
             <div class="upload-title">Haz clic o arrastra las fotos aquí</div>
-            <div class="upload-sub">JPG, PNG, WebP — Hasta 12 fotos. Se guardan en la nube.</div>
+            <div class="upload-sub">JPG, PNG, WebP — Hasta 25 fotos. Se guardan en la nube.</div>
             <input type="file" accept="image/*" multiple onchange="handleImages(event)"/>
           </div>
           <div class="img-preview-grid" id="imgPreview"></div>
@@ -217,6 +217,17 @@
             <div class="upload-icon">🎬</div>
             <div class="upload-title">Haz clic para seleccionar un video</div>
             <div class="upload-sub">MP4, WebM, MOV — Máximo 100 MB. 1 video por vehículo.</div>
+            <input id="f-video" type="file" accept="video/mp4,video/webm,video/quicktime,video/x-msvideo" onchange="handleVideo(event)"/>
+          </div>
+          <div id="videoPreview" style="margin-top:10px"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">🎬 Video del vehículo (opcional)</div>
+          <div class="img-upload-zone" style="border-color:var(--gray-200)">
+            <div class="upload-icon">🎬</div>
+            <div class="upload-title">Haz clic para subir un video</div>
+            <div class="upload-sub">MP4, WebM, MOV — Máximo 100 MB · 1 video por vehículo</div>
             <input id="f-video" type="file" accept="video/mp4,video/webm,video/quicktime,video/x-msvideo" onchange="handleVideo(event)"/>
           </div>
           <div id="videoPreview" style="margin-top:10px"></div>
