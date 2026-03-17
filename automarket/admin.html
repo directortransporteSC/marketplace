@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SpecialUsadosMarket — Panel Administrador</title>
+  <link rel="icon" href="assets/specialcar.png"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:26px;height:26px;object-fit:contain"/></span>
+        SpecialUsados
+      </div>
+      <p class="login-sub">Panel de administración</p>
+      <div class="login-hint">
+        Inicia sesión con tu correo de administrador.<br>
+        <small style="opacity:.7">Los admins se crean en Supabase → Authentication → Users</small>
+      </div>
+      <div class="login-error" id="loginError">Usuario o contraseña incorrectos</div>
+      <div class="login-form">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input id="loginUser" type="email" placeholder="admin@tudominio.com" onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <div class="form-group" style="margin-bottom:20px">
+          <label>Contraseña</label>
+          <input id="loginPass" type="password" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <button class="btn btn-primary btn-block btn-lg" onclick="doLogin()">Entrar →</button>
+      </div>
+      <a class="login-back" href="index.html">← Volver a la tienda</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL ADMIN ══ -->
+<div id="adminPanel" style="display:none">
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:24px;height:24px;object-fit:contain"/></span>
+      SpecialUsados<em>Market</em>
+    </div>
+    <div class="nav-right">
+      <span class="nav-role-badge admin" id="adminUserLabel">⚙️ Admin</span>
+      <a href="index.html"><button class="btn btn-ghost btn-sm">👁 Ver tienda</button></a>
+      <button class="btn btn-white btn-sm" onclick="doLogout()">Salir 🔒</button>
+    </div>
+  </nav>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">Anuncios activos</div></div>
+      <div class="stat-card"><div class="stat-label">Nuevos</div><div class="stat-value" id="statNew">0</div><div class="stat-sub">Condición nuevo</div></div>
+      <div class="stat-card"><div class="stat-label">Usados</div><div class="stat-value" id="statUsed">0</div><div class="stat-sub">Condición usado</div></div>
+      <div class="stat-card"><div class="stat-label">Precio prom.</div><div class="stat-value" id="statAvg">—</div><div class="stat-sub">Promedio general</div></div>
+      <div class="stat-card"><div class="stat-label">Con fotos</div><div class="stat-value" id="statPhotos">0</div><div class="stat-sub">Con imágenes</div></div>
+      <div class="stat-card"><div class="stat-label">Hoy</div><div class="stat-value" id="statToday">0</div><div class="stat-sub">Últimas 24 h</div></div>
+    </div>
+  </div>
+
+  <!-- HERO ADMIN -->
+  <section class="hero" style="padding:28px 32px 24px">
+    <div class="hero-inner">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+        <div>
+          <h1 style="font-size:clamp(20px,3vw,28px);margin-bottom:4px">Panel de <em>Administración</em></h1>
+          <p class="hero-sub" style="margin-bottom:0">Gestiona todos los anuncios del marketplace</p>
+        </div>
+        <button class="btn btn-white btn-lg" onclick="openAddModal()">+ Publicar vehículo</button>
+      </div>
+      <div class="search-bar" style="margin-top:18px">
+        <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca por marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
+        <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
+        <select id="typeFilter"  class="search-field w140" onchange="applyFilters()">
+          <option value="">Tipo</option>
+          <option>Sedán</option><option>SUV</option><option>Camioneta</option>
+          <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
+          <option>Camión</option><option>Van</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <div class="filters-bar">
+    <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
+    <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
+    <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
+    <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
+    <select class="filter-select" onchange="setYear(this.value)">
+      <option value="">📅 Año</option>
+      <option value="2024">2024</option><option value="2023">2023</option>
+      <option value="2022">2022</option><option value="2021">2021</option>
+      <option value="2020">2020</option><option value="2015">2015 o anterior</option>
+    </select>
+    <select class="filter-select" onchange="setPrice(this.value)">
+      <option value="">💵 Precio</option>
+      <option value="0-30000000">Hasta $30M</option>
+      <option value="30000000-60000000">$30M – $60M</option>
+      <option value="60000000-100000000">$60M – $100M</option>
+      <option value="100000000-200000000">$100M – $200M</option>
+      <option value="200000000-9999999999">Más de $200M</option>
+    </select>
+    <div class="filters-right">
+      <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
+        <button class="view-btn"        onclick="setView('list',this)">≡</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="section-header">
+      <h2>Gestión de vehículos</h2>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Nuevo anuncio</button>
+    </div>
+    <div id="vehicleContainer" class="vehicle-grid"></div>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="empty-icon">🚗</div>
+      <h3>No hay vehículos todavía</h3>
+      <p>¡Publica el primer anuncio!</p>
+      <button class="btn btn-primary btn-lg" onclick="openAddModal()">+ Publicar vehículo</button>
+    </div>
+  </main>
+
+  <button class="fab" onclick="openAddModal()">+</button>
+
+  <!-- ══ MODAL PUBLICAR / EDITAR ══ -->
+  <div class="overlay" id="addModal">
+    <div class="modal">
+      <div class="modal-hdr">
+        <h2 id="modalTitle">🚗 Publicar vehículo</h2>
+        <button class="modal-close" onclick="closeAddModal()">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-section">
+          <div class="form-sec-title">📋 Información básica</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Marca <span class="req">*</span></label><input id="f-brand" class="fc" placeholder="Toyota, BMW..."/></div>
+            <div class="form-group"><label>Modelo <span class="req">*</span></label><input id="f-model" class="fc" placeholder="Corolla, X5..."/></div>
+            <div class="form-group"><label>Año <span class="req">*</span></label><input id="f-year" type="number" class="fc" placeholder="2023" min="1980" max="2026"/></div>
+            <div class="form-group"><label>Precio COP <span class="req">*</span></label><input id="f-price" type="number" class="fc" placeholder="45000000"/></div>
+            <div class="form-group">
+              <label>Tipo</label>
+              <select id="f-type" class="fc">
+                <option value="">Seleccionar</option>
+                <option>Sedán</option><option>SUV</option><option>Camioneta</option>
+                <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
+                <option>Camión</option><option>Van</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Condición</label>
+              <select id="f-condition" class="fc">
+                <option value="Nuevo">Nuevo</option>
+                <option value="Usado" selected>Usado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">🔧 Especificaciones</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Kilometraje</label><input id="f-km" type="number" class="fc" placeholder="45000" min="0"/></div>
+            <div class="form-group"><label>Combustible</label>
+              <select id="f-fuel" class="fc"><option>Gasolina</option><option>Diésel</option><option>Eléctrico</option><option>Híbrido</option><option>Gas Natural</option></select>
+            </div>
+            <div class="form-group"><label>Transmisión</label>
+              <select id="f-trans" class="fc"><option>Automática</option><option>Manual</option><option>CVT</option></select>
+            </div>
+            <div class="form-group"><label>Motor</label><input id="f-engine" class="fc" placeholder="2.0L Turbo..."/></div>
+            <div class="form-group"><label>Color</label><input id="f-color" class="fc" placeholder="Blanco, Negro..."/></div>
+            <div class="form-group"><label>Ciudad</label><input id="f-city" class="fc" placeholder="Bogotá, Medellín..."/></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">👤 Datos del vendedor y contacto</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nombre del vendedor</label><input id="f-seller" class="fc" placeholder="Nombre o empresa"/></div>
+            <div class="form-group"><label>Ciudad del vendedor</label><input id="f-city" class="fc" placeholder="Bogotá, Medellín..."/></div>
+            <div class="form-group"><label>WhatsApp</label><input id="f-whatsapp" class="fc" placeholder="3001234567" maxlength="10"/></div>
+            <div class="form-group"><label>Teléfono adicional</label><input id="f-phone" class="fc" placeholder="3001234567"/></div>
+            <div class="form-group form-full"><label>Correo electrónico de contacto</label><input id="f-email" type="email" class="fc" placeholder="vendedor@correo.com"/></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">📝 Descripción</div>
+          <textarea id="f-desc" class="fc" rows="4" placeholder="Describe el vehículo: extras, historial, razón de venta..."></textarea>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">📷 Fotos (se guardan en Supabase Storage)</div>
+          <div class="img-upload-zone">
+            <div class="upload-icon">📷</div>
+            <div class="upload-title">Haz clic o arrastra las fotos aquí</div>
+            <div class="upload-sub">JPG, PNG, WebP — Hasta 12 fotos. Se guardan en la nube.</div>
+            <input type="file" accept="image/*" multiple onchange="handleImages(event)"/>
+          </div>
+          <div class="img-preview-grid" id="imgPreview"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-sec-title">🎬 Video del vehículo (opcional)</div>
+          <div class="img-upload-zone" style="border-color:var(--blue-soft)">
+            <div class="upload-icon">🎬</div>
+            <div class="upload-title">Haz clic para seleccionar un video</div>
+            <div class="upload-sub">MP4, WebM, MOV — Máximo 100 MB. 1 video por vehículo.</div>
+            <input id="f-video" type="file" accept="video/mp4,video/webm,video/quicktime,video/x-msvideo" onchange="handleVideo(event)"/>
+          </div>
+          <div id="videoPreview" style="margin-top:10px"></div>
+        </div>
+
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" onclick="closeAddModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveVehicle()">✓ Publicar anuncio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL DETALLE admin ══ -->
+  <div class="overlay" id="detailModal">
+    <div class="modal detail-modal" style="position:relative">
+      <button class="modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.4)" onclick="closeDetail()">✕</button>
+      <div class="detail-gallery" id="detailGallery"></div>
+      <div class="detail-body" id="detailContent"></div>
+    </div>
+  </div>
+
+</div><!-- /adminPanel -->
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SPECIALUSADOSMarket — Vehículos en venta</title>
+  <meta name="description" content="Compra y vende carros, motos y más en Colombia."/>
+  <link rel="icon" href="assets/specialcar.png"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-logo">
+    <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:24px;height:24px;object-fit:contain"/></span>
+    SPECIALUSADOS<em>MarketPLACE</em>
+  </div>
+  <div class="nav-right">
+    <span class="nav-role-badge">👤 Tienda</span>
+    <button class="btn btn-ghost btn-sm" id="favBtn" onclick="toggleFavFilter()">♡ Favoritos</button>
+    <a href="admin.html"><button class="btn btn-white btn-sm">🔐 Admin</button></a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Encuentra tu próximo<br><em>vehículo ideal</em></h1>
+    <p class="hero-sub">Carros particulares, placa blanca  y más con contacto directo al vendedor.</p>
+    <div class="search-bar">
+      <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
+      <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
+      <select id="typeFilter"  class="search-field w140" onchange="applyFilters()">
+        <option value="">Tipo</option>
+        <option>Sedán</option><option>SUV</option><option>Camioneta</option>
+        <option>Deportivo</option><option>Publico</option><option>Eléctrico</option>
+        <option>Camión</option><option>Van</option>
+      </select>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">🚗 <strong id="statTotal">0</strong> vehículos</div>
+      <div class="hero-stat">💬 Contacto directo</div>
+      <div class="hero-stat">✅ Gratis</div>
+    </div>
+  </div>
+</section>
+
+<div class="filters-bar">
+  <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
+  <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
+  <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
+  <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
+  <select class="filter-select" onchange="setYear(this.value)">
+    <option value="">📅 Año</option>
+    <option value="2024">2024</option><option value="2023">2023</option>
+    <option value="2022">2022</option><option value="2021">2021</option>
+    <option value="2020">2020</option><option value="2019">2019</option>
+    <option value="2018">2018</option><option value="2015">2015 o anterior</option>
+    <option value="2010">2010 o anterior</option>
+  </select>
+  <select class="filter-select" onchange="setPrice(this.value)">
+    <option value="">💵 Precio</option>
+    <option value="0-30000000">Hasta $30M</option>
+    <option value="30000000-60000000">$30M – $60M</option>
+    <option value="60000000-100000000">$60M – $100M</option>
+    <option value="100000000-200000000">$100M – $200M</option>
+    <option value="200000000-9999999999">Más de $200M</option>
+  </select>
+  <div class="filters-right">
+    <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
+      <button class="view-btn"        onclick="setView('list',this)">≡</button>
+    </div>
+  </div>
+</div>
+
+<main class="main-content">
+  <div class="section-header">
+    <h2 id="sectionTitle">Todos los vehículos</h2>
+  </div>
+  <div id="vehicleContainer" class="vehicle-grid"></div>
+  <div id="emptyState" class="empty-state" style="display:none">
+    <div class="empty-icon">🚗</div>
+    <h3>No se encontraron vehículos</h3>
+    <p>Prueba con otros filtros o términos de búsqueda</p>
+    <button class="btn btn-primary btn-lg" onclick="clearAllFilters()">Limpiar filtros</button>
+  </div>
+</main>
+
+<!-- MODAL DETALLE -->
+<div class="overlay" id="detailModal">
+  <div class="modal detail-modal" style="position:relative">
+    <button class="modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.4)" onclick="closeDetail()">✕</button>
+    <div class="detail-gallery" id="detailGallery"></div>
+    <div class="detail-body" id="detailContent"></div>
+  </div>
+</div>
+
+<!-- MODAL CORREO -->
+<div class="overlay" id="emailModal">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-hdr">
+      <h2>✉️ Enviar consulta</h2>
+      <button class="modal-close" onclick="closeEmailModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--gray-600);font-size:14px;margin-bottom:16px">Sobre: <strong id="emailVehicleName"></strong></p>
+      <div class="form-group" style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu nombre</label>
+        <input id="emailName" class="fc" placeholder="Nombre completo"/>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu correo</label>
+        <input id="emailFrom" class="fc" type="email" placeholder="tu@correo.com"/>
+      </div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Mensaje</label>
+        <textarea id="emailMsg" class="fc" rows="4"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeEmailModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="sendEmail()">✉️ Enviar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/client.js"></script>
+</body>
+</html>
