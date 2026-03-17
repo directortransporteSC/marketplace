@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>SPECIALUSADOSMarket — Vehículos en venta</title>
+  <title>AutoMarket — Vehículos en venta</title>
   <meta name="description" content="Compra y vende carros, motos y más en Colombia."/>
   <link rel="icon" href="assets/specialcar.png"/>
   <link rel="stylesheet" href="css/styles.css"/>
@@ -13,7 +13,7 @@
 <nav class="navbar">
   <div class="nav-logo">
     <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:24px;height:24px;object-fit:contain"/></span>
-    SPECIALUSADOS<em>MarketPLACE</em>
+    Auto<em>Market</em>
   </div>
   <div class="nav-right">
     <span class="nav-role-badge">👤 Tienda</span>
@@ -24,15 +24,16 @@
 
 <section class="hero">
   <div class="hero-inner">
+    <div class="hero-logo"><img src="assets/Special_CAR_1.png" alt="Special CAR"/></div>
     <h1>Encuentra tu próximo<br><em>vehículo ideal</em></h1>
-    <p class="hero-sub">Carros particulares, placa blanca  y más con contacto directo al vendedor.</p>
+    <p class="hero-sub">Carros, motos y más con contacto directo al vendedor.</p>
     <div class="search-bar">
       <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
       <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
       <select id="typeFilter"  class="search-field w140" onchange="applyFilters()">
         <option value="">Tipo</option>
         <option>Sedán</option><option>SUV</option><option>Camioneta</option>
-        <option>Deportivo</option><option>Publico</option><option>Eléctrico</option>
+        <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
         <option>Camión</option><option>Van</option>
       </select>
     </div>
