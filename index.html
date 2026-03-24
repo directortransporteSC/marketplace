@@ -34,7 +34,7 @@
       <select id="typeFilter" class="search-field w140" onchange="applyFilters()">
         <option value="">Tipo</option>
         <option>Sedán</option><option>SUV</option><option>Camioneta</option>
-        <option>Deportivo</option><option>Automovil</option><option>Eléctrico</option>
+        <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
         <option>Camión</option><option>Van</option>
       </select>
     </div>
@@ -49,24 +49,36 @@
 <!-- BANNER INFORMATIVO -->
 <div class="info-banner">
   <div class="info-banner-inner">
-    <div class="info-item">
-      <span class="info-icon">🔧</span>
-      <div><strong>Vehículos con trabajo</strong><span>Todos nuestros vehículos se entregan listos para trabajar</span></div>
-    </div>
-    <div class="info-divider"></div>
-    <div class="info-item">
-      <span class="info-icon">🚗</span>
-      <div><strong>Solo carros y camionetas</strong><span>No manejamos motos — exclusivamente vehículos de 4 ruedas</span></div>
-    </div>
-    <div class="info-divider"></div>
-    <div class="info-item">
-      <span class="info-icon">📋</span>
-      <div><strong>Documentos al día</strong><span>SOAT, póliza, RTM y TO verificados antes de la entrega</span></div>
-    </div>
-    <div class="info-divider"></div>
-    <div class="info-item">
-      <span class="info-icon">🤝</span>
-      <div><strong>Contacto directo</strong><span>Habla con el vendedor sin intermediarios</span></div>
+    <div class="info-banner-title">¿Por qué elegirnos?</div>
+    <div class="info-items-grid">
+      <div class="info-item">
+        <span class="info-icon">🔧</span>
+        <div class="info-item-text">
+          <strong>Vehículos con trabajo</strong>
+          <span>Todos se entregan listos para trabajar desde el primer día</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🚗</span>
+        <div class="info-item-text">
+          <strong>Solo carros y camionetas</strong>
+          <span>No manejamos motos — exclusivamente vehículos de 4 ruedas</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">📋</span>
+        <div class="info-item-text">
+          <strong>Documentos verificados</strong>
+          <span>SOAT, póliza, RTM y TO revisados antes de cada entrega</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🤝</span>
+        <div class="info-item-text">
+          <strong>Contacto directo</strong>
+          <span>Habla con el vendedor sin intermediarios ni comisiones ocultas</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -145,6 +157,7 @@
         <li>Carro de reemplazo</li>
         <li>Grúa incluida</li>
       </ul>
+      <div class="ins-price">Desde <strong>$280.000 / mes</strong></div>
       <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Premium','todo_riesgo')">Cotizar ahora →</button>
     </div>
 
@@ -160,6 +173,7 @@
         <li>Asistencia en carretera</li>
         <li>Grúa hasta 50 km</li>
       </ul>
+      <div class="ins-price">Desde <strong>$180.000 / mes</strong></div>
       <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Básico','todo_riesgo')">Cotizar ahora →</button>
     </div>
 
@@ -176,6 +190,7 @@
         <li>Cobertura de accesorios especiales</li>
         <li>Extensión de RC voluntaria</li>
       </ul>
+      <div class="ins-price">Desde <strong>$85.000 / mes</strong></div>
       <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Amparo Plus','poliza_extra')">Cotizar ahora →</button>
     </div>
 
@@ -191,6 +206,7 @@
         <li>Asistencia médica al conductor</li>
         <li>Transporte del vehículo</li>
       </ul>
+      <div class="ins-price">Desde <strong>$65.000 / mes</strong></div>
       <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Motos','poliza_extra')">Cotizar ahora →</button>
     </div>
 
