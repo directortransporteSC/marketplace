@@ -4,6 +4,51 @@
    ============================================= */
 'use strict';
 
+// ─── Helper documentos ─────────────────────────
+function docsStatusLabel(status) {
+  return { vigente:'✅ Vigente', vencido:'❌ Vencido', no_tiene:'⚠️ Sin doc', no_aplica:'— N/A' }[status] || '–';
+}
+function docsStatusClass(status) {
+  return { vigente:'vigente', vencido:'vencido', no_tiene:'no_tiene', no_aplica:'no_aplica' }[status] || 'sin_dato';
+}
+function buildDocsBadges(docs) {
+  if (!docs) return '';
+  const items = [
+    { key:'soat', label:'SOAT' },{ key:'poliza', label:'Póliza' },
+    { key:'rtm', label:'RTM' },{ key:'to', label:'TO' },
+  ];
+  return '<div class="docs-badges">' +
+    items.map(i => {
+      const d = docs[i.key] || {};
+      if (!d.status) return '';
+      return `<span class="doc-badge ${docsStatusClass(d.status)}">${i.label}: ${docsStatusLabel(d.status)}</span>`;
+    }).filter(Boolean).join('') + '</div>';
+}
+function buildDocsDetail(docs) {
+  if (!docs) return '';
+  const items = [
+    { key:'soat', label:'SOAT', icon:'🔵' },
+    { key:'poliza', label:'Póliza / Seguro', icon:'🟢' },
+    { key:'rtm', label:'RTM (Tecnomecánica)', icon:'🟡' },
+    { key:'to', label:'TO (Tarjeta Op.)', icon:'🟠' },
+  ];
+  const html = items.map(i => {
+    const d = docs[i.key] || {};
+    const st = d.status || '';
+    const exp = d.expiry ? new Date(d.expiry + 'T00:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '';
+    return `<div class="doc-detail-item">
+      <div class="doc-detail-name">${i.icon} ${i.label}</div>
+      <div class="doc-detail-status ${docsStatusClass(st)}">${st ? docsStatusLabel(st) : '–'}</div>
+      ${exp ? `<div class="doc-detail-date">Vence: ${exp}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="docs-detail-section">
+    <div class="docs-detail-title">📄 Documentos</div>
+    <div class="docs-detail-grid">${html}</div>
+  </div>`;
+}
+
+
 let vehicles   = [];
 let filtered   = [];
 let favorites  = new Set();
@@ -171,6 +216,7 @@ function buildCard(v) {
         ${v.trans?`<span class="spec-tag">⚙️ ${v.trans}</span>`:''}
         ${v.type ?`<span class="spec-tag">${getEmoji(v.type)} ${v.type}</span>`:''}
       </div>
+      ${buildDocsBadges(v.docs)}
       <div class="v-footer">
         ${isSold
           ? `<button class="btn btn-outline btn-sm" style="flex:1;opacity:.6;cursor:default" disabled>🔴 Vendido</button>`
@@ -241,6 +287,7 @@ function openDetail(id) {
       ${v.type  ?`<div class="d-spec"><div class="sl">Tipo</div><div class="sv">${v.type}</div></div>`:''}
     </div>
     ${v.description?`<div class="detail-desc">${v.description.replace(/\n/g,'<br>')}</div>`:''}
+    ${buildDocsDetail(v.docs)}
 
     ${v.video_url&&!isSold?`
     <div style="margin-bottom:18px">
@@ -473,6 +520,57 @@ function openGallery(urls, el, enableLightbox = false) {
     );
 }
 
+
+// ─── PUBLICA CON NOSOTROS ──────────────────────
+function openPublishModal() {
+  ['pub-name','pub-phone','pub-email','pub-vehicle','pub-price','pub-city','pub-km','pub-desc'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('publishModal').classList.add('open');
+}
+function closePublishModal() { document.getElementById('publishModal').classList.remove('open'); }
+
+async function submitPublishRequest() {
+  const name    = document.getElementById('pub-name').value.trim();
+  const phone   = document.getElementById('pub-phone').value.trim();
+  const email   = document.getElementById('pub-email').value.trim();
+  const vehicle = document.getElementById('pub-vehicle').value.trim();
+  const price   = document.getElementById('pub-price').value.trim();
+  const city    = document.getElementById('pub-city').value.trim();
+  const km      = document.getElementById('pub-km').value.trim();
+  const desc    = document.getElementById('pub-desc').value.trim();
+
+  if (!name)    { showToast('Ingresa tu nombre','error'); return; }
+  if (!phone)   { showToast('Ingresa tu WhatsApp','error'); return; }
+  if (!email || !email.includes('@')) { showToast('Ingresa un correo válido','error'); return; }
+  if (!vehicle) { showToast('Ingresa el vehículo que deseas publicar','error'); return; }
+
+  const COMERCIAL_EMAIL = 'adminusados@specialcar.com.co';
+  const subject = encodeURIComponent(`[Publicar] Solicitud de publicación — ${vehicle}`);
+  const body = encodeURIComponent(
+    `SOLICITUD DE PUBLICACIÓN\n` +
+    `═══════════════════════════\n\n` +
+    `DATOS DEL PROPIETARIO\n` +
+    `─────────────────────\n` +
+    `Nombre:    ${name}\n` +
+    `WhatsApp:  ${phone}\n` +
+    `Correo:    ${email}\n\n` +
+    `DATOS DEL VEHÍCULO\n` +
+    `──────────────────\n` +
+    `Vehículo:  ${vehicle}\n` +
+    `Precio:    ${price||'No especificado'}\n` +
+    `Ciudad:    ${city||'No especificado'}\n` +
+    `Km:        ${km||'No especificado'}\n\n` +
+    `DESCRIPCIÓN\n` +
+    `───────────\n` +
+    `${desc||'Sin descripción adicional'}\n\n` +
+    `Fecha: ${new Date().toLocaleString('es-CO')}`
+  );
+  window.open(`mailto:${COMERCIAL_EMAIL}?subject=${subject}&body=${body}`, '_blank');
+  closePublishModal();
+  showToast('✅ Solicitud enviada — un asesor te contactará pronto');
+}
+
 // ─── Init ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   initSupabase();
@@ -480,9 +578,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('detailModal').addEventListener('click', function(e){if(e.target===this)closeDetail();});
   document.getElementById('emailModal').addEventListener('click',  function(e){if(e.target===this)closeEmailModal();});
   document.getElementById('insuranceModal').addEventListener('click', function(e){if(e.target===this)closeInsuranceModal();});
+  document.getElementById('publishModal').addEventListener('click', function(e){if(e.target===this)closePublishModal();});
 });
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){closeDetail();closeEmailModal();closeInsuranceModal();closeLightbox();}
+  if(e.key==='Escape'){closeDetail();closeEmailModal();closeInsuranceModal();closeLightbox();closePublishModal();}
   if(e.key==='ArrowLeft')  lightboxMove(-1);
   if(e.key==='ArrowRight') lightboxMove(1);
 });

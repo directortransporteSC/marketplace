@@ -145,6 +145,54 @@ function updateBrandFilter(){
   sel.value=cur;
 }
 
+
+// ─── Helper documentos ─────────────────────────
+function docsStatusLabel(status) {
+  return { vigente:'✅ Vigente', vencido:'❌ Vencido', no_tiene:'⚠️ Sin doc', no_aplica:'— N/A' }[status] || '–';
+}
+function docsStatusClass(status) {
+  return { vigente:'vigente', vencido:'vencido', no_tiene:'no_tiene', no_aplica:'no_aplica' }[status] || 'sin_dato';
+}
+function buildDocsBadges(docs) {
+  if (!docs) return '';
+  const items = [
+    { key:'soat',   label:'SOAT' },
+    { key:'poliza', label:'Póliza' },
+    { key:'rtm',    label:'RTM' },
+    { key:'to',     label:'TO' },
+  ];
+  return '<div class="docs-badges">' +
+    items.map(i => {
+      const d = docs[i.key] || {};
+      if (!d.status) return `<span class="doc-badge sin_dato">${i.label}: –</span>`;
+      return `<span class="doc-badge ${docsStatusClass(d.status)}">${i.label}: ${docsStatusLabel(d.status)}</span>`;
+    }).join('') +
+  '</div>';
+}
+function buildDocsDetail(docs) {
+  if (!docs) return '';
+  const items = [
+    { key:'soat',   label:'SOAT', icon:'🔵' },
+    { key:'poliza', label:'Póliza / Seguro', icon:'🟢' },
+    { key:'rtm',    label:'RTM (Tecnomecánica)', icon:'🟡' },
+    { key:'to',     label:'TO (Tarjeta Op.)', icon:'🟠' },
+  ];
+  const html = items.map(i => {
+    const d = docs[i.key] || {};
+    const st = d.status || '';
+    const exp = d.expiry ? new Date(d.expiry + 'T00:00:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '';
+    return `<div class="doc-detail-item">
+      <div class="doc-detail-name">${i.icon} ${i.label}</div>
+      <div class="doc-detail-status ${docsStatusClass(st)}">${st ? docsStatusLabel(st) : '–'}</div>
+      ${exp ? `<div class="doc-detail-date">Vence: ${exp}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="docs-detail-section">
+    <div class="docs-detail-title">📄 Documentos</div>
+    <div class="docs-detail-grid">${html}</div>
+  </div>`;
+}
+
 // ─── Render cards admin ────────────────────────
 function renderGrid() {
   const c=document.getElementById('vehicleContainer');
@@ -199,6 +247,7 @@ function buildAdminCard(v) {
         ${v.trans?`<span class="spec-tag">⚙️ ${v.trans}</span>`:''}
         ${v.type ?`<span class="spec-tag">${getEmoji(v.type)} ${v.type}</span>`:''}
       </div>
+      ${buildDocsBadges(v.docs)}
       ${deleteNotice}
       <div class="v-footer">
         <button class="btn btn-primary btn-sm" style="flex:2" onclick="event.stopPropagation();editVehicle('${v.id}')">✏️ Editar</button>
@@ -362,6 +411,11 @@ function clearForm() {
   document.getElementById('f-trans').value='Automática';
   document.getElementById('imgPreview').innerHTML='';
   renderVideoPreview();
+  // Limpiar docs
+  ['soat','poliza','rtm','to'].forEach(d=>{
+    const s=document.getElementById('f-'+d+'-status'); if(s) s.value='';
+    const dt=document.getElementById('f-'+d+'-date'); if(dt) dt.value='';
+  });
 }
 
 // ─── Manejo de fotos ───────────────────────────
@@ -514,6 +568,12 @@ async function saveVehicle() {
       // Array de todos los vendedores
       sellers:     sellers,
       description: document.getElementById('f-desc').value.trim()||null,
+      docs: {
+        soat:   { status: document.getElementById('f-soat-status')?.value||'',   expiry: document.getElementById('f-soat-date')?.value||'' },
+        poliza: { status: document.getElementById('f-poliza-status')?.value||'', expiry: document.getElementById('f-poliza-date')?.value||'' },
+        rtm:    { status: document.getElementById('f-rtm-status')?.value||'',    expiry: document.getElementById('f-rtm-date')?.value||'' },
+        to:     { status: document.getElementById('f-to-status')?.value||'',     expiry: document.getElementById('f-to-date')?.value||'' },
+      },
       images:      imageUrls,
       video_url:   videoUrl,
     };
@@ -619,6 +679,7 @@ function openDetail(id) {
     </div>
     ${v.description?`<div class="detail-desc">${v.description.replace(/\n/g,'<br>')}</div>`:''}
     ${videoSection}
+    ${buildDocsDetail(v.docs)}
     ${sellersHtml}
     <div class="detail-actions">
       <button class="btn btn-primary" style="flex:2" onclick="closeDetail();editVehicle('${v.id}')">✏️ Editar</button>

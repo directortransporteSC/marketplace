@@ -215,6 +215,66 @@
           <p style="font-size:11px;color:var(--gray-400);margin-top:6px">Puedes agregar varios vendedores. El primero es el principal.</p>
         </div>
 
+        <!-- DOCUMENTOS -->
+        <div class="form-section">
+          <div class="form-sec-title">📄 Documentos del vehículo</div>
+          <div class="docs-grid">
+
+            <div class="doc-field-card">
+              <div class="doc-field-icon">🔵</div>
+              <div class="doc-field-label">SOAT</div>
+              <select id="f-soat-status" class="fc doc-select">
+                <option value="">Estado</option>
+                <option value="vigente">✅ Vigente</option>
+                <option value="vencido">❌ Vencido</option>
+                <option value="no_tiene">⚠️ No tiene</option>
+              </select>
+              <label class="doc-date-label">Vencimiento</label>
+              <input id="f-soat-date" type="date" class="fc doc-date"/>
+            </div>
+
+            <div class="doc-field-card">
+              <div class="doc-field-icon">🟢</div>
+              <div class="doc-field-label">Póliza / Seguro</div>
+              <select id="f-poliza-status" class="fc doc-select">
+                <option value="">Estado</option>
+                <option value="vigente">✅ Vigente</option>
+                <option value="vencido">❌ Vencido</option>
+                <option value="no_tiene">⚠️ No tiene</option>
+              </select>
+              <label class="doc-date-label">Vencimiento</label>
+              <input id="f-poliza-date" type="date" class="fc doc-date"/>
+            </div>
+
+            <div class="doc-field-card">
+              <div class="doc-field-icon">🟡</div>
+              <div class="doc-field-label">RTM (Tecnomecánica)</div>
+              <select id="f-rtm-status" class="fc doc-select">
+                <option value="">Estado</option>
+                <option value="vigente">✅ Vigente</option>
+                <option value="vencido">❌ Vencido</option>
+                <option value="no_aplica">— No aplica (0km)</option>
+              </select>
+              <label class="doc-date-label">Vencimiento</label>
+              <input id="f-rtm-date" type="date" class="fc doc-date"/>
+            </div>
+
+            <div class="doc-field-card">
+              <div class="doc-field-icon">🟠</div>
+              <div class="doc-field-label">TO (Tarjeta de Operación)</div>
+              <select id="f-to-status" class="fc doc-select">
+                <option value="">Estado</option>
+                <option value="vigente">✅ Vigente</option>
+                <option value="vencido">❌ Vencido</option>
+                <option value="no_aplica">— No aplica</option>
+              </select>
+              <label class="doc-date-label">Vencimiento</label>
+              <input id="f-to-date" type="date" class="fc doc-date"/>
+            </div>
+
+          </div>
+        </div>
+
         <div class="form-section">
           <div class="form-sec-title">📝 Descripción</div>
           <textarea id="f-desc" class="fc" rows="4" placeholder="Describe el vehículo: extras, historial, razón de venta..."></textarea>

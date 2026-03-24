@@ -18,6 +18,7 @@
   <div class="nav-right">
     <span class="nav-role-badge">👤 Tienda</span>
     <button class="btn btn-ghost btn-sm" id="favBtn" onclick="toggleFavFilter()">♡ Favoritos</button>
+    <button class="btn btn-ghost btn-sm" onclick="openPublishModal()">📢 Publica con nosotros</button>
     <a href="admin.html"><button class="btn btn-white btn-sm">🔐 Admin</button></a>
   </div>
 </nav>
@@ -33,7 +34,7 @@
       <select id="typeFilter" class="search-field w140" onchange="applyFilters()">
         <option value="">Tipo</option>
         <option>Sedán</option><option>SUV</option><option>Camioneta</option>
-        <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
+        <option>Deportivo</option><option>Automovil</option><option>Eléctrico</option>
         <option>Camión</option><option>Van</option>
       </select>
     </div>
@@ -44,6 +45,31 @@
     </div>
   </div>
 </section>
+
+<!-- BANNER INFORMATIVO -->
+<div class="info-banner">
+  <div class="info-banner-inner">
+    <div class="info-item">
+      <span class="info-icon">🔧</span>
+      <div><strong>Vehículos con trabajo</strong><span>Todos nuestros vehículos se entregan listos para trabajar</span></div>
+    </div>
+    <div class="info-divider"></div>
+    <div class="info-item">
+      <span class="info-icon">🚗</span>
+      <div><strong>Solo carros y camionetas</strong><span>No manejamos motos — exclusivamente vehículos de 4 ruedas</span></div>
+    </div>
+    <div class="info-divider"></div>
+    <div class="info-item">
+      <span class="info-icon">📋</span>
+      <div><strong>Documentos al día</strong><span>SOAT, póliza, RTM y TO verificados antes de la entrega</span></div>
+    </div>
+    <div class="info-divider"></div>
+    <div class="info-item">
+      <span class="info-icon">🤝</span>
+      <div><strong>Contacto directo</strong><span>Habla con el vendedor sin intermediarios</span></div>
+    </div>
+  </div>
+</div>
 
 <!-- TABS PRINCIPALES -->
 <div class="main-tabs">
@@ -294,7 +320,65 @@
   <button class="lightbox-arrow next" onclick="lightboxMove(1)">›</button>
 </div>
 
+
+<!-- MODAL PUBLICA CON NOSOTROS -->
+<div class="overlay" id="publishModal">
+  <div class="modal" style="max-width:560px;padding:0;overflow:hidden;border-radius:var(--r-lg)">
+    <div style="background:linear-gradient(135deg,var(--blue) 0%,#243b8a 100%);padding:24px;color:#fff;position:relative">
+      <button class="modal-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)" onclick="closePublishModal()">✕</button>
+      <div style="font-size:28px;margin-bottom:8px">📢</div>
+      <h3 style="font-size:20px;font-weight:800;margin-bottom:4px">Publica con nosotros</h3>
+      <p style="font-size:13px;opacity:.8">Vende tu vehículo más rápido con el respaldo de SpecialUsadosMarket</p>
+    </div>
+    <div class="modal-body" style="padding:22px 24px">
+      <div class="form-grid">
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu nombre <span class="req">*</span></label>
+          <input id="pub-name" class="fc" placeholder="Nombre completo"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">WhatsApp <span class="req">*</span></label>
+          <input id="pub-phone" class="fc" placeholder="3001234567"/>
+        </div>
+        <div class="form-group form-full">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Correo electrónico <span class="req">*</span></label>
+          <input id="pub-email" class="fc" type="email" placeholder="tu@correo.com"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Marca y modelo <span class="req">*</span></label>
+          <input id="pub-vehicle" class="fc" placeholder="Toyota Corolla 2022"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Precio aproximado</label>
+          <input id="pub-price" class="fc" placeholder="$45.000.000"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Ciudad</label>
+          <input id="pub-city" class="fc" placeholder="Bogotá, Medellín..."/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Kilometraje</label>
+          <input id="pub-km" class="fc" placeholder="45.000 km"/>
+        </div>
+        <div class="form-group form-full">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Descripción del vehículo</label>
+          <textarea id="pub-desc" class="fc" rows="3" placeholder="Cuéntanos sobre el estado, extras, historial..."></textarea>
+        </div>
+      </div>
+      <div style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:12px 14px;margin-top:4px;font-size:12px;color:var(--blue)">
+        💡 <strong>¿Cómo funciona?</strong> Un asesor revisará tu información y te contactará para coordinar la publicación. ¡Es gratis!
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closePublishModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitPublishRequest()">📢 Enviar solicitud</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<button class="publish-float" onclick="openPublishModal()">📢 Publica con nosotros</button>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
