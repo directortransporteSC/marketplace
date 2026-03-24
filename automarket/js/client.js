@@ -1,5 +1,6 @@
 /* =============================================
-   AUTOMARKET — Vista CLIENTE (Supabase)
+   AUTOMARKET — Vista CLIENTE (Supabase) v2
+   Nuevas: vendido, lightbox, seguros, múlt. vendedores
    ============================================= */
 'use strict';
 
@@ -14,6 +15,15 @@ let viewMode   = 'grid';
 let showFavs   = false;
 let emailTargetId = null;
 
+// ─── TABS ──────────────────────────────────────
+function switchTab(tabName, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(b => b.classList.remove('active'));
+  const section = document.getElementById('tab-' + tabName);
+  if (section) section.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
 // ─── Cargar vehículos desde Supabase ───────────
 async function loadVehicles() {
   showSpinner('Cargando vehículos...');
@@ -24,10 +34,9 @@ async function loadVehicles() {
       .order('created_at', { ascending: false });
     if (error) throw error;
     vehicles = data || [];
-    // Cargar favoritos desde localStorage
     try { favorites = new Set(JSON.parse(localStorage.getItem('am_favs') || '[]')); } catch(e) {}
     applyFilters();
-    document.getElementById('statTotal').textContent = vehicles.length;
+    document.getElementById('statTotal').textContent = vehicles.filter(v=>!v.sold).length;
   } catch(e) {
     showToast('Error al cargar vehículos: ' + e.message, 'error');
     console.error(e);
@@ -118,26 +127,36 @@ function buildCard(v) {
   const isFav    = favorites.has(v.id);
   const imgs     = v.images || [];
   const hasVideo = !!v.video_url;
+  const isSold   = !!v.sold;
+
+  // Obtener contacto principal
+  const sellers = (v.sellers && Array.isArray(v.sellers) && v.sellers.length) ? v.sellers : [];
+  const primary = sellers[0] || { whatsapp: v.whatsapp, email: v.email };
+
   const imgHtml  = imgs.length
-    ? `<div class="v-card-img">
+    ? `<div class="v-card-img" style="overflow:hidden">
         <img src="${imgs[0]}" alt="${v.brand} ${v.model}" loading="lazy"/>
+        ${isSold ? '<div class="sold-ribbon">VENDIDO</div>' : ''}
         <div style="position:absolute;bottom:10px;right:10px;display:flex;gap:4px">
           ${imgs.length>1?`<span class="v-photo-count">📷 ${imgs.length}</span>`:''}
           ${hasVideo?`<span class="v-photo-count" style="background:rgba(220,38,38,.75)">🎬 Video</span>`:''}
         </div>
        </div>`
-    : `<div class="v-card-img"><div class="v-card-no-img">${getEmoji(v.type)}<span>${hasVideo?'🎬 Con video':'Sin fotos'}</span></div></div>`;
+    : `<div class="v-card-img">
+        ${isSold ? '<div class="sold-ribbon">VENDIDO</div>' : ''}
+        <div class="v-card-no-img">${getEmoji(v.type)}<span>${hasVideo?'🎬 Con video':'Sin fotos'}</span></div>
+       </div>`;
 
   return `
-  <div class="v-card" onclick="openDetail('${v.id}')">
+  <div class="v-card ${isSold?'is-sold':''}" onclick="openDetail('${v.id}')">
     <div style="position:relative">
       ${imgHtml}
       <span class="v-badge ${v.condition==='Nuevo'?'badge-new':'badge-used'}">${v.condition}</span>
-      <button class="v-fav-btn ${isFav?'on':''}"
+      ${!isSold ? `<button class="v-fav-btn ${isFav?'on':''}"
         onclick="event.stopPropagation();toggleFav('${v.id}',this)"
         title="${isFav?'Quitar favorito':'Guardar'}">
         ${isFav?'♥':'♡'}
-      </button>
+      </button>` : ''}
     </div>
     <div class="v-body">
       <div class="v-header">
@@ -153,16 +172,19 @@ function buildCard(v) {
         ${v.type ?`<span class="spec-tag">${getEmoji(v.type)} ${v.type}</span>`:''}
       </div>
       <div class="v-footer">
-        ${v.whatsapp?`<a href="https://wa.me/57${v.whatsapp}?text=Hola,%20me%20interesa%20el%20${encodeURIComponent(v.brand+' '+v.model+' '+v.year)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-          <button class="btn btn-whatsapp btn-sm">💬 WhatsApp</button></a>`:''}
-        ${v.email?`<button class="btn btn-email btn-sm" onclick="event.stopPropagation();openEmailModal('${v.id}')">✉️ Correo</button>`:''}
-        <button class="btn btn-outline btn-sm" style="flex:1" onclick="event.stopPropagation();openDetail('${v.id}')">Ver más →</button>
+        ${isSold
+          ? `<button class="btn btn-outline btn-sm" style="flex:1;opacity:.6;cursor:default" disabled>🔴 Vendido</button>`
+          : `${primary.whatsapp?`<a href="https://wa.me/57${primary.whatsapp}?text=Hola,%20me%20interesa%20el%20${encodeURIComponent(v.brand+' '+v.model+' '+v.year)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+            <button class="btn btn-whatsapp btn-sm">💬 WhatsApp</button></a>`:''}
+           ${primary.email?`<button class="btn btn-email btn-sm" onclick="event.stopPropagation();openEmailModal('${v.id}')">✉️ Correo</button>`:''}
+           <button class="btn btn-outline btn-sm" style="flex:1" onclick="event.stopPropagation();openDetail('${v.id}')">Ver más →</button>`
+        }
       </div>
     </div>
   </div>`;
 }
 
-// ─── Favoritos (localStorage) ──────────────────
+// ─── Favoritos ─────────────────────────────────
 function toggleFav(id, btn) {
   if(favorites.has(id)){favorites.delete(id);if(btn){btn.textContent='♡';btn.classList.remove('on');}}
   else                 {favorites.add(id);   if(btn){btn.textContent='♥';btn.classList.add('on');}}
@@ -173,14 +195,39 @@ function toggleFav(id, btn) {
 // ─── Modal Detalle ─────────────────────────────
 function openDetail(id) {
   const v = vehicles.find(x=>x.id===id); if(!v)return;
-  openGallery(v.images||[], document.getElementById('detailGallery'));
-  const isFav = favorites.has(v.id);
+  openGallery(v.images||[], document.getElementById('detailGallery'), true);
+  const isFav  = favorites.has(v.id);
+  const isSold = !!v.sold;
+
+  // Múltiples vendedores
+  const sellers = (v.sellers && Array.isArray(v.sellers) && v.sellers.length)
+    ? v.sellers
+    : (v.seller_name ? [{ name:v.seller_name, whatsapp:v.whatsapp, phone:v.phone, email:v.email }] : []);
+
+  const sellersHtml = sellers.length
+    ? `<div class="multi-sellers-section">
+        <div class="multi-sellers-title">👥 Vendedor${sellers.length>1?'es':''}</div>
+        ${sellers.map(s=>`
+          <div class="multi-seller-card">
+            <div class="multi-seller-avatar">${(s.name||'V').charAt(0).toUpperCase()}</div>
+            <div class="multi-seller-info">
+              <div class="multi-seller-name">${s.name||'Vendedor'}</div>
+              <div class="multi-seller-contacts">
+                ${s.whatsapp&&!isSold?`<a href="https://wa.me/57${s.whatsapp}?text=Hola,%20me%20interesa%20el%20${encodeURIComponent(v.brand+' '+v.model+' '+v.year)}" target="_blank" style="background:var(--green);color:#fff;border-radius:20px;padding:4px 10px;font-size:11.5px;font-weight:600">💬 ${s.whatsapp}</a>`:''}
+                ${s.phone&&s.phone!==s.whatsapp&&!isSold?`<a href="tel:${s.phone}" style="background:var(--blue-soft);color:var(--blue);border-radius:20px;padding:4px 10px;font-size:11.5px;font-weight:600">📞 ${s.phone}</a>`:''}
+                ${s.email&&!isSold?`<button onclick="openEmailModal('${v.id}')" style="background:var(--blue-pale);color:var(--blue);border-radius:20px;padding:4px 10px;font-size:11.5px;font-weight:600;border:none;cursor:pointer">✉️ ${s.email}</button>`:''}
+              </div>
+            </div>
+          </div>`).join('')}
+       </div>`
+    : `<div class="seller-card"><div class="seller-avatar">?</div><div class="seller-info"><div class="seller-name">Sin datos de contacto</div></div></div>`;
 
   document.getElementById('detailContent').innerHTML = `
+    ${isSold ? `<div style="background:#dc2626;color:#fff;text-align:center;font-weight:800;font-size:13px;padding:10px;letter-spacing:2px;margin-bottom:16px;border-radius:var(--r-sm)">🔴 ESTE VEHÍCULO YA FUE VENDIDO</div>` : ''}
     <div class="detail-top">
       <div>
         <div class="detail-title">${v.brand} ${v.model} ${v.year}</div>
-        <div class="detail-sub">📍 ${v.city||'Colombia'} &nbsp;·&nbsp; 🕐 ${timeAgo(v.created_at)}${v.seller_name?` &nbsp;·&nbsp; 👤 ${v.seller_name}`:''}</div>
+        <div class="detail-sub">📍 ${v.city||'Colombia'} &nbsp;·&nbsp; 🕐 ${timeAgo(v.created_at)}</div>
       </div>
       <span class="v-badge ${v.condition==='Nuevo'?'badge-new':'badge-used'}" style="position:static;white-space:nowrap;margin-top:4px">${v.condition}</span>
     </div>
@@ -195,7 +242,7 @@ function openDetail(id) {
     </div>
     ${v.description?`<div class="detail-desc">${v.description.replace(/\n/g,'<br>')}</div>`:''}
 
-    ${v.video_url?`
+    ${v.video_url&&!isSold?`
     <div style="margin-bottom:18px">
       <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:8px">🎬 Video del vehículo</div>
       <video src="${v.video_url}" controls playsinline
@@ -204,37 +251,14 @@ function openDetail(id) {
       </video>
     </div>`:''}
 
-    <div class="seller-card">
-      <div class="seller-avatar">${(v.seller_name||'V').charAt(0).toUpperCase()}</div>
-      <div class="seller-info">
-        <div class="seller-name">${v.seller_name||'Vendedor'}</div>
-        ${v.city?`<div class="seller-loc">📍 ${v.city}</div>`:''}
-      </div>
-    </div>
+    ${sellersHtml}
 
-    <div class="contact-card">
-      <div class="contact-methods">
-        ${v.whatsapp?`
-          <a href="https://wa.me/57${v.whatsapp}?text=Hola,%20me%20interesa%20el%20${encodeURIComponent(v.brand+' '+v.model+' '+v.year)}" target="_blank" rel="noopener">
-            <button class="btn btn-whatsapp">💬 WhatsApp &nbsp;<span style="opacity:.8;font-weight:400">${v.whatsapp}</span></button>
-          </a>`:''}
-        ${v.phone && v.phone!==v.whatsapp?`
-          <a href="tel:${v.phone}">
-            <button class="btn btn-outline">📞 Llamar &nbsp;<span style="opacity:.7;font-weight:400">${v.phone}</span></button>
-          </a>`:''}
-        ${v.email?`
-          <button class="btn btn-email" onclick="openEmailModal('${v.id}')">
-            ✉️ Correo &nbsp;<span style="opacity:.7;font-weight:400">${v.email}</span>
-          </button>`:''}
-      </div>
-    </div>
-
-    <div class="detail-actions">
+    ${!isSold ? `<div class="detail-actions">
       <button class="btn ${isFav?'btn-primary':'btn-outline'}" style="flex:1" id="detailFavBtn"
         onclick="toggleDetailFav('${v.id}')">
         ${isFav?'♥ Guardado':'♡ Guardar'}
       </button>
-    </div>`;
+    </div>` : ''}`;
 
   document.getElementById('detailModal').classList.add('open');
 }
@@ -256,10 +280,15 @@ function openEmailModal(id) {
   document.getElementById('emailVehicleName').textContent=`${v.brand} ${v.model} ${v.year}`;
   document.getElementById('emailName').value='';
   document.getElementById('emailFrom').value='';
-  document.getElementById('emailMsg').value=`Hola ${v.seller_name||''}, estoy interesado en el ${v.brand} ${v.model} ${v.year}. ¿Sigue disponible?`;
+  // Obtener vendedor destino
+  const sellers = (v.sellers&&Array.isArray(v.sellers)&&v.sellers.length)?v.sellers:[];
+  const primary = sellers[0]||{};
+  const sellerName = primary.name||v.seller_name||'';
+  document.getElementById('emailMsg').value=`Hola ${sellerName}, estoy interesado en el ${v.brand} ${v.model} ${v.year}. ¿Sigue disponible?`;
   document.getElementById('emailModal').classList.add('open');
 }
 function closeEmailModal() { document.getElementById('emailModal').classList.remove('open'); }
+
 function sendEmail() {
   const v=vehicles.find(x=>x.id===emailTargetId);
   const name=document.getElementById('emailName').value.trim();
@@ -267,13 +296,181 @@ function sendEmail() {
   const msg=document.getElementById('emailMsg').value.trim();
   if(!name||!from||!msg){showToast('Completa todos los campos','error');return;}
   if(!from.includes('@')){showToast('Correo inválido','error');return;}
-  if(v&&v.email){
+
+  // Obtener todos los correos de vendedores
+  const sellers = (v&&v.sellers&&Array.isArray(v.sellers)&&v.sellers.length)?v.sellers:[];
+  const emails = sellers.map(s=>s.email).filter(Boolean);
+  if (!emails.length && v?.email) emails.push(v.email);
+
+  if(emails.length){
     const sub=encodeURIComponent(`Consulta: ${v.brand} ${v.model} ${v.year} — AutoMarket`);
     const body=encodeURIComponent(`Nombre: ${name}\nCorreo: ${from}\n\n${msg}`);
-    window.open(`mailto:${v.email}?subject=${sub}&body=${body}`,'_blank');
+    window.open(`mailto:${emails.join(',')}?subject=${sub}&body=${body}`,'_blank');
   }
   closeEmailModal();
   showToast('✓ Abriendo cliente de correo...');
+}
+
+// ─── MODAL SEGUROS ─────────────────────────────
+let currentInsuranceType = '';
+let currentInsurancePlan = '';
+
+function openInsuranceModal(planName, type) {
+  currentInsurancePlan = planName;
+  currentInsuranceType = type;
+  const typeLabels = {
+    todo_riesgo: 'Todo Riesgo',
+    poliza_extra: 'Póliza Extra',
+    contractual:  'Contractual'
+  };
+  document.getElementById('insModalTitle').textContent = `🛡️ ${planName}`;
+  document.getElementById('insModalSubtitle').textContent = `Tipo: ${typeLabels[type]||type} · Un asesor te contactará pronto`;
+  document.getElementById('ins-name').value = '';
+  document.getElementById('ins-phone').value = '';
+  document.getElementById('ins-email').value = '';
+  document.getElementById('ins-vehicle').value = '';
+  document.getElementById('ins-message').value = '';
+  document.getElementById('insuranceModal').classList.add('open');
+}
+function closeInsuranceModal() { document.getElementById('insuranceModal').classList.remove('open'); }
+
+async function submitInsuranceLead() {
+  const name    = document.getElementById('ins-name').value.trim();
+  const phone   = document.getElementById('ins-phone').value.trim();
+  const email   = document.getElementById('ins-email').value.trim();
+  const vehicle = document.getElementById('ins-vehicle').value.trim();
+  const message = document.getElementById('ins-message').value.trim();
+
+  if (!name)  { showToast('Ingresa tu nombre','error'); return; }
+  if (!phone) { showToast('Ingresa tu teléfono','error'); return; }
+  if (!email || !email.includes('@')) { showToast('Ingresa un correo válido','error'); return; }
+
+  showSpinner('Enviando solicitud...');
+  try {
+    // Guardar en Supabase
+    const { error } = await sb.from('insurance_leads').insert([{
+      insurance_type: currentInsuranceType,
+      plan_name:      currentInsurancePlan,
+      client_name:    name,
+      client_phone:   phone,
+      client_email:   email,
+      vehicle_info:   vehicle || null,
+      message:        message || null,
+    }]);
+    if (error) throw error;
+
+    // También abrir mailto para el asesor
+    const ASESOR_EMAIL = 'adminusados@specialcar.com.co';
+    const subject = encodeURIComponent(`[Seguro] Solicitud: ${currentInsurancePlan} — ${name}`);
+    const body = encodeURIComponent(
+      `SOLICITUD DE SEGURO\n` +
+      `═══════════════════\n` +
+      `Plan: ${currentInsurancePlan}\n` +
+      `Tipo: ${currentInsuranceType}\n\n` +
+      `DATOS DEL CLIENTE\n` +
+      `──────────────────\n` +
+      `Nombre:   ${name}\n` +
+      `Teléfono: ${phone}\n` +
+      `Correo:   ${email}\n` +
+      `Vehículo: ${vehicle||'No especificado'}\n\n` +
+      `MENSAJE\n` +
+      `──────────────────\n` +
+      `${message||'Sin mensaje adicional'}\n\n` +
+      `Fecha: ${new Date().toLocaleString('es-CO')}`
+    );
+    window.open(`mailto:${ASESOR_EMAIL}?subject=${subject}&body=${body}`, '_blank');
+
+    closeInsuranceModal();
+    showToast('✅ Solicitud enviada. Un asesor te contactará pronto.');
+  } catch(e) {
+    showToast('Error al enviar: ' + e.message, 'error');
+    console.error(e);
+  } finally {
+    hideSpinner();
+  }
+}
+
+// ─── LIGHTBOX ──────────────────────────────────
+let _lbImgs = [];
+let _lbIdx  = 0;
+
+function openLightbox(imgs, startIndex) {
+  if (!imgs || !imgs.length) return;
+  _lbImgs = imgs;
+  _lbIdx  = startIndex || 0;
+  renderLightbox();
+  document.getElementById('lightbox').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function lightboxMove(dir) {
+  if (!_lbImgs.length) return;
+  _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
+  renderLightbox();
+}
+
+function lightboxBgClick(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+function renderLightbox() {
+  document.getElementById('lightboxImg').src = _lbImgs[_lbIdx];
+  document.getElementById('lightboxCounter').textContent =
+    _lbImgs.length > 1 ? `${_lbIdx+1} / ${_lbImgs.length}` : '';
+
+  // Thumbnails
+  const wrap = document.getElementById('lightboxThumbs');
+  if (_lbImgs.length > 1) {
+    wrap.innerHTML = _lbImgs.map((src,i) =>
+      `<img class="lightbox-thumb ${i===_lbIdx?'active':''}"
+        src="${src}" alt="Foto ${i+1}"
+        onclick="event.stopPropagation();_lbIdx=${i};renderLightbox()"/>`
+    ).join('');
+    // Scroll thumbnail activo a la vista
+    setTimeout(() => {
+      const active = wrap.querySelector('.lightbox-thumb.active');
+      if (active) active.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+    }, 50);
+  } else {
+    wrap.innerHTML = '';
+  }
+
+  // Ocultar flechas si hay solo 1 imagen
+  document.querySelectorAll('.lightbox-arrow').forEach(a =>
+    a.style.display = _lbImgs.length > 1 ? '' : 'none'
+  );
+}
+
+// ─── openGallery MEJORADA con click → lightbox ──
+// Sobreescribe la de supabase.js para añadir lightbox
+function openGallery(urls, el, enableLightbox = false) {
+  _slideUrls = urls || []; _slideIdx = 0;
+  if (!_slideUrls.length) {
+    el.innerHTML = `<div class="gallery-no-img">🚗</div>`; return;
+  }
+  el.innerHTML =
+    _slideUrls.map((src,i) => {
+      const click = enableLightbox
+        ? `onclick="event.stopPropagation();openLightbox(_slideUrls,${i})" style="cursor:zoom-in"`
+        : '';
+      return `<div class="gallery-slide ${i===0?'active':''}">
+        <img src="${src}" alt="Foto ${i+1}" loading="lazy" ${click}/>
+       </div>`;
+    }).join('') +
+    (_slideUrls.length > 1
+      ? `<button class="g-arrow prev" onclick="changeSlide(-1)">‹</button>
+         <button class="g-arrow next" onclick="changeSlide(1)">›</button>
+         <div class="g-dots">${_slideUrls.map((_,i)=>
+           `<button class="g-dot ${i===0?'active':''}" onclick="goSlide(${i})"></button>`
+         ).join('')}</div>
+         <div style="position:absolute;bottom:38px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;pointer-events:none">🔍 Clic para ampliar</div>`
+      : (enableLightbox ? `<div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;padding:3px 8px;border-radius:12px;pointer-events:none">🔍 Clic para ampliar</div>` : '')
+    );
 }
 
 // ─── Init ──────────────────────────────────────
@@ -282,7 +479,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadVehicles();
   document.getElementById('detailModal').addEventListener('click', function(e){if(e.target===this)closeDetail();});
   document.getElementById('emailModal').addEventListener('click',  function(e){if(e.target===this)closeEmailModal();});
+  document.getElementById('insuranceModal').addEventListener('click', function(e){if(e.target===this)closeInsuranceModal();});
 });
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){closeDetail();closeEmailModal();}
+  if(e.key==='Escape'){closeDetail();closeEmailModal();closeInsuranceModal();closeLightbox();}
+  if(e.key==='ArrowLeft')  lightboxMove(-1);
+  if(e.key==='ArrowRight') lightboxMove(1);
 });

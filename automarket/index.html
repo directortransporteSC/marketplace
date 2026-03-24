@@ -26,11 +26,11 @@
   <div class="hero-inner">
     <div class="hero-logo"><img src="assets/Special_CAR_1.png" alt="Special CAR"/></div>
     <h1>Encuentra tu próximo<br><em>vehículo ideal</em></h1>
-    <p class="hero-sub">Carros particulares, publicos y más con contacto directo al vendedor.</p>
+    <p class="hero-sub">Carros particulares, públicos y más con contacto directo al vendedor.</p>
     <div class="search-bar">
       <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
       <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
-      <select id="typeFilter"  class="search-field w140" onchange="applyFilters()">
+      <select id="typeFilter" class="search-field w140" onchange="applyFilters()">
         <option value="">Tipo</option>
         <option>Sedán</option><option>SUV</option><option>Camioneta</option>
         <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
@@ -45,48 +45,168 @@
   </div>
 </section>
 
-<div class="filters-bar">
-  <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
-  <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
-  <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
-  <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
-  <select class="filter-select" onchange="setYear(this.value)">
-    <option value="">📅 Año</option>
-    <option value="2024">2024</option><option value="2023">2023</option>
-    <option value="2022">2022</option><option value="2021">2021</option>
-    <option value="2020">2020</option><option value="2019">2019</option>
-    <option value="2018">2018</option><option value="2015">2015 o anterior</option>
-    <option value="2010">2010 o anterior</option>
-  </select>
-  <select class="filter-select" onchange="setPrice(this.value)">
-    <option value="">💵 Precio</option>
-    <option value="0-30000000">Hasta $30M</option>
-    <option value="30000000-60000000">$30M – $60M</option>
-    <option value="60000000-100000000">$60M – $100M</option>
-    <option value="100000000-200000000">$100M – $200M</option>
-    <option value="200000000-9999999999">Más de $200M</option>
-  </select>
-  <div class="filters-right">
-    <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
-    <div class="view-toggle">
-      <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
-      <button class="view-btn"        onclick="setView('list',this)">≡</button>
-    </div>
-  </div>
+<!-- TABS PRINCIPALES -->
+<div class="main-tabs">
+  <button class="main-tab active" id="tab-btn-vehicles" onclick="switchTab('vehicles',this)">🚗 Vehículos</button>
+  <button class="main-tab" id="tab-btn-insurance" onclick="switchTab('insurance',this)">🛡️ Seguros</button>
 </div>
 
-<main class="main-content">
-  <div class="section-header">
-    <h2 id="sectionTitle">Todos los vehículos</h2>
+<!-- ══ TAB VEHÍCULOS ══ -->
+<div id="tab-vehicles" class="tab-section active">
+  <div class="filters-bar">
+    <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
+    <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
+    <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
+    <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
+    <select class="filter-select" onchange="setYear(this.value)">
+      <option value="">📅 Año</option>
+      <option value="2024">2024</option><option value="2023">2023</option>
+      <option value="2022">2022</option><option value="2021">2021</option>
+      <option value="2020">2020</option><option value="2019">2019</option>
+      <option value="2018">2018</option><option value="2015">2015 o anterior</option>
+      <option value="2010">2010 o anterior</option>
+    </select>
+    <select class="filter-select" onchange="setPrice(this.value)">
+      <option value="">💵 Precio</option>
+      <option value="0-30000000">Hasta $30M</option>
+      <option value="30000000-60000000">$30M – $60M</option>
+      <option value="60000000-100000000">$60M – $100M</option>
+      <option value="100000000-200000000">$100M – $200M</option>
+      <option value="200000000-9999999999">Más de $200M</option>
+    </select>
+    <div class="filters-right">
+      <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
+      <div class="view-toggle">
+        <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
+        <button class="view-btn" onclick="setView('list',this)">≡</button>
+      </div>
+    </div>
   </div>
-  <div id="vehicleContainer" class="vehicle-grid"></div>
-  <div id="emptyState" class="empty-state" style="display:none">
-    <div class="empty-icon">🚗</div>
-    <h3>No se encontraron vehículos</h3>
-    <p>Prueba con otros filtros o términos de búsqueda</p>
-    <button class="btn btn-primary btn-lg" onclick="clearAllFilters()">Limpiar filtros</button>
+
+  <main class="main-content">
+    <div class="section-header">
+      <h2 id="sectionTitle">Todos los vehículos</h2>
+    </div>
+    <div id="vehicleContainer" class="vehicle-grid"></div>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="empty-icon">🚗</div>
+      <h3>No se encontraron vehículos</h3>
+      <p>Prueba con otros filtros o términos de búsqueda</p>
+      <button class="btn btn-primary btn-lg" onclick="clearAllFilters()">Limpiar filtros</button>
+    </div>
+  </main>
+</div>
+
+<!-- ══ TAB SEGUROS ══ -->
+<div id="tab-insurance" class="tab-section">
+  <div class="insurance-hero">
+    <h2>🛡️ Seguros para tu vehículo</h2>
+    <p>Protege tu inversión con nuestros planes de seguro. Coberturas completas adaptadas a tu necesidad.</p>
   </div>
-</main>
+  <div class="insurance-grid">
+
+    <div class="insurance-card featured">
+      <div class="ins-icon">🚗💎</div>
+      <span class="ins-type">Todo Riesgo</span>
+      <div class="ins-title">Seguro Todo Riesgo Premium</div>
+      <div class="ins-desc">Cobertura total para tu vehículo ante cualquier eventualidad. La protección más completa del mercado colombiano.</div>
+      <ul class="ins-features">
+        <li>Daños por colisión o vuelco</li>
+        <li>Hurto total y parcial</li>
+        <li>Daños a terceros (RC)</li>
+        <li>Daños por fenómenos naturales</li>
+        <li>Asistencia en carretera 24/7</li>
+        <li>Carro de reemplazo</li>
+        <li>Grúa incluida</li>
+      </ul>
+      <div class="ins-price">Desde <strong>$280.000 / mes</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Premium','todo_riesgo')">Cotizar ahora →</button>
+    </div>
+
+    <div class="insurance-card">
+      <div class="ins-icon">🚗🛡️</div>
+      <span class="ins-type">Todo Riesgo</span>
+      <div class="ins-title">Seguro Todo Riesgo Básico</div>
+      <div class="ins-desc">Cobertura esencial para proteger tu vehículo contra los riesgos más frecuentes en Colombia.</div>
+      <ul class="ins-features">
+        <li>Daños por colisión</li>
+        <li>Hurto total</li>
+        <li>Daños a terceros (RC)</li>
+        <li>Asistencia en carretera</li>
+        <li>Grúa hasta 50 km</li>
+      </ul>
+      <div class="ins-price">Desde <strong>$180.000 / mes</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Básico','todo_riesgo')">Cotizar ahora →</button>
+    </div>
+
+    <div class="insurance-card">
+      <div class="ins-icon">📋✨</div>
+      <span class="ins-type">Póliza Extra</span>
+      <div class="ins-title">Póliza Extra — Amparo Plus</div>
+      <div class="ins-desc">Complementa tu seguro actual con coberturas adicionales para situaciones especiales no incluidas en pólizas estándar.</div>
+      <ul class="ins-features">
+        <li>Pérdida de llaves y chapas</li>
+        <li>Daños por mascotas o animales</li>
+        <li>Rotura de vidrios y lunas</li>
+        <li>Daños a rines y neumáticos</li>
+        <li>Cobertura de accesorios especiales</li>
+        <li>Extensión de RC voluntaria</li>
+      </ul>
+      <div class="ins-price">Desde <strong>$85.000 / mes</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Amparo Plus','poliza_extra')">Cotizar ahora →</button>
+    </div>
+
+    <div class="insurance-card">
+      <div class="ins-icon">🏍️🛡️</div>
+      <span class="ins-type">Póliza Extra</span>
+      <div class="ins-title">Póliza Extra — Motos</div>
+      <div class="ins-desc">Cobertura especializada para motocicletas. Protección ampliada ante los riesgos específicos del uso de moto en ciudad.</div>
+      <ul class="ins-features">
+        <li>Hurto total y parcial de moto</li>
+        <li>Accesorios (casco, maletín, etc.)</li>
+        <li>RC contra terceros ampliada</li>
+        <li>Asistencia médica al conductor</li>
+        <li>Transporte del vehículo</li>
+      </ul>
+      <div class="ins-price">Desde <strong>$65.000 / mes</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Motos','poliza_extra')">Cotizar ahora →</button>
+    </div>
+
+    <div class="insurance-card">
+      <div class="ins-icon">📄🤝</div>
+      <span class="ins-type">Contractual</span>
+      <div class="ins-title">Póliza Contractual — Empresas</div>
+      <div class="ins-desc">Para flotas empresariales, transporte de carga y vehículos de servicio especial. Condiciones a medida según el contrato.</div>
+      <ul class="ins-features">
+        <li>Cobertura para flotas desde 2 vehículos</li>
+        <li>Responsabilidad civil contractual</li>
+        <li>Transporte de mercancías</li>
+        <li>Gastos de defensa jurídica</li>
+        <li>Gerencia de riesgos incluida</li>
+        <li>Facturación empresarial</li>
+      </ul>
+      <div class="ins-price"><strong>Cotización personalizada</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Contractual Empresas','contractual')">Cotizar ahora →</button>
+    </div>
+
+    <div class="insurance-card">
+      <div class="ins-icon">🚛📋</div>
+      <span class="ins-type">Contractual</span>
+      <div class="ins-title">Póliza Contractual — Transporte</div>
+      <div class="ins-desc">Diseñada para empresas de transporte público y especial. Cumple con las exigencias legales del MinTransporte.</div>
+      <ul class="ins-features">
+        <li>RC contractual y extracontractual</li>
+        <li>Pasajeros y conductor</li>
+        <li>SOAT complementario</li>
+        <li>Cumplimiento normativo MinTransporte</li>
+        <li>Asesoría jurídica incluida</li>
+      </ul>
+      <div class="ins-price"><strong>Cotización personalizada</strong></div>
+      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Contractual Transporte','contractual')">Cotizar ahora →</button>
+    </div>
+
+  </div>
+</div>
 
 <!-- MODAL DETALLE -->
 <div class="overlay" id="detailModal">
@@ -126,9 +246,60 @@
   </div>
 </div>
 
+<!-- MODAL SEGUROS -->
+<div class="overlay" id="insuranceModal">
+  <div class="modal" style="max-width:520px;padding:0;overflow:hidden;border-radius:var(--r-lg)">
+    <div class="ins-form-header">
+      <button class="modal-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)" onclick="closeInsuranceModal()">✕</button>
+      <h3 id="insModalTitle">🛡️ Cotizar seguro</h3>
+      <p id="insModalSubtitle">Completa el formulario y un asesor te contactará pronto</p>
+    </div>
+    <div class="modal-body" style="padding:22px 24px">
+      <input type="hidden" id="ins-type"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Nombre completo <span class="req">*</span></label>
+          <input id="ins-name" class="fc" placeholder="Tu nombre completo"/>
+        </div>
+        <div class="form-group">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">WhatsApp / Teléfono <span class="req">*</span></label>
+          <input id="ins-phone" class="fc" placeholder="3001234567"/>
+        </div>
+        <div class="form-group form-full">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Correo electrónico <span class="req">*</span></label>
+          <input id="ins-email" class="fc" type="email" placeholder="tu@correo.com"/>
+        </div>
+        <div class="form-group form-full">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Vehículo a asegurar</label>
+          <input id="ins-vehicle" class="fc" placeholder="Ej: Toyota Corolla 2022, placa ABC-123"/>
+        </div>
+        <div class="form-group form-full">
+          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Mensaje adicional</label>
+          <textarea id="ins-message" class="fc" rows="3" placeholder="Cuéntanos más sobre tu necesidad o pregunta específica..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeInsuranceModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitInsuranceLead()">🛡️ Solicitar cotización</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay hidden" id="lightbox" onclick="lightboxBgClick(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-img-wrap">
+    <img id="lightboxImg" src="" alt="Foto del vehículo"/>
+  </div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+  <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+  <button class="lightbox-arrow prev" onclick="lightboxMove(-1)">‹</button>
+  <button class="lightbox-arrow next" onclick="lightboxMove(1)">›</button>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/client.js"></script>

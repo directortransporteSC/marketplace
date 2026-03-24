@@ -60,7 +60,7 @@
       <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">Anuncios activos</div></div>
       <div class="stat-card"><div class="stat-label">Nuevos</div><div class="stat-value" id="statNew">0</div><div class="stat-sub">Condición nuevo</div></div>
       <div class="stat-card"><div class="stat-label">Usados</div><div class="stat-value" id="statUsed">0</div><div class="stat-sub">Condición usado</div></div>
-      <div class="stat-card"><div class="stat-label">Precio prom.</div><div class="stat-value" id="statAvg">—</div><div class="stat-sub">Promedio general</div></div>
+      <div class="stat-card"><div class="stat-label">Vendidos</div><div class="stat-value" id="statSold">0</div><div class="stat-sub">Marcados vendido</div></div>
       <div class="stat-card"><div class="stat-label">Con fotos</div><div class="stat-value" id="statPhotos">0</div><div class="stat-sub">Con imágenes</div></div>
       <div class="stat-card"><div class="stat-label">Hoy</div><div class="stat-value" id="statToday">0</div><div class="stat-sub">Últimas 24 h</div></div>
     </div>
@@ -79,7 +79,7 @@
       <div class="search-bar" style="margin-top:18px">
         <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca por marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
         <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
-        <select id="typeFilter"  class="search-field w140" onchange="applyFilters()">
+        <select id="typeFilter" class="search-field w140" onchange="applyFilters()">
           <option value="">Tipo</option>
           <option>Sedán</option><option>SUV</option><option>Camioneta</option>
           <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
@@ -89,47 +89,68 @@
     </div>
   </section>
 
-  <div class="filters-bar">
-    <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
-    <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
-    <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
-    <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
-    <select class="filter-select" onchange="setYear(this.value)">
-      <option value="">📅 Año</option>
-      <option value="2024">2024</option><option value="2023">2023</option>
-      <option value="2022">2022</option><option value="2021">2021</option>
-      <option value="2020">2020</option><option value="2015">2015 o anterior</option>
-    </select>
-    <select class="filter-select" onchange="setPrice(this.value)">
-      <option value="">💵 Precio</option>
-      <option value="0-30000000">Hasta $30M</option>
-      <option value="30000000-60000000">$30M – $60M</option>
-      <option value="60000000-100000000">$60M – $100M</option>
-      <option value="100000000-200000000">$100M – $200M</option>
-      <option value="200000000-9999999999">Más de $200M</option>
-    </select>
-    <div class="filters-right">
-      <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
-      <div class="view-toggle">
-        <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
-        <button class="view-btn"        onclick="setView('list',this)">≡</button>
-      </div>
-    </div>
+  <!-- TABS -->
+  <div class="main-tabs">
+    <button class="main-tab active" onclick="switchAdminTab('vehicles',this)">🚗 Vehículos</button>
+    <button class="main-tab" onclick="switchAdminTab('insurance_leads',this)">🛡️ Leads Seguros</button>
   </div>
 
-  <main class="main-content">
-    <div class="section-header">
-      <h2>Gestión de vehículos</h2>
-      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Nuevo anuncio</button>
+  <!-- TAB VEHÍCULOS -->
+  <div id="admin-tab-vehicles" class="tab-section active">
+    <div class="filters-bar">
+      <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
+      <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
+      <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
+      <button class="filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
+      <button class="filter-chip" id="chipSold" onclick="toggleSoldFilter(this)">🔴 Vendidos</button>
+      <select class="filter-select" onchange="setYear(this.value)">
+        <option value="">📅 Año</option>
+        <option value="2024">2024</option><option value="2023">2023</option>
+        <option value="2022">2022</option><option value="2021">2021</option>
+        <option value="2020">2020</option><option value="2015">2015 o anterior</option>
+      </select>
+      <select class="filter-select" onchange="setPrice(this.value)">
+        <option value="">💵 Precio</option>
+        <option value="0-30000000">Hasta $30M</option>
+        <option value="30000000-60000000">$30M – $60M</option>
+        <option value="60000000-100000000">$60M – $100M</option>
+        <option value="100000000-200000000">$100M – $200M</option>
+        <option value="200000000-9999999999">Más de $200M</option>
+      </select>
+      <div class="filters-right">
+        <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
+        <div class="view-toggle">
+          <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
+          <button class="view-btn" onclick="setView('list',this)">≡</button>
+        </div>
+      </div>
     </div>
-    <div id="vehicleContainer" class="vehicle-grid"></div>
-    <div id="emptyState" class="empty-state" style="display:none">
-      <div class="empty-icon">🚗</div>
-      <h3>No hay vehículos todavía</h3>
-      <p>¡Publica el primer anuncio!</p>
-      <button class="btn btn-primary btn-lg" onclick="openAddModal()">+ Publicar vehículo</button>
-    </div>
-  </main>
+
+    <main class="main-content">
+      <div class="section-header">
+        <h2>Gestión de vehículos</h2>
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Nuevo anuncio</button>
+      </div>
+      <div id="vehicleContainer" class="vehicle-grid"></div>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <div class="empty-icon">🚗</div>
+        <h3>No hay vehículos todavía</h3>
+        <p>¡Publica el primer anuncio!</p>
+        <button class="btn btn-primary btn-lg" onclick="openAddModal()">+ Publicar vehículo</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- TAB LEADS SEGUROS -->
+  <div id="admin-tab-insurance_leads" class="tab-section">
+    <main class="main-content">
+      <div class="section-header" style="margin-bottom:20px">
+        <h2>🛡️ Solicitudes de seguros</h2>
+        <button class="btn btn-outline btn-sm" onclick="loadInsuranceLeads()">↻ Actualizar</button>
+      </div>
+      <div id="insuranceLeadsContainer"></div>
+    </main>
+  </div>
 
   <button class="fab" onclick="openAddModal()">+</button>
 
@@ -184,15 +205,14 @@
           </div>
         </div>
 
+        <!-- MÚLTIPLES VENDEDORES -->
         <div class="form-section">
-          <div class="form-sec-title">👤 Datos del vendedor y contacto</div>
-          <div class="form-grid">
-            <div class="form-group"><label>Nombre del vendedor</label><input id="f-seller" class="fc" placeholder="Nombre o empresa"/></div>
-            <div class="form-group"><label>Ciudad del vendedor</label><input id="f-city" class="fc" placeholder="Bogotá, Medellín..."/></div>
-            <div class="form-group"><label>WhatsApp</label><input id="f-whatsapp" class="fc" placeholder="3001234567" maxlength="10"/></div>
-            <div class="form-group"><label>Teléfono adicional</label><input id="f-phone" class="fc" placeholder="3001234567"/></div>
-            <div class="form-group form-full"><label>Correo electrónico de contacto</label><input id="f-email" type="email" class="fc" placeholder="vendedor@correo.com"/></div>
+          <div class="form-sec-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>👥 Vendedores</span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="addSellerRow()">+ Agregar vendedor</button>
           </div>
+          <div id="sellersContainer" class="sellers-list"></div>
+          <p style="font-size:11px;color:var(--gray-400);margin-top:6px">Puedes agregar varios vendedores. El primero es el principal.</p>
         </div>
 
         <div class="form-section">
@@ -222,17 +242,6 @@
           <div id="videoPreview" style="margin-top:10px"></div>
         </div>
 
-        <div class="form-section">
-          <div class="form-sec-title">🎬 Video del vehículo (opcional)</div>
-          <div class="img-upload-zone" style="border-color:var(--gray-200)">
-            <div class="upload-icon">🎬</div>
-            <div class="upload-title">Haz clic para subir un video</div>
-            <div class="upload-sub">MP4, WebM, MOV — Máximo 100 MB · 1 video por vehículo</div>
-            <input id="f-video" type="file" accept="video/mp4,video/webm,video/quicktime,video/x-msvideo" onchange="handleVideo(event)"/>
-          </div>
-          <div id="videoPreview" style="margin-top:10px"></div>
-        </div>
-
       </div>
       <div class="modal-foot">
         <button class="btn btn-outline" onclick="closeAddModal()">Cancelar</button>
@@ -251,6 +260,18 @@
   </div>
 
 </div><!-- /adminPanel -->
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay hidden" id="lightbox" onclick="lightboxBgClick(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-img-wrap">
+    <img id="lightboxImg" src="" alt="Foto del vehículo"/>
+  </div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+  <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+  <button class="lightbox-arrow prev" onclick="lightboxMove(-1)">‹</button>
+  <button class="lightbox-arrow next" onclick="lightboxMove(1)">›</button>
+</div>
 
 <div class="toast" id="toast"></div>
 

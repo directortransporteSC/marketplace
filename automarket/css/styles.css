@@ -299,3 +299,462 @@ textarea.fc{resize:vertical;min-height:88px;line-height:1.6;}
   .contact-card{flex-direction:column;align-items:flex-start;}
   .search-bar .search-field.w160,.search-bar .search-field.w140{flex:1 1 140px;}
 }
+
+/* ══════════════════════════════════════════════
+   NUEVAS FUNCIONALIDADES v2
+   ══════════════════════════════════════════════ */
+
+/* ── CINTA VENDIDO ── */
+.sold-ribbon {
+  position: absolute;
+  top: 18px;
+  right: -28px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 36px;
+  transform: rotate(38deg);
+  transform-origin: center;
+  box-shadow: 0 2px 8px rgba(220,38,38,.45);
+  z-index: 5;
+  pointer-events: none;
+  width: 120px;
+  text-align: center;
+}
+.v-card.is-sold .v-card-img img,
+.v-card.is-sold .v-card-img video {
+  filter: grayscale(60%) brightness(.85);
+}
+.v-card.is-sold {
+  opacity: .88;
+}
+.sold-delete-notice {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* ── LIGHTBOX FOTOS ── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.93);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+}
+.lightbox-overlay.hidden { display: none; }
+.lightbox-img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 92vw;
+  max-height: 78vh;
+}
+.lightbox-img-wrap img {
+  max-width: 90vw;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  user-select: none;
+}
+.lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s;
+  z-index: 2010;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.25); }
+.lightbox-counter {
+  color: rgba(255,255,255,.65);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+.lightbox-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.1);
+  border: 1.5px solid rgba(255,255,255,.15);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s;
+  z-index: 2010;
+}
+.lightbox-arrow:hover { background: rgba(255,255,255,.22); }
+.lightbox-arrow.prev { left: 16px; }
+.lightbox-arrow.next { right: 16px; }
+.lightbox-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  max-width: 92vw;
+  padding: 4px 0 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.3) transparent;
+}
+.lightbox-thumb {
+  flex-shrink: 0;
+  width: 60px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+  opacity: .5;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: opacity .2s, border-color .2s;
+}
+.lightbox-thumb.active,
+.lightbox-thumb:hover {
+  opacity: 1;
+  border-color: #fff;
+}
+
+/* Clic en foto del carrusel para abrir lightbox */
+.gallery-slide img { cursor: zoom-in; }
+
+/* ── TABS SEGUROS ── */
+.main-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--white);
+  border-bottom: 2px solid var(--gray-100);
+  padding: 0 32px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.main-tab {
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-600);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+  white-space: nowrap;
+  margin-bottom: -2px;
+}
+.main-tab:hover { color: var(--blue); }
+.main-tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--accent);
+}
+
+/* Secciones de tab */
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* ── SEGUROS PAGE ── */
+.insurance-hero {
+  background: linear-gradient(135deg, var(--blue) 0%, #243b8a 100%);
+  padding: 48px 32px 40px;
+  text-align: center;
+  color: #fff;
+}
+.insurance-hero h2 {
+  font-family: var(--font-h);
+  font-size: clamp(22px, 3.5vw, 36px);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.insurance-hero p {
+  color: rgba(255,255,255,.75);
+  font-size: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.insurance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 32px 48px;
+}
+.insurance-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-100);
+  border-radius: var(--r-lg);
+  padding: 28px 24px 24px;
+  box-shadow: var(--sh-sm);
+  transition: box-shadow .25s, transform .25s, border-color .25s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.insurance-card:hover {
+  box-shadow: var(--sh-md);
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.insurance-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(160deg, #f0f6ff 0%, var(--white) 100%);
+}
+.insurance-card.featured::before {
+  content: '⭐ Más popular';
+  position: absolute;
+  top: 14px;
+  right: -24px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 32px;
+  transform: rotate(38deg);
+  letter-spacing: .5px;
+}
+.ins-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+.ins-type {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  background: var(--blue-soft);
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+}
+.ins-title {
+  font-family: var(--font-h);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--blue);
+}
+.ins-desc {
+  color: var(--gray-600);
+  font-size: 13.5px;
+  line-height: 1.6;
+  flex: 1;
+}
+.ins-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ins-features li {
+  font-size: 13px;
+  color: var(--gray-800);
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+.ins-features li::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ins-price {
+  font-family: var(--font-h);
+  font-size: 13px;
+  color: var(--gray-600);
+  margin-top: 4px;
+}
+.ins-price strong {
+  color: var(--blue);
+  font-size: 16px;
+}
+.btn-insurance {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  margin-top: 4px;
+}
+.btn-insurance:hover {
+  background: var(--blue-dark);
+  box-shadow: 0 4px 14px rgba(26,47,110,.3);
+}
+
+/* ── MODAL SEGUROS ── */
+#insuranceModal .modal { max-width: 520px; }
+.ins-form-header {
+  background: linear-gradient(135deg, var(--blue) 0%, #243b8a 100%);
+  padding: 22px 24px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  color: #fff;
+}
+.ins-form-header h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.ins-form-header p {
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* ── MULTIPLE SELLERS ── */
+.sellers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.seller-row {
+  background: var(--blue-pale);
+  border: 1px solid var(--blue-soft);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  position: relative;
+}
+.seller-row .rm-seller {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--tr);
+}
+.seller-row .rm-seller:hover { background: var(--danger); color: #fff; }
+.seller-row input {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r-sm);
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-family: var(--font-b);
+  outline: none;
+}
+.seller-row input:focus { border-color: var(--accent); }
+
+/* Contactos múltiples en detalle cliente */
+.multi-sellers-section {
+  margin-bottom: 16px;
+}
+.multi-sellers-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--blue);
+  margin-bottom: 10px;
+}
+.multi-seller-card {
+  background: var(--blue-pale);
+  border: 1px solid var(--blue-soft);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.multi-seller-avatar {
+  width: 34px;
+  height: 34px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.multi-seller-info { flex: 1; min-width: 0; }
+.multi-seller-name { font-weight: 700; font-size: 13px; color: var(--gray-800); }
+.multi-seller-contacts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.multi-seller-contacts a,
+.multi-seller-contacts button {
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* ── BOTÓN MARCAR VENDIDO (admin) ── */
+.btn-sold {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1.5px solid #fecaca;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: var(--tr);
+}
+.btn-sold:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+.btn-unsold {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1.5px solid #bbf7d0;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: var(--tr);
+}
+.btn-unsold:hover { background: #16a34a; color: #fff; border-color: #16a34a; }
+
+@media (max-width: 600px) {
+  .insurance-grid { grid-template-columns: 1fr; padding: 0 16px 32px; }
+  .main-tabs { padding: 0 12px; }
+  .main-tab { padding: 12px 14px; font-size: 13px; }
+  .lightbox-arrow { display: none; }
+  .seller-row { grid-template-columns: 1fr; }
+}
