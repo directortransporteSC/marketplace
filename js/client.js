@@ -407,7 +407,7 @@ async function submitInsuranceLead() {
     if (error) throw error;
 
     // También abrir mailto para el asesor
-    const ASESOR_EMAIL = 'adminusados@specialcar.com.co';
+    const ASESOR_EMAIL = 'directorcomercial@rodandoexpress.com.co';
     const subject = encodeURIComponent(`[Seguro] Solicitud: ${currentInsurancePlan} — ${name}`);
     const body = encodeURIComponent(
       `SOLICITUD DE SEGURO\n` +
@@ -545,7 +545,7 @@ async function submitPublishRequest() {
   if (!email || !email.includes('@')) { showToast('Ingresa un correo válido','error'); return; }
   if (!vehicle) { showToast('Ingresa el vehículo que deseas publicar','error'); return; }
 
-  const COMERCIAL_EMAIL = 'adminusados@specialcar.com.co';
+  const COMERCIAL_EMAIL = 'directorcomercial@rodandoexpress.com.co';
   const subject = encodeURIComponent(`[Publicar] Solicitud de publicación — ${vehicle}`);
   const body = encodeURIComponent(
     `SOLICITUD DE PUBLICACIÓN\n` +
