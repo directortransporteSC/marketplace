@@ -14,10 +14,12 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
    ─────────────────────────────────────────────── */
 
 // Cliente Supabase (se inicializa con la librería CDN)
-let sb; // se asigna en DOMContentLoaded de cada página
+let sb; // se asigna una sola vez al abrir el catálogo
 
 function initSupabase() {
-  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  if (!sb) {
+    sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  }
   return sb;
 }
 
@@ -77,12 +79,15 @@ function openGallery(urls, el) {
   el.innerHTML =
     _slideUrls.map((src,i) =>
       `<div class="gallery-slide ${i===0?'active':''}">
-        <img src="${src}" alt="Foto ${i+1}" loading="lazy"/>
+        <img src="${src}" alt="Foto ${i+1}" loading="lazy"
+             style="width:100%;height:100%;object-fit:contain;background:#0a0e28;display:block;cursor:zoom-in;"
+             onclick="if(typeof openLightbox==='function') openLightbox(_slideUrls, ${i});"
+             title="Clic para ver en pantalla completa"/>
        </div>`
     ).join('') +
     (_slideUrls.length > 1
-      ? `<button class="g-arrow prev" onclick="changeSlide(-1)">‹</button>
-         <button class="g-arrow next" onclick="changeSlide(1)">›</button>
+      ? `<button class="g-arrow prev" onclick="changeSlide(-1)">&#8249;</button>
+         <button class="g-arrow next" onclick="changeSlide(1)">&#8250;</button>
          <div class="g-dots">${_slideUrls.map((_,i)=>
            `<button class="g-dot ${i===0?'active':''}" onclick="goSlide(${i})"></button>`
          ).join('')}</div>` : '');
