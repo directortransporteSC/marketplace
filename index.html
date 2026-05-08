@@ -1,97 +1,900 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>SpecialUsadosMarket — Vehículos en venta</title>
-  <meta name="description" content="Compra y vende carros, motos y más en Colombia."/>
-  <link rel="icon" href="assets/specialcar.png"/>
-  <link rel="stylesheet" href="css/styles.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Special CAR Usados — Venta & Servicios Automotrices</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --blue:#2d3c8e; --blue-dark:#1a2460; --blue-light:#3d52bf;
+  --gold:#f0b429; --gold-dark:#d49a10;
+  --white:#ffffff; --off:#f4f6fb; --text:#1c1c2e; --mid:#5a6080; --border:#dde2f0;
+  --green:#25d366; --success:#16a34a; --success-bg:#dcfce7;
+  --danger:#dc2626; --danger-bg:#fee2e2;
+  --blue-soft:#eef1fb; --blue-pale:#f4f6fd;
+  --font-h:'Barlow Condensed',sans-serif;
+  --font-b:'Open Sans',sans-serif;
+  --r-sm:6px; --r:10px; --r-lg:14px; --r-xl:18px;
+  --sh-sm:0 1px 4px rgba(45,60,142,.08);
+  --sh-md:0 4px 20px rgba(45,60,142,.12);
+  --sh-lg:0 12px 48px rgba(45,60,142,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-b);color:var(--text);background:var(--white);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+button{font-family:var(--font-b);cursor:pointer;}
+input,select,textarea{font-family:var(--font-b);}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--blue-dark);color:#b8c4ee;font-size:12.5px;padding:7px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.topbar a{color:#b8c4ee;transition:.2s;} .topbar a:hover{color:var(--gold);}
+.topbar-social{display:flex;gap:14px;}
+.topbar-social a{font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;}
+
+/* ── HEADER ── */
+header{background:var(--white);box-shadow:var(--sh-sm);position:sticky;top:0;z-index:200;}
+.header-inner{max-width:1280px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:68px;}
+.logo-wrap{display:flex;align-items:center;gap:10px;}
+.logo-wrap img{height:48px;mix-blend-mode:multiply;border-radius:4px;}
+/* En el hero y footer el fondo es oscuro, usamos screen para eliminar el negro */
+.hero-logo-big img{width:260px;mix-blend-mode:screen;filter:drop-shadow(0 4px 24px rgba(0,0,0,.2));}
+.footer-brand-img{height:50px;mix-blend-mode:screen;margin-bottom:16px;display:block;}.logo-name{font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--blue);letter-spacing:1px;}
+.logo-name span{color:var(--gold);}
+nav ul{list-style:none;display:flex;align-items:center;gap:2px;}
+nav ul li a{font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text);padding:8px 11px;border-radius:var(--r-sm);transition:.2s;position:relative;}
+nav ul li a::after{content:'';position:absolute;bottom:4px;left:11px;right:11px;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .2s;}
+nav ul li a:hover::after,nav ul li a.active::after{transform:scaleX(1);}
+nav ul li a:hover,nav ul li a.active{color:var(--blue);}
+.btn-cta{background:var(--blue)!important;color:var(--white)!important;border-radius:var(--r-sm)!important;padding:8px 16px!important;}
+.btn-cta::after{display:none!important;} .btn-cta:hover{background:var(--blue-light)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--blue);transition:.3s;}
+
+/* ── PAGES ── */
+.page{display:none;} .page.active{display:block;}
+
+/* ── HERO ── */
+.hero{min-height:88vh;background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 55%,var(--blue-light) 100%);position:relative;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.hero-bg-pattern{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,.04) 0,transparent 60%),radial-gradient(circle at 80% 20%,rgba(240,180,41,.07) 0,transparent 50%);pointer-events:none;}
+.hero-diagonal{position:absolute;right:0;top:0;bottom:0;width:45%;background:rgba(255,255,255,.03);clip-path:polygon(20% 0,100% 0,100% 100%,0% 100%);}
+.hero-content{max-width:1280px;margin:0 auto;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:60px;position:relative;z-index:1;}
+.hero-text{animation:fadeUp .8s ease both;}
+.hero-tag{display:inline-block;background:var(--gold);color:var(--blue-dark);font-family:var(--font-h);font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.hero-text h1{font-family:var(--font-h);font-size:clamp(42px,6vw,76px);font-weight:900;color:var(--white);line-height:.95;margin-bottom:20px;}
+.hero-text h1 em{font-style:normal;color:var(--gold);}
+.hero-text p{color:#c5cce8;font-size:17px;line-height:1.7;max-width:480px;margin-bottom:36px;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-gold{background:var(--gold);color:var(--blue-dark);font-family:var(--font-h);font-weight:800;font-size:14px;letter-spacing:.8px;text-transform:uppercase;padding:13px 26px;border-radius:var(--r-sm);transition:.25s;display:inline-block;border:none;}
+.btn-gold:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,180,41,.35);}
+.btn-wh-outline{border:2px solid rgba(255,255,255,.4);color:var(--white);font-family:var(--font-h);font-weight:700;font-size:14px;letter-spacing:.8px;text-transform:uppercase;padding:11px 24px;border-radius:var(--r-sm);transition:.25s;display:inline-block;background:transparent;}
+.btn-wh-outline:hover{border-color:var(--white);background:rgba(255,255,255,.1);}
+.hero-visual{display:flex;justify-content:center;align-items:center;animation:fadeUp .8s .2s ease both;}
+.hero-logo-big{width:320px;height:320px;background:rgba(255,255,255,.05);border-radius:50%;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.25);overflow:hidden;}
+/* hero-logo-big img — estilos en la clase .hero-logo-big img arriba */
+.hero-stats{max-width:1280px;margin:0 auto;padding:0 40px 56px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative;z-index:1;}
+.stat-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:20px;text-align:center;backdrop-filter:blur(6px);}
+.stat-num{font-family:var(--font-h);font-size:36px;font-weight:900;color:var(--gold);line-height:1;}
+.stat-label{color:#c5cce8;font-size:12px;margin-top:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SECTIONS ── */
+.section{padding:72px 40px;}
+.section-inner{max-width:1280px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:50px;}
+.section-header .tag{display:inline-block;background:var(--blue);color:var(--white);font-family:var(--font-h);font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;}
+.section-header h2{font-family:var(--font-h);font-size:clamp(28px,4vw,46px);font-weight:900;color:var(--blue-dark);line-height:1.05;}
+.section-header h2 em{font-style:normal;color:var(--blue);}
+.section-header p{color:var(--mid);font-size:15px;max-width:540px;margin:12px auto 0;line-height:1.7;}
+.divider{width:48px;height:4px;background:var(--gold);border-radius:2px;margin:14px auto 0;}
+
+/* ── SERVICES ── */
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.srv-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 22px;text-align:center;transition:.3s;position:relative;overflow:hidden;}
+.srv-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--blue),var(--blue-light));opacity:0;transition:.3s;}
+.srv-card:hover::before{opacity:1;}
+.srv-card:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);}
+.srv-icon{width:56px;height:56px;background:var(--off);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;transition:.3s;position:relative;z-index:1;}
+.srv-card:hover .srv-icon{background:rgba(255,255,255,.15);}
+.srv-card h3{font-family:var(--font-h);font-size:17px;font-weight:800;color:var(--blue-dark);margin-bottom:8px;transition:.3s;position:relative;z-index:1;}
+.srv-card p{font-size:13px;color:var(--mid);line-height:1.6;transition:.3s;position:relative;z-index:1;}
+.srv-card:hover h3,.srv-card:hover p{color:var(--white);}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.about-visual{position:relative;}
+.about-img-wrap{border-radius:18px;overflow:hidden;box-shadow:var(--sh-lg);}
+.about-img-wrap img{width:100%;height:380px;object-fit:cover;display:block;}
+.about-badge{position:absolute;bottom:-22px;right:-22px;background:var(--gold);border-radius:12px;padding:22px;text-align:center;box-shadow:0 10px 30px rgba(240,180,41,.35);}
+.about-badge strong{font-family:var(--font-h);font-size:38px;font-weight:900;color:var(--blue-dark);display:block;line-height:1;}
+.about-badge span{font-size:11px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.5px;}
+.about-text .tag{display:inline-block;background:var(--blue);color:var(--white);font-family:var(--font-h);font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;}
+.about-text h2{font-family:var(--font-h);font-size:38px;font-weight:900;color:var(--blue-dark);line-height:1.05;margin-bottom:16px;}
+.about-text p{color:var(--mid);font-size:15px;line-height:1.75;margin-bottom:12px;}
+.values-list{list-style:none;margin:20px 0;display:flex;flex-direction:column;gap:10px;}
+.values-list li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);}
+.values-list li::before{content:'✓';width:24px;height:24px;background:var(--blue);color:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;}
+
+/* ── CATÁLOGO (Supabase real — estilo autobog.com.co/catalogo) ── */
+.cat-hero{background:var(--white);border-bottom:1px solid var(--border);padding:32px 40px 28px;position:relative;overflow:hidden;}
+.cat-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:700px;background:url('assets/Special_CAR_1.png') center/contain no-repeat;opacity:.05;pointer-events:none;}
+.cat-hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.cat-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap;}
+.cat-hero-title{font-family:var(--font-h);font-size:clamp(22px,3vw,32px);font-weight:900;color:var(--blue-dark);}
+.cat-hero-title em{font-style:normal;color:var(--gold);}
+.cat-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.cat-search-bar{display:flex;gap:10px;flex-wrap:wrap;}
+.cat-field{background:var(--white);border:1.5px solid var(--border);color:var(--text);padding:11px 16px;border-radius:var(--r);font-size:14px;outline:none;transition:.2s;box-shadow:var(--sh-sm);font-family:var(--font-b);}
+.cat-field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,60,142,.1);}
+.cat-field::placeholder{color:var(--mid);}
+.cat-field.grow{flex:1;min-width:220px;}
+.cat-field.w160{flex:0 0 160px;} .cat-field.w140{flex:0 0 140px;}
+.cat-stats{display:flex;gap:22px;margin-top:16px;flex-wrap:wrap;}
+.cat-stat{display:flex;align-items:center;gap:8px;color:var(--mid);font-size:13px;}
+.cat-stat strong{color:var(--blue);font-size:17px;font-weight:800;font-family:var(--font-h);}
+
+/* BARRA FILTROS sticky — exacta como autobog catalogo */
+.cat-filters{background:var(--white);border-bottom:2px solid var(--blue);padding:0 40px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;position:sticky;top:68px;z-index:100;box-shadow:0 2px 10px rgba(45,60,142,.07);}
+.filter-chip{background:transparent;border:none;color:var(--mid);padding:14px 15px;font-family:var(--font-h);font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;transition:.2s;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;}
+.filter-chip:hover{color:var(--blue);}
+.filter-chip.active{color:var(--blue);border-bottom-color:var(--gold);}
+.filter-select{background:var(--white);border:1.5px solid var(--border);color:var(--mid);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-family:var(--font-h);font-weight:600;outline:none;transition:.2s;margin:8px 0;}
+.filter-select:hover,.filter-select:focus{border-color:var(--blue);color:var(--blue);}
+.filters-right{display:flex;align-items:center;gap:10px;margin-left:auto;padding:8px 0;}
+.results-text{color:var(--mid);font-size:12px;white-space:nowrap;}
+.results-text strong{color:var(--blue);}
+.view-toggle{display:flex;background:var(--off);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;gap:2px;}
+.view-btn{background:transparent;border:none;color:var(--mid);padding:5px 9px;border-radius:5px;font-size:15px;cursor:pointer;transition:.2s;line-height:1;}
+.view-btn.active{background:var(--white);color:var(--blue);box-shadow:var(--sh-sm);}
+
+/* GRIDS DE VEHÍCULOS */
+.vehicle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.vehicle-list{display:flex;flex-direction:column;gap:14px;}
+
+/* CARDS (usando las clases del client.js del ZIP) */
+.v-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:.3s;cursor:pointer;box-shadow:var(--sh-sm);}
+.v-card:hover{border-color:var(--blue);box-shadow:var(--sh-lg);transform:translateY(-4px);}
+.v-card-img{position:relative;height:205px;background:var(--blue-pale);overflow:hidden;}
+.v-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.v-card:hover .v-card-img img{transform:scale(1.05);}
+.v-card-no-img{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--mid);font-size:50px;}
+.v-card-no-img span{font-size:12px;font-weight:500;}
+.v-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-h);}
+.badge-new{background:var(--success-bg);color:var(--success);}
+.badge-used{background:var(--blue-soft);color:var(--blue);}
+.v-fav-btn{position:absolute;top:10px;right:10px;background:var(--white);border:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;box-shadow:var(--sh-sm);transition:.2s;z-index:2;}
+.v-fav-btn:hover{transform:scale(1.15);}
+.v-fav-btn.on{color:#e11d48;}
+.v-photo-count{position:absolute;bottom:10px;right:10px;background:rgba(26,36,96,.72);color:var(--white);font-size:10px;padding:3px 8px;border-radius:6px;backdrop-filter:blur(4px);font-weight:600;}
+.v-body{padding:16px 18px 15px;}
+.v-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px;}
+.v-title{font-family:var(--font-h);font-weight:800;font-size:16px;color:var(--text);line-height:1.2;}
+.v-year{font-size:11px;color:var(--blue);font-weight:700;background:var(--blue-soft);padding:2px 8px;border-radius:6px;margin-left:6px;white-space:nowrap;font-family:var(--font-h);}
+.v-location{color:var(--mid);font-size:12px;margin-bottom:8px;}
+.v-price{font-family:var(--font-h);font-size:21px;font-weight:900;color:var(--blue);margin-bottom:10px;}
+.v-specs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.spec-tag{background:var(--off);border:1px solid var(--border);color:var(--mid);font-size:11px;font-weight:500;padding:3px 9px;border-radius:5px;}
+.v-footer{display:flex;gap:7px;border-top:1px solid var(--border);padding-top:11px;}
+.v-footer .btn{flex:1;font-size:11px;padding:7px 8px;}
+/* list view */
+.vehicle-list .v-card{display:grid;grid-template-columns:220px 1fr;border-radius:var(--r);}
+.vehicle-list .v-card-img{height:auto;min-height:150px;}
+.vehicle-list .v-body{display:flex;flex-direction:column;justify-content:space-between;}
+/* empty */
+.empty-state{text-align:center;padding:70px 24px;}
+.empty-state h3{font-family:var(--font-h);font-size:22px;margin-bottom:8px;color:var(--blue-dark);}
+.empty-state p{color:var(--mid);margin-bottom:20px;}
+
+/* INFO BANNER CATÁLOGO */
+.cat-info{background:var(--blue-pale);border-top:1px solid var(--blue-soft);padding:36px 40px;}
+.cat-info-inner{max-width:1280px;margin:0 auto;}
+.cat-info-title{font-family:var(--font-h);font-size:20px;font-weight:900;color:var(--blue-dark);text-align:center;margin-bottom:24px;}
+.cat-info-title::after{content:'';display:block;width:40px;height:3px;background:var(--gold);border-radius:2px;margin:10px auto 0;}
+.cat-info-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.cat-info-item{background:var(--white);border-radius:var(--r);padding:20px;display:flex;gap:12px;align-items:flex-start;border:1px solid var(--blue-soft);transition:.2s;}
+.cat-info-item:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+.cat-info-item span{font-size:26px;flex-shrink:0;}
+.cat-info-item strong{display:block;font-family:var(--font-h);font-size:13px;font-weight:800;color:var(--blue-dark);margin-bottom:3px;}
+.cat-info-item em{font-style:normal;font-size:12px;color:var(--mid);line-height:1.5;}
+
+/* BUTTONS (sistema completo para client.js) */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:700;transition:.2s;white-space:nowrap;cursor:pointer;border:1.5px solid transparent;font-family:var(--font-h);letter-spacing:.3px;}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--blue);color:var(--white);border-color:var(--blue);}
+.btn-primary:hover{background:var(--blue-light);box-shadow:0 4px 14px rgba(45,60,142,.3);}
+.btn-outline{background:transparent;color:var(--mid);border-color:var(--border);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft);}
+.btn-whatsapp{background:var(--green);color:var(--white);border-color:var(--green);}
+.btn-whatsapp:hover{background:#1ebe5d;box-shadow:0 4px 12px rgba(37,211,102,.35);}
+.btn-email{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-soft);}
+.btn-email:hover{background:var(--blue-pale);border-color:var(--blue);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-lg{padding:12px 26px;font-size:14px;}
+.btn-ghost{background:rgba(255,255,255,.12);color:var(--white);border-color:rgba(255,255,255,.2);}
+.btn-ghost:hover{background:rgba(255,255,255,.22);}
+.btn-white{background:var(--white);color:var(--blue);border-color:var(--white);}
+.btn-white:hover{background:var(--blue-pale);}
+
+/* MODAL OVERLAY (detalle vehículo y correo — del client.js) */
+.overlay{display:none;position:fixed;inset:0;background:rgba(17,28,77,.6);z-index:500;overflow-y:auto;padding:24px 16px;backdrop-filter:blur(3px);}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal{background:var(--white);border-radius:var(--r-xl);width:100%;max-width:680px;margin:auto;box-shadow:var(--sh-lg);overflow:hidden;animation:modalIn .25s ease;}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.modal-hdr{background:linear-gradient(135deg,var(--blue-dark),var(--blue));padding:20px 24px;display:flex;align-items:center;justify-content:space-between;}
+.modal-hdr h2{font-family:var(--font-h);font-weight:800;font-size:18px;color:var(--white);}
+.modal-close{background:rgba(255,255,255,.15);border:none;color:var(--white);width:34px;height:34px;border-radius:var(--r-sm);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body{padding:22px 26px;}
+.modal-foot{display:flex;gap:10px;padding:0 26px 26px;}
+.modal-foot .btn{flex:1;padding:12px;font-size:14px;}
+/* MODAL DETALLE */
+.detail-modal{max-width:740px;}
+.detail-gallery{position:relative;height:310px;background:var(--blue-pale);overflow:hidden;}
+.gallery-slide{display:none;width:100%;height:100%;}
+.gallery-slide.active{display:block;}
+.gallery-slide img{width:100%;height:100%;object-fit:cover;}
+.gallery-no-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:80px;opacity:.15;}
+.g-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.92);border:none;width:40px;height:40px;border-radius:var(--r-sm);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;box-shadow:var(--sh-sm);color:var(--blue);}
+.g-arrow:hover{background:var(--white);box-shadow:var(--sh-md);}
+.g-arrow.prev{left:12px;} .g-arrow.next{right:12px;}
+.g-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
+.g-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;transition:.2s;padding:0;}
+.g-dot.active{background:var(--white);width:22px;border-radius:4px;}
+.detail-body{padding:22px 26px;overflow-y:auto;max-height:calc(90vh - 310px);}
+.detail-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;gap:12px;}
+.detail-title{font-family:var(--font-h);font-weight:900;font-size:22px;color:var(--blue-dark);}
+.detail-sub{color:var(--mid);font-size:12px;margin-bottom:14px;}
+.detail-price{font-family:var(--font-h);font-size:30px;font-weight:900;color:var(--blue);margin-bottom:16px;}
+.detail-specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:16px;}
+.d-spec{background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:10px;text-align:center;}
+.d-spec .sl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:3px;font-family:var(--font-h);}
+.d-spec .sv{font-size:13px;font-weight:700;color:var(--blue-dark);}
+.detail-desc{background:var(--off);border-radius:var(--r-sm);padding:12px 15px;font-size:13px;color:var(--mid);line-height:1.75;margin-bottom:16px;border-left:3px solid var(--blue);}
+.seller-card{display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r);margin-bottom:12px;}
+.seller-avatar{width:42px;height:42px;border-radius:50%;background:var(--blue);color:var(--white);font-family:var(--font-h);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.seller-name{font-family:var(--font-h);font-weight:700;font-size:15px;color:var(--blue-dark);}
+.seller-loc{color:var(--mid);font-size:12px;margin-top:2px;}
+.contact-card{background:var(--blue);border-radius:var(--r);padding:14px 18px;margin-bottom:12px;}
+.contact-methods{display:flex;flex-direction:column;gap:8px;}
+.contact-methods .btn{justify-content:flex-start;width:100%;}
+.detail-actions{display:flex;gap:10px;padding-top:13px;border-top:1px solid var(--border);}
+/* FORM */
+.fc{background:var(--off);border:1.5px solid var(--border);color:var(--text);padding:10px 14px;border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;outline:none;transition:.2s;width:100%;}
+.fc:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px rgba(45,60,142,.08);}
+.fc::placeholder{color:var(--mid);}
+textarea.fc{resize:vertical;min-height:80px;line-height:1.6;}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.form-group label{font-size:11px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.4px;}
+
+/* TOAST (del supabase.js del ZIP) */
+.toast{position:fixed;bottom:28px;right:28px;padding:13px 20px;border-radius:var(--r);font-weight:700;font-size:13px;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--sh-lg);max-width:320px;font-family:var(--font-h);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-success{background:var(--blue-dark);color:var(--white);}
+.toast-error{background:var(--danger);color:var(--white);}
+
+/* BOTONES FLOTANTES CATÁLOGO */
+.float-group{position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;gap:10px;z-index:400;}
+.float-wrap{position:relative;display:flex;align-items:center;justify-content:flex-end;}
+.float-btn{width:52px;height:52px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:.2s;box-shadow:var(--sh-lg);}
+.float-btn:hover{transform:scale(1.1);}
+.float-wsp{background:var(--green);color:var(--white);}
+.float-ins{background:var(--blue);color:var(--white);}
+.float-pub{background:var(--gold);color:var(--blue-dark);}
+.float-tooltip{display:none;position:absolute;right:62px;background:var(--blue-dark);color:var(--white);font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:var(--font-h);}
+.float-wrap:hover .float-tooltip{display:block;}
+
+/* ── CRÉDITO HERO — sin imágenes externas, gradiente animado ── */
+.credit-hero-wrap{position:relative;border-radius:20px;overflow:hidden;margin-bottom:50px;}
+.credit-animated-bg{
+  position:relative;
+  min-height:480px;
+  background:linear-gradient(135deg,#0d1a4a 0%,#1a2460 30%,#2d3c8e 60%,#1a3a6e 100%);
+  background-size:300% 300%;
+  animation:creditBgAnim 8s ease infinite;
+  border-radius:20px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+@keyframes creditBgAnim{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+/* Partículas decorativas */
+.credit-animated-bg::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(240,180,41,.12) 0, transparent 35%),
+    radial-gradient(circle at 85% 70%, rgba(61,82,191,.3) 0, transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(240,180,41,.07) 0, transparent 30%);
+  pointer-events:none;
+}
+/* Silueta auto decorativa derecha */
+.credit-animated-bg::after{
+  content:'🚗';
+  position:absolute;right:5%;top:50%;
+  transform:translateY(-50%);
+  font-size:200px;
+  opacity:.06;
+  pointer-events:none;
+  filter:grayscale(1);
+}
+.credit-carousel-text{padding:56px 64px;max-width:720px;position:relative;z-index:3;width:100%;}
+/* Indicadores de slide del carrusel (ahora son tabs de contenido) */
+.credit-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.credit-tab{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-family:var(--font-h);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 14px;border-radius:20px;cursor:pointer;transition:.2s;}
+.credit-tab.active,.credit-tab:hover{background:var(--gold);border-color:var(--gold);color:var(--blue-dark);}
+/* Fondo grid decorativo */
+.credit-grid-deco{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;
+}
+/* Línea de luz animada */
+.credit-light-sweep{
+  position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);
+  animation:sweep 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes sweep{0%{left:-100%;}100%{left:200%;}}
+
+/* ITEMS CRÉDITO */
+.credit-items{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:28px;}
+.credit-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(4px);}
+.credit-item-icon{font-size:24px;flex-shrink:0;}
+.credit-item strong{display:block;color:var(--white);font-family:var(--font-h);font-size:15px;font-weight:800;}
+.credit-item span{color:rgba(255,255,255,.7);font-size:12px;line-height:1.4;}
+
+/* CONTADORES ANIMADOS */
+.credit-counters{display:flex;gap:28px;margin-bottom:32px;flex-wrap:wrap;}
+.credit-counter{text-align:center;}
+.credit-counter-num{font-family:var(--font-h);font-size:42px;font-weight:900;color:var(--gold);line-height:1;display:block;}
+.credit-counter-label{font-size:12px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.5px;}
+
+/* CATEGORÍAS QUÉ FINANCIAMOS */
+.finance-cats{margin-bottom:50px;}
+.finance-cats-title{font-family:var(--font-h);font-size:26px;font-weight:900;color:var(--blue-dark);margin-bottom:6px;text-align:center;}
+.finance-cats-sub{color:var(--mid);font-size:14px;text-align:center;margin-bottom:28px;}
+.finance-cats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.finance-cat{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:24px 16px;text-align:center;transition:.3s;cursor:default;}
+.finance-cat:hover{border-color:var(--blue);box-shadow:var(--sh-md);transform:translateY(-3px);}
+.finance-cat-icon{font-size:36px;margin-bottom:10px;}
+.finance-cat-name{font-family:var(--font-h);font-size:15px;font-weight:800;color:var(--blue-dark);margin-bottom:4px;}
+.finance-cat-range{font-size:12px;color:var(--blue);font-weight:700;background:var(--blue-soft);padding:3px 10px;border-radius:20px;display:inline-block;}
+
+/* ALIADOS FINANCIEROS */
+.allies-section{background:var(--off);border-radius:18px;padding:40px;margin-bottom:50px;}
+.allies-title{font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--blue-dark);text-align:center;margin-bottom:6px;}
+.allies-sub{color:var(--mid);font-size:13px;text-align:center;margin-bottom:28px;}
+.allies-img-wrap{border-radius:12px;overflow:hidden;box-shadow:var(--sh-md);max-width:900px;margin:0 auto;}
+.allies-img-wrap img{width:100%;display:block;}
+
+/* PASOS PROCESO */
+.credit-process{margin-bottom:50px;}
+.process-title{font-family:var(--font-h);font-size:26px;font-weight:900;color:var(--blue-dark);text-align:center;margin-bottom:28px;}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
+.process-steps::before{content:'';position:absolute;top:28px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold));z-index:0;}
+.process-step{text-align:center;position:relative;z-index:1;padding:0 8px;}
+.process-num{width:56px;height:56px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--white);margin:0 auto 14px;border:3px solid var(--white);box-shadow:var(--sh-md);transition:.2s;}
+.process-step:hover .process-num{background:var(--gold);color:var(--blue-dark);}
+.process-step h4{font-family:var(--font-h);font-size:16px;font-weight:800;color:var(--blue-dark);margin-bottom:5px;}
+.process-step p{font-size:12px;color:var(--mid);line-height:1.5;}
+
+/* SIMULADOR */
+.simulator{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:36px;max-width:580px;margin:0 auto;}
+.simulator h3{font-family:var(--font-h);font-size:26px;font-weight:800;color:var(--blue-dark);margin-bottom:22px;text-align:center;}
+.sim-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.sim-result{background:linear-gradient(135deg,var(--blue-dark),var(--blue));border-radius:var(--r);padding:22px;margin-top:18px;text-align:center;display:none;}
+.sim-result strong{font-family:var(--font-h);font-size:38px;font-weight:900;color:var(--gold);display:block;}
+.sim-result em{font-style:normal;font-size:13px;color:rgba(255,255,255,.7);}
+.btn-sim{width:100%;background:linear-gradient(135deg,var(--blue),var(--gold));color:var(--white);border:none;font-family:var(--font-h);font-weight:800;font-size:15px;letter-spacing:.8px;text-transform:uppercase;padding:14px;border-radius:var(--r-sm);cursor:pointer;margin-top:6px;transition:.2s;}
+.btn-sim:hover{opacity:.9;transform:translateY(-1px);}
+
+/* ── VEHÍCULOS VENDIDOS ── */
+.sold-section-title{font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--mid);margin:48px 0 18px;display:flex;align-items:center;gap:12px;grid-column:1/-1;}
+.sold-section-title::before,.sold-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.sold-section-logo{height:36px;filter:grayscale(100%) opacity(.5);}
+.v-card.sold{opacity:.72;filter:grayscale(20%);}
+.v-card.sold .v-card-img::after{content:'VENDIDO';position:absolute;inset:0;background:rgba(26,36,96,.55);display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:28px;font-weight:900;color:var(--white);letter-spacing:3px;}
+.sold-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--danger);color:var(--white);font-family:var(--font-h);font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:var(--r-sm);white-space:nowrap;z-index:5;box-shadow:var(--sh-md);}
+
+/* ── MODAL FOTOS COMPLETO (lightbox) ── */
+.lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;flex-direction:column;align-items:center;justify-content:center;}
+.lightbox-overlay.open{display:flex;}
+.lightbox-img-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;padding:60px 80px 12px;position:relative;}
+.lightbox-img-wrap img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:4px;user-select:none;}
+.lightbox-close{position:fixed;top:18px;right:22px;background:rgba(255,255,255,.15);border:none;color:var(--white);width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:10;}
+.lightbox-close:hover{background:rgba(255,255,255,.3);}
+.lightbox-prev,.lightbox-next{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:var(--white);width:52px;height:52px;border-radius:50%;font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:10;}
+.lightbox-prev:hover,.lightbox-next:hover{background:rgba(255,255,255,.25);}
+.lightbox-prev{left:18px;} .lightbox-next{right:18px;}
+.lightbox-counter{position:fixed;top:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-family:var(--font-h);font-size:14px;font-weight:700;letter-spacing:1px;}
+.lightbox-thumbs{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;max-width:100%;justify-content:center;}
+.lightbox-thumb{width:60px;height:44px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid rgba(255,255,255,.2);flex-shrink:0;transition:.2s;}
+.lightbox-thumb.active,.lightbox-thumb:hover{border-color:var(--gold);}
+
+/* Galería en el modal de detalle — fotos completas sin recorte */
+.detail-gallery{position:relative;height:360px;background:#0a0e28;overflow:hidden;}
+.gallery-slide img{width:100%;height:100%;object-fit:contain;background:#0a0e28;}
+
+/* ── SEDES ── */
+.sedes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+@media(max-width:1024px){.sedes-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.sedes-grid{grid-template-columns:1fr;}}
+.sede-card{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);transition:.3s;}
+.sede-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px);}
+.sede-header{background:linear-gradient(135deg,var(--blue-dark),var(--blue));padding:28px;color:var(--white);}
+.sede-num{font-family:var(--font-h);font-size:52px;font-weight:900;color:rgba(255,255,255,.13);line-height:1;float:right;}
+.sede-header h3{font-family:var(--font-h);font-size:22px;font-weight:900;margin-bottom:4px;}
+.sede-header p{font-size:13px;color:#c5cce8;}
+.sede-body{padding:26px;background:var(--white);}
+.sede-item{display:flex;gap:12px;margin-bottom:16px;align-items:flex-start;}
+.sede-item-icon{width:34px;height:34px;background:var(--off);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sede-item-text strong{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.sede-item-text span{font-size:12px;color:var(--mid);}
+.sede-map{width:100%;height:180px;border-radius:8px;overflow:hidden;margin-top:4px;background:var(--off);display:flex;align-items:center;justify-content:center;color:var(--mid);font-size:13px;border:1px dashed var(--border);}
+.sede-map-embed{margin-top:14px;border-radius:8px;overflow:hidden;box-shadow:var(--sh-sm);}
+
+/* ── CARRUSELES ── */
+.carousel-wrap{position:relative;overflow:hidden;border-radius:var(--r-lg);background:var(--off);height:220px;}
+.carousel-track{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+.carousel-slide{min-width:100%;height:100%;flex-shrink:0;}
+.carousel-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.car-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);border:none;width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--sh-md);color:var(--blue);transition:.2s;z-index:10;padding:0;}
+.car-arrow:hover{background:var(--white);transform:translateY(-50%) scale(1.1);}
+.car-prev{left:10px;} .car-next{right:10px;}
+.car-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+.car-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:.2s;}
+.car-dot.active{background:var(--white);width:22px;border-radius:4px;}
+/* About carousel específico */
+.about-visual .carousel-wrap{height:380px;border-radius:18px;}
+
+/* ── TESTIMONIALS ── */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.test-card{background:var(--white);border-radius:var(--r-lg);padding:26px;box-shadow:var(--sh-sm);border:1px solid var(--border);}
+.test-stars{color:var(--gold);font-size:17px;margin-bottom:12px;}
+.test-text{font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:18px;font-style:italic;}
+.test-author{display:flex;align-items:center;gap:10px;}
+.test-avatar{width:42px;height:42px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--white);font-family:var(--font-h);font-weight:900;font-size:16px;}
+.test-name{font-weight:700;font-size:13px;color:var(--text);}
+.test-role{font-size:11px;color:var(--mid);}
+
+/* ── SERVICIOS ── */
+.workshop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.work-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;transition:.3s;}
+.work-card:hover{box-shadow:var(--sh-md);transform:translateY(-3px);}
+.work-card .icon{font-size:34px;margin-bottom:12px;}
+.work-card h3{font-family:var(--font-h);font-size:19px;font-weight:800;color:var(--blue-dark);margin-bottom:7px;}
+.work-card p{font-size:13px;color:var(--mid);line-height:1.6;}
+.work-card .price{font-family:var(--font-h);font-size:20px;font-weight:900;color:var(--blue);margin-top:12px;}
+.seguros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.seg-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 24px;transition:.3s;text-align:center;}
+.seg-card:hover{box-shadow:var(--sh-md);transform:translateY(-3px);border-color:var(--blue);}
+.seg-icon{font-size:44px;margin-bottom:14px;}
+.seg-card h3{font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--blue-dark);margin-bottom:8px;}
+.seg-card p{font-size:13px;color:var(--mid);line-height:1.6;margin-bottom:16px;}
+.seg-tag{display:inline-block;background:var(--off);color:var(--blue);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:5px;margin-right:3px;}
+.transport-banner{background:linear-gradient(135deg,var(--blue-dark),var(--blue));border-radius:18px;padding:56px;color:var(--white);display:grid;grid-template-columns:1fr auto;align-items:center;gap:40px;margin-bottom:44px;}
+.transport-banner h2{font-family:var(--font-h);font-size:42px;font-weight:900;margin-bottom:10px;}
+.transport-banner p{font-size:15px;color:#c5cce8;max-width:480px;line-height:1.7;}
+.transport-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.trans-card{background:var(--off);border-radius:var(--r);padding:22px;text-align:center;}
+.trans-card .icon{font-size:36px;margin-bottom:10px;}
+.trans-card h3{font-family:var(--font-h);font-size:16px;font-weight:800;color:var(--blue-dark);margin-bottom:5px;}
+.trans-card p{font-size:12px;color:var(--mid);line-height:1.5;}
+
+/* ── VENDER ── */
+.sell-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+.sell-steps{display:flex;flex-direction:column;gap:22px;}
+.step{display:flex;gap:18px;align-items:flex-start;}
+.step-num{width:44px;height:44px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:19px;font-weight:900;color:var(--white);flex-shrink:0;}
+.step-text h3{font-family:var(--font-h);font-size:19px;font-weight:800;color:var(--blue-dark);margin-bottom:5px;}
+.step-text p{font-size:13px;color:var(--mid);line-height:1.6;}
+.sell-form{background:var(--off);border-radius:var(--r-lg);padding:32px;}
+.sell-form h3{font-family:var(--font-h);font-size:24px;font-weight:800;color:var(--blue-dark);margin-bottom:22px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group-b{margin-bottom:16px;}
+.form-group-b label{display:block;font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.form-group-b input,.form-group-b select,.form-group-b textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;color:var(--text);outline:none;transition:.2s;}
+.form-group-b input:focus,.form-group-b select:focus,.form-group-b textarea:focus{border-color:var(--blue);}
+.form-group-b textarea{resize:vertical;min-height:90px;}
+.btn-send{background:var(--blue);color:var(--white);border:none;font-family:var(--font-h);font-weight:800;font-size:15px;letter-spacing:.8px;text-transform:uppercase;padding:13px 28px;border-radius:var(--r-sm);cursor:pointer;transition:.2s;margin-top:6px;}
+.btn-send:hover{background:var(--blue-light);}
+
+/* ── CONTACTO ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.contact-info{display:flex;flex-direction:column;gap:22px;}
+.contact-item{display:flex;gap:14px;align-items:flex-start;}
+.contact-icon{width:48px;height:48px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.contact-item h4{font-family:var(--font-h);font-size:17px;font-weight:800;color:var(--blue-dark);margin-bottom:3px;}
+.contact-item p,.contact-item a{font-size:13px;color:var(--mid);line-height:1.6;}
+.contact-item a:hover{color:var(--blue);}
+.contact-form-wrap{background:var(--off);border-radius:var(--r-lg);padding:32px;}
+.contact-form-wrap h3{font-family:var(--font-h);font-size:24px;font-weight:800;color:var(--blue-dark);margin-bottom:22px;}
+
+/* MODAL PUBLICAR (inline, sin client.js) */
+.pub-overlay{display:none;position:fixed;inset:0;background:rgba(17,28,77,.6);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);}
+.pub-overlay.open{display:flex;}
+.pub-modal{background:var(--white);border-radius:var(--r-xl);max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-lg);animation:modalIn .25s ease;}
+.pub-hdr{background:linear-gradient(135deg,var(--blue-dark),var(--blue));padding:22px 26px;border-radius:var(--r-xl) var(--r-xl) 0 0;color:var(--white);position:relative;}
+.pub-hdr h3{font-family:var(--font-h);font-size:20px;font-weight:900;}
+.pub-hdr p{font-size:12px;opacity:.8;margin-top:3px;}
+.pub-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border:none;color:var(--white);width:30px;height:30px;border-radius:var(--r-sm);cursor:pointer;font-size:16px;}
+.pub-body{padding:22px 26px;}
+.pub-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.pub-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);display:block;margin-bottom:4px;}
+.pub-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:14px;color:var(--text);outline:none;transition:.2s;margin-bottom:12px;}
+.pub-input:focus{border-color:var(--blue);}
+.pub-foot{padding:0 26px 24px;display:flex;gap:10px;justify-content:flex-end;}
+.btn-pub{background:var(--blue);color:var(--white);border:none;font-family:var(--font-h);font-weight:800;font-size:14px;letter-spacing:.4px;text-transform:uppercase;padding:11px 24px;border-radius:var(--r-sm);cursor:pointer;transition:.2s;}
+.btn-pub:hover{background:var(--blue-light);}
+.btn-cancel{background:var(--off);color:var(--text);border:1px solid var(--border);font-family:var(--font-h);font-weight:700;font-size:14px;padding:11px 20px;border-radius:var(--r-sm);cursor:pointer;}
+
+/* ── FOOTER ── */
+footer{background:var(--blue-dark);color:#b8c4ee;padding:56px 40px 28px;}
+.footer-inner{max-width:1280px;margin:0 auto;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);}
+.footer-brand p{font-size:13px;color:#8898cc;line-height:1.75;max-width:240px;margin-bottom:18px;}
+.footer-social{display:flex;gap:8px;flex-wrap:wrap;}
+.footer-social a{background:rgba(255,255,255,.07);color:#b8c4ee;font-size:11px;font-weight:700;padding:6px 12px;border-radius:6px;transition:.2s;text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-h);}
+.footer-social a:hover{background:var(--gold);color:var(--blue-dark);}
+.footer-col h5{font-family:var(--font-h);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--white);margin-bottom:16px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-col ul li a{font-size:13px;color:#8898cc;transition:.2s;}
+.footer-col ul li a:hover{color:var(--gold);}
+.footer-col p{font-size:13px;color:#8898cc;line-height:1.7;margin-bottom:8px;}
+.footer-col a{color:#8898cc;} .footer-col a:hover{color:var(--gold);}
+.footer-bottom{max-width:1280px;margin:22px auto 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#45507a;flex-wrap:wrap;gap:8px;}
+
+/* SPINNER global */
+.sc-spinner-box{background:var(--blue-dark);border-radius:var(--r-lg);padding:30px 38px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:13px;}
+.sc-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.25);border-top-color:var(--gold);border-radius:50%;animation:sc-spin .7s linear infinite;}
+@keyframes sc-spin{to{transform:rotate(360deg)}}
+.sc-spinner-box p{color:rgba(255,255,255,.75);font-size:13px;font-weight:600;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .services-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .hero-content{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
+  .transport-grid{grid-template-columns:repeat(2,1fr);}
+  .cat-info-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:768px){
+  .topbar{padding:6px 16px;font-size:11.5px;}
+  .header-inner{padding:0 16px;}
+  nav ul{display:none;flex-direction:column;position:absolute;top:68px;left:0;right:0;background:var(--white);box-shadow:var(--sh-lg);padding:8px 0;gap:0;z-index:300;}
+  nav ul.open{display:flex;}
+  nav ul li a{padding:12px 20px;border-radius:0;font-size:13px;}
+  nav ul li a::after{display:none;}
+  .hamburger{display:flex;}
+  .section{padding:48px 16px;}
+  .about-grid,.sell-grid,.contact-grid,.sedes-grid{grid-template-columns:1fr;}
+  .credit-features,.seguros-grid,.workshop-grid{grid-template-columns:1fr;}
+  .test-grid{grid-template-columns:1fr;}
+  .services-grid{grid-template-columns:1fr 1fr;}
+  .transport-banner{grid-template-columns:1fr;}
+  footer{padding:36px 16px 20px;}
+  .footer-grid{grid-template-columns:1fr;}
+  .hero-content{padding:60px 16px;}
+  .hero-stats{padding:0 16px 36px;grid-template-columns:repeat(2,1fr);}
+  .transport-grid{grid-template-columns:1fr 1fr;}
+  .form-row,.sim-form-row,.pub-2col{grid-template-columns:1fr;}
+  .cat-filters{padding:0 16px;overflow-x:auto;flex-wrap:nowrap;}
+  .filters-right{margin-left:0;}
+  .cat-hero{padding:22px 16px 18px;}
+  .cat-info{padding:28px 16px;}
+  .cat-info-grid{grid-template-columns:1fr;}
+  .vehicle-list .v-card{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .vehicle-grid{grid-template-columns:1fr;}
+  .detail-specs{grid-template-columns:repeat(2,1fr);}
+}
+</style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="nav-logo">
-    <span class="logo-icon"><img src="assets/specialcar.png" alt="" style="width:24px;height:24px;object-fit:contain"/></span>
-    SpecialUsados<em>Market</em>
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="tel:+573155004485">📞 +57 315 500 4485</a>
+  <div class="topbar-social">
+    <a href="https://allmylinks.com/specialcar" target="_blank" title="Facebook" style="display:flex;align-items:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.887v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+    </a>
+    <a href="https://allmylinks.com/specialcar" target="_blank" title="Instagram" style="display:flex;align-items:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://allmylinks.com/specialcar" target="_blank" title="TikTok" style="display:flex;align-items:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+    </a>
+    <a href="https://allmylinks.com/specialcar" target="_blank" title="YouTube" style="display:flex;align-items:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
   </div>
-  <div class="nav-right">
-    <span class="nav-role-badge">👤 Tienda</span>
-    <button class="btn btn-ghost btn-sm" id="favBtn" onclick="toggleFavFilter()">♡ Favoritos</button>
-    <button class="btn btn-ghost btn-sm" onclick="openPublishModal()">📢 Publica con nosotros</button>
-    <a href="admin.html"><button class="btn btn-white btn-sm">🔐 Admin</button></a>
-  </div>
-</nav>
+</div>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-logo"><img src="assets/Special_CAR_1.png" alt="Special CAR"/></div>
-    <h1>Encuentra tu próximo<br><em>vehículo ideal</em></h1>
-    <p class="hero-sub">Carros particulares, públicos y más con contacto directo al vendedor.</p>
-    <div class="search-bar">
-      <input id="searchInput" class="search-field grow" type="text" placeholder="🔍  Busca marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
-      <select id="brandFilter" class="search-field w160" onchange="applyFilters()"><option value="">Todas las marcas</option></select>
-      <select id="typeFilter" class="search-field w140" onchange="applyFilters()">
-        <option value="">Tipo</option>
-        <option>Sedán</option><option>SUV</option><option>Camioneta</option>
-        <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
-        <option>Camión</option><option>Van</option>
-      </select>
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="assets/logo.png" alt="Special CAR Usados" onerror="this.style.display='none'" style="height:48px;mix-blend-mode:multiply;"/>
+      <div class="logo-name">Special <span>CAR</span> <span style="font-size:14px;font-weight:700;color:var(--mid);letter-spacing:1px;">USADOS</span></div>
+    </div>
+    <nav>
+      <ul id="navMenu">
+        <li><a href="#" class="active" onclick="showPage('inicio',this)">Inicio</a></li>
+        <li><a href="#" onclick="showPage('quienes',this)">Quiénes somos</a></li>
+        <li><a href="#" onclick="showPage('sedes',this)">Sedes</a></li>
+        <li><a href="#" onclick="showPage('catalogo',this)">Catálogo</a></li>
+        <li><a href="#" onclick="showPage('credito',this)">Crédito rápido</a></li>
+        <li><a href="#" onclick="showPage('servicios',this)">Servicios</a></li>
+        <li><a href="#" onclick="showPage('vender',this)">Quiero vender</a></li>
+        <li><a href="admin.html">Admin 🔐</a></li>
+        <li><a href="#" onclick="showPage('contacto',this)" class="btn-cta">Contáctanos</a></li>
+      </ul>
+    </nav>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- ══════ PAGE: INICIO ══════ -->
+<div class="page active" id="page-inicio">
+  <section class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-diagonal"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <span class="hero-tag">🚗 Bogotá, Colombia</span>
+        <h1>Tu vehículo<br/><em>ideal,</em><br/>a tu alcance</h1>
+        <p>En Special CAR encontrarás vehículos nuevos y usados, financiación ágil, taller mecánico y todos los servicios automotrices en un solo lugar.</p>
+        <div class="hero-btns">
+          <a href="#" class="btn-gold" onclick="showPage('catalogo',null)">Ver catálogo</a>
+          <a href="#" class="btn-wh-outline" onclick="showPage('credito',null)">Simular crédito</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-logo-big">
+          <img src="assets/logo2.png" alt="Special CAR" onerror="this.style.fontSize='80px';this.outerHTML='<span style=font-size:80px>🚗</span>'"/>
+        </div>
+      </div>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat">🚗 <strong id="statTotal">0</strong> vehículos</div>
-      <div class="hero-stat">💬 Contacto directo</div>
-      <div class="hero-stat">✅ Gratis</div>
+      <div class="stat-card"><div class="stat-num">500+</div><div class="stat-label">Vehículos vendidos</div></div>
+      <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">Sedes en Bogotá</div></div>
+      <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">Años de experiencia</div></div>
+      <div class="stat-card"><div class="stat-num">98%</div><div class="stat-label">Clientes satisfechos</div></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- BANNER INFORMATIVO -->
-<div class="info-banner">
-  <div class="info-banner-inner">
-    <div class="info-banner-title">¿Por qué elegirnos?</div>
-    <div class="info-items-grid">
-      <div class="info-item">
-        <span class="info-icon">🔧</span>
-        <div class="info-item-text">
-          <strong>Vehículos con trabajo</strong>
-          <span>Todos se entregan listos para trabajar desde el primer día</span>
-        </div>
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="tag">Lo que hacemos</span>
+        <h2>Todos los servicios <em>automotrices</em></h2>
+        <div class="divider"></div>
+        <p>Desde la compra de tu vehículo hasta el mantenimiento, seguros y transporte especial — todo en Special CAR.</p>
       </div>
-      <div class="info-item">
-        <span class="info-icon">🚗</span>
-        <div class="info-item-text">
-          <strong>Solo carros y camionetas</strong>
-          <span>No manejamos motos — exclusivamente vehículos de 4 ruedas</span>
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-icon">📋</span>
-        <div class="info-item-text">
-          <strong>Documentos verificados</strong>
-          <span>SOAT, póliza, RTM y TO revisados antes de cada entrega</span>
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-icon">🤝</span>
-        <div class="info-item-text">
-          <strong>Contacto directo</strong>
-          <span>Habla con el vendedor sin intermediarios ni comisiones ocultas</span>
-        </div>
+      <div class="services-grid">
+        <div class="srv-card"><div class="srv-icon">🚗</div><h3>Venta de Vehículos</h3><p>Nuevos y usados. Amplio inventario con los mejores precios del mercado y garantía de calidad.</p></div>
+        <div class="srv-card"><div class="srv-icon">💳</div><h3>Crédito Rápido</h3><p>Financiación flexible con cuotas a tu medida. Aprobación ágil con o sin cuota inicial.</p></div>
+        <div class="srv-card"><div class="srv-icon">🔧</div><h3>Taller Mecánico</h3><p>Mantenimiento preventivo y correctivo. Técnicos certificados con equipos de diagnóstico.</p></div>
+        <div class="srv-card"><div class="srv-icon">🚐</div><h3>Transporte Especial</h3><p>Contratos de transporte escolar, empresarial y turístico. Flota moderna y conductores certificados.</p></div>
+        <div class="srv-card"><div class="srv-icon">🛡️</div><h3>Seguros & SOAT</h3><p>Venta de SOAT, pólizas todo riesgo y seguros especializados. Las mejores aseguradoras.</p></div>
+        <div class="srv-card"><div class="srv-icon">🏢</div><h3>Alianzas CDA</h3><p>Tramitamos tu revisión técnico-mecánica con nuestros centros aliados. Rápido y sin filas.</p></div>
+        <div class="srv-card"><div class="srv-icon">🔄</div><h3>Carros con Ingresos</h3><p>Invierte en un vehículo que trabaje para ti. Plataformas de transporte y taxi.</p></div>
+        <div class="srv-card"><div class="srv-icon">📋</div><h3>Peritaje & Trámites</h3><p>Avalúos, traspaso, cambio de color, duplicado de licencia de tránsito y más.</p></div>
       </div>
     </div>
+  </section>
+
+  <section class="section" style="background:var(--off);">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="tag">Opiniones</span>
+        <h2>Lo que dicen <em>nuestros clientes</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="test-grid">
+        <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"Compré mi carro en Special CAR y el proceso fue muy sencillo. Me aprobaron el crédito en el mismo día y me entregaron el vehículo en perfectas condiciones."</p><div class="test-author"><div class="test-avatar">JR</div><div><div class="test-name">Juan Ramírez</div><div class="test-role">Comprador de vehículo usado</div></div></div></div>
+        <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"El taller mecánico es excelente. Muy profesionales, me explicaron todo lo que le hicieron al carro y los precios son muy justos. Volvería sin dudarlo."</p><div class="test-author"><div class="test-avatar">MP</div><div><div class="test-name">María Pérez</div><div class="test-role">Cliente taller mecánico</div></div></div></div>
+        <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"Contraté el servicio de transporte escolar y estoy muy satisfecha. Conductores responsables, vehículos en buen estado y siempre puntuales con mis hijos."</p><div class="test-author"><div class="test-avatar">CG</div><div><div class="test-name">Claudia Gómez</div><div class="test-role">Contrato transporte escolar</div></div></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════ PAGE: QUIÉNES SOMOS ══════ -->
+<div class="page" id="page-quienes">
+  <section class="section">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-visual">
+          <!-- CARRUSEL QUIÉNES SOMOS -->
+          <div class="carousel-wrap" id="carouselAbout">
+            <div class="carousel-track" id="trackAbout">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=700&q=80&auto=format&fit=crop" alt="Special CAR concesionario"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=700&q=80&auto=format&fit=crop" alt="Vehículos Special CAR"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1493238792000-8113da705763?w=700&q=80&auto=format&fit=crop" alt="Equipo Special CAR"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=700&q=80&auto=format&fit=crop" alt="Servicio Special CAR"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop" alt="Taller Special CAR"/></div>
+            </div>
+            <button class="car-arrow car-prev" onclick="moveCarousel('about',-1)">&#8249;</button>
+            <button class="car-arrow car-next" onclick="moveCarousel('about',1)">&#8250;</button>
+            <div class="car-dots" id="dotsAbout"></div>
+          </div>
+          <div class="about-badge"><strong>10+</strong><span>Años de<br/>experiencia</span></div>
+        </div>
+        <div class="about-text">
+          <span class="tag">Quiénes somos</span>
+          <h2>Más que una concesionaria, <em>somos tu aliado</em> automotriz</h2>
+          <p>Special CAR nació con la visión de ofrecer a los colombianos una experiencia automotriz completa, transparente y de calidad. Somos una empresa bogotana con más de 10 años en el sector.</p>
+          <p>Nuestro equipo está conformado por profesionales apasionados por los autos, comprometidos con la satisfacción de cada cliente y con el crecimiento de la movilidad en Colombia.</p>
+          <ul class="values-list">
+            <li>Transparencia en cada transacción y proceso</li>
+            <li>Calidad garantizada en todos nuestros vehículos</li>
+            <li>Financiación accesible sin complicaciones</li>
+            <li>Servicio postventa y acompañamiento continuo</li>
+            <li>Alianzas con las mejores aseguradoras y CDA</li>
+          </ul>
+          <a href="#" class="btn-gold" style="margin-top:10px;" onclick="showPage('contacto',null)">Contáctanos hoy</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="background:var(--off);padding-top:0;">
+    <div class="section-inner">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+        <div style="background:var(--white);border-radius:16px;padding:32px;border-top:4px solid var(--blue);"><div style="font-size:34px;margin-bottom:12px;">🎯</div><h3 style="font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--blue-dark);margin-bottom:10px;">Misión</h3><p style="font-size:13px;color:var(--mid);line-height:1.7;">Ofrecer soluciones automotrices integrales de alta calidad, facilitando el acceso a vehículos y servicios con honestidad, agilidad y compromiso.</p></div>
+        <div style="background:var(--white);border-radius:16px;padding:32px;border-top:4px solid var(--gold);"><div style="font-size:34px;margin-bottom:12px;">🔭</div><h3 style="font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--blue-dark);margin-bottom:10px;">Visión</h3><p style="font-size:13px;color:var(--mid);line-height:1.7;">Ser la empresa automotriz de referencia en Bogotá y Colombia, reconocida por nuestra excelencia, innovación e impacto positivo.</p></div>
+        <div style="background:var(--white);border-radius:16px;padding:32px;border-top:4px solid var(--blue-light);"><div style="font-size:34px;margin-bottom:12px;">💎</div><h3 style="font-family:var(--font-h);font-size:22px;font-weight:900;color:var(--blue-dark);margin-bottom:10px;">Valores</h3><p style="font-size:13px;color:var(--mid);line-height:1.7;">Honestidad, responsabilidad, innovación, trabajo en equipo y pasión por el servicio al cliente guían cada decisión.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════ PAGE: SEDES ══════ -->
+<div class="page" id="page-sedes">
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="tag">Ubicaciones</span>
+        <h2>Nuestras <em>sedes</em></h2>
+        <div class="divider"></div>
+        <p>Encuéntranos en dos puntos estratégicos de Bogotá, listos para atenderte.</p>
+      </div>
+      <div class="sedes-grid">
+
+        <!-- SEDE 1 -->
+        <div class="sede-card">
+          <div class="sede-header"><div class="sede-num">01</div><h3>Sede Principal</h3><p>Kennedy — Bogotá DC</p></div>
+          <!-- CARRUSEL SEDE 1 -->
+          <div class="carousel-wrap" id="carouselSede1" style="border-radius:0;">
+            <div class="carousel-track" id="trackSede1">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1562519776-b232b8f2e98c?w=700&q=80&auto=format&fit=crop" alt="Sede Principal Special CAR"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=700&q=80&auto=format&fit=crop" alt="Sede Principal - interior"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&q=80&auto=format&fit=crop" alt="Sede Principal - vehículos"/></div>
+            </div>
+            <button class="car-arrow car-prev" onclick="moveCarousel('sede1',-1)">&#8249;</button>
+            <button class="car-arrow car-next" onclick="moveCarousel('sede1',1)">&#8250;</button>
+            <div class="car-dots" id="dotsSede1"></div>
+          </div>
+          <div class="sede-body">
+            <div class="sede-item"><div class="sede-item-icon">📍</div><div class="sede-item-text"><strong>Dirección</strong><span>Cra 69F #19a-91, Bogotá DC</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">📞</div><div class="sede-item-text"><strong>Teléfono</strong><span><a href="tel:+573155004485">+57 315 500 4485</a></span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">🕐</div><div class="sede-item-text"><strong>Horario</strong><span>Lun – Sáb: 8:00 am – 6:00 pm<br/>Dom: 9:00 am – 2:00 pm</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">✅</div><div class="sede-item-text"><strong>Servicios</strong><span>Venta, crédito, taller, seguros, peritaje</span></div></div>
+            <!-- MAPA REAL SEDE 1 -->
+            <div class="sede-map-embed">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6778463058604!2d-74.12351322502096!3d4.651423195323418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b74daf6d585%3A0x5458c60693318f37!2sSpecial%20Car%20Pits!5e0!3m2!1ses-419!2sco!4v1778165954755!5m2!1ses-419!2sco" width="100%" height="220" style="border:0;display:block;border-radius:0 0 8px 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEDE 2 -->
+        <div class="sede-card">
+          <div class="sede-header"><div class="sede-num">02</div><h3>Sede Norte</h3><p>Usaquén — Bogotá DC</p></div>
+          <!-- CARRUSEL SEDE 2 -->
+          <div class="carousel-wrap" id="carouselSede2" style="border-radius:0;">
+            <div class="carousel-track" id="trackSede2">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=700&q=80&auto=format&fit=crop" alt="Sede Norte Special CAR"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&q=80&auto=format&fit=crop" alt="Sede Norte - showroom"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=700&q=80&auto=format&fit=crop" alt="Sede Norte - vehículos"/></div>
+            </div>
+            <button class="car-arrow car-prev" onclick="moveCarousel('sede2',-1)">&#8249;</button>
+            <button class="car-arrow car-next" onclick="moveCarousel('sede2',1)">&#8250;</button>
+            <div class="car-dots" id="dotsSede2"></div>
+          </div>
+          <div class="sede-body">
+            <div class="sede-item"><div class="sede-item-icon">📍</div><div class="sede-item-text"><strong>Dirección</strong><span>Cra 45 #144-21, Bogotá DC</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">📞</div><div class="sede-item-text"><strong>Teléfono</strong><span><a href="tel:+573155004485">+57 315 500 4485</a></span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">🕐</div><div class="sede-item-text"><strong>Horario</strong><span>Lun – Sáb: 8:00 am – 6:00 pm<br/>Dom: 10:00 am – 1:00 pm</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">✅</div><div class="sede-item-text"><strong>Servicios</strong><span>Venta, transporte especial, SOAT, CDA</span></div></div>
+            <!-- MAPA REAL SEDE 2 -->
+            <div class="sede-map-embed">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.2505568487354!2d-74.05598781538521!3d4.726485729199453!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b85c6f3445f%3A0x38c9883cb9e4cf17!2sSpecial%20Car!5e0!3m2!1ses-419!2sco!4v1778166060313!5m2!1ses-419!2sco" width="100%" height="220" style="border:0;display:block;border-radius:0 0 8px 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEDE 3: PITS TALLER -->
+        <div class="sede-card">
+          <div class="sede-header" style="background:linear-gradient(135deg,#1a3a1a,#2d6a2d);"><div class="sede-num">03</div><h3>Special Pits Taller</h3><p>Kennedy — Bogotá DC</p></div>
+          <div class="carousel-wrap" id="carouselSede3" style="border-radius:0;">
+            <div class="carousel-track" id="trackSede3">
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=700&q=80&auto=format&fit=crop" alt="Special Pits Taller"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format&fit=crop" alt="Taller mecánico Pits"/></div>
+              <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=700&q=80&auto=format&fit=crop" alt="Pits taller interior"/></div>
+            </div>
+            <button class="car-arrow car-prev" onclick="moveCarousel('sede3',-1)">&#8249;</button>
+            <button class="car-arrow car-next" onclick="moveCarousel('sede3',1)">&#8250;</button>
+            <div class="car-dots" id="dotsSede3"></div>
+          </div>
+          <div class="sede-body">
+            <div class="sede-item"><div class="sede-item-icon">📍</div><div class="sede-item-text"><strong>Dirección</strong><span>Cra 69F #19a-91, Bogotá DC</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">📞</div><div class="sede-item-text"><strong>Teléfono</strong><span><a href="tel:+573155004485">+57 315 500 4485</a></span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">🕐</div><div class="sede-item-text"><strong>Horario</strong><span>Lun – Sáb: 7:00 am – 5:00 pm</span></div></div>
+            <div class="sede-item"><div class="sede-item-icon">🔧</div><div class="sede-item-text"><strong>Especialidad</strong><span>Taller mecánico preventivo & correctivo</span></div></div>
+            <a href="https://pits.specialcar.com.co/" target="_blank" style="display:block;margin-top:14px;background:linear-gradient(135deg,#2d6a2d,#3d8a3d);color:#fff;text-align:center;padding:12px;border-radius:var(--r-sm);font-family:var(--font-h);font-weight:800;font-size:13px;letter-spacing:.5px;text-transform:uppercase;transition:.2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">🌐 Visitar sitio web del taller →</a>
+            <div class="sede-map-embed" style="margin-top:14px;">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6778463058604!2d-74.12351322502096!3d4.651423195323418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3f9b74daf6d585%3A0x5458c60693318f37!2sSpecial%20Car%20Pits!5e0!3m2!1ses-419!2sco!4v1778165954755!5m2!1ses-419!2sco" width="100%" height="200" style="border:0;display:block;border-radius:0 0 8px 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- fin sedes-grid -->
+    </div><!-- fin section-inner -->
+  </section>
+</div><!-- fin page-sedes -->
+
+<!-- ══════ PAGE: CATÁLOGO — usa client.js del ZIP ══════ -->
+<div class="page" id="page-catalogo">
+
+  <!-- HERO BÚSQUEDA (estilo autobog.com.co/catalogo) -->
+  <div class="cat-hero">
+    <div class="cat-hero-inner">
+      <div class="cat-hero-top">
+        <div>
+          <h1 class="cat-hero-title">Catálogo de <em>Vehículos</em></h1>
+          <p style="color:var(--mid);font-size:14px;margin-top:4px;">Carros nuevos, usados y con trabajo — contacto directo con el vendedor</p>
+        </div>
+        <div class="cat-actions">
+          <button class="btn btn-outline btn-sm" id="favBtn" onclick="toggleFavFilter()">♡ Favoritos</button>
+          <button class="btn btn-primary btn-sm" onclick="openPublishModal()">📢 Publica con nosotros</button>
+          <a href="admin.html" class="btn btn-outline btn-sm">🔐 Admin</a>
+        </div>
+      </div>
+      <div class="cat-search-bar">
+        <input id="searchInput" class="cat-field grow" type="text"
+          placeholder="🔍 Busca marca, modelo, ciudad..." oninput="applyFilters()" autocomplete="off"/>
+        <select id="brandFilter" class="cat-field w160" onchange="applyFilters()">
+          <option value="">Todas las marcas</option>
+        </select>
+        <select id="typeFilter" class="cat-field w140" onchange="applyFilters()">
+          <option value="">Tipo</option>
+          <option>Sedán</option><option>SUV</option><option>Camioneta</option>
+          <option>Deportivo</option><option>Moto</option><option>Eléctrico</option>
+          <option>Camión</option><option>Van</option>
+        </select>
+      </div>
+      <div class="cat-stats">
+        <div class="cat-stat">🚗 <strong id="statTotal">0</strong> vehículos</div>
+        <div class="cat-stat">💬 Contacto directo</div>
+        <div class="cat-stat">✅ Publicación gratis</div>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- TABS PRINCIPALES -->
-<div class="main-tabs">
-  <button class="main-tab active" id="tab-btn-vehicles" onclick="switchTab('vehicles',this)">🚗 Vehículos</button>
-  <button class="main-tab" id="tab-btn-insurance" onclick="switchTab('insurance',this)">🛡️ Seguros</button>
-</div>
-
-<!-- ══ TAB VEHÍCULOS ══ -->
-<div id="tab-vehicles" class="tab-section active">
-  <div class="filters-bar">
+  <!-- BARRA FILTROS STICKY -->
+  <div class="cat-filters">
     <button class="filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
     <button class="filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
     <button class="filter-chip" onclick="setOrder('precio_desc',this)">💎 Mayor precio</button>
@@ -101,7 +904,7 @@
       <option value="2024">2024</option><option value="2023">2023</option>
       <option value="2022">2022</option><option value="2021">2021</option>
       <option value="2020">2020</option><option value="2019">2019</option>
-      <option value="2018">2018</option><option value="2015">2015 o anterior</option>
+      <option value="2018">2018</option><option value="2015">2015+</option>
       <option value="2010">2010 o anterior</option>
     </select>
     <select class="filter-select" onchange="setPrice(this.value)">
@@ -115,163 +918,68 @@
     <div class="filters-right">
       <span class="results-text" id="resultsCount"><strong>0</strong> vehículos</span>
       <div class="view-toggle">
-        <button class="view-btn active" onclick="setView('grid',this)">⊞</button>
-        <button class="view-btn" onclick="setView('list',this)">≡</button>
+        <button class="view-btn active" onclick="setView('grid',this)" title="Cuadrícula">⊞</button>
+        <button class="view-btn" onclick="setView('list',this)" title="Lista">≡</button>
       </div>
     </div>
   </div>
 
-  <main class="main-content">
-    <div class="section-header">
-      <h2 id="sectionTitle">Todos los vehículos</h2>
+  <!-- GRILLA DE VEHÍCULOS — renderizada por client.js -->
+  <div style="max-width:1280px;margin:0 auto;padding:28px 40px 56px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <h2 id="sectionTitle" style="font-family:var(--font-h);font-size:18px;font-weight:800;color:var(--blue);">Todos los vehículos</h2>
     </div>
     <div id="vehicleContainer" class="vehicle-grid"></div>
-    <div id="emptyState" class="empty-state" style="display:none">
-      <div class="empty-icon">🚗</div>
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <div style="font-size:68px;opacity:.2;margin-bottom:14px;">🚗</div>
       <h3>No se encontraron vehículos</h3>
       <p>Prueba con otros filtros o términos de búsqueda</p>
       <button class="btn btn-primary btn-lg" onclick="clearAllFilters()">Limpiar filtros</button>
     </div>
-  </main>
-</div>
-
-<!-- ══ TAB SEGUROS ══ -->
-<div id="tab-insurance" class="tab-section">
-  <div class="insurance-hero">
-    <h2>🛡️ Seguros para tu vehículo</h2>
-    <p>Protege tu inversión con nuestros planes de seguro. Coberturas completas adaptadas a tu necesidad.</p>
   </div>
-  <div class="insurance-grid">
 
-    <div class="insurance-card featured">
-      <div class="ins-icon">🚗💎</div>
-      <span class="ins-type">Todo Riesgo</span>
-      <div class="ins-title">Seguro Todo Riesgo Premium</div>
-      <div class="ins-desc">Cobertura total para tu vehículo ante cualquier eventualidad. La protección más completa del mercado colombiano.</div>
-      <ul class="ins-features">
-        <li>Daños por colisión o vuelco</li>
-        <li>Hurto total y parcial</li>
-        <li>Daños a terceros (RC)</li>
-        <li>Daños por fenómenos naturales</li>
-        <li>Asistencia en carretera 24/7</li>
-        <li>Carro de reemplazo</li>
-        <li>Grúa incluida</li>
-      </ul>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Premium','todo_riesgo')">Cotizar ahora →</button>
+  <!-- INFO BANNER -->
+  <div class="cat-info">
+    <div class="cat-info-inner">
+      <div class="cat-info-title">¿Por qué elegir Special CAR?</div>
+      <div class="cat-info-grid">
+        <div class="cat-info-item"><span>🔧</span><div><strong>Vehículos con trabajo</strong><em>Listos para trabajar desde el primer día</em></div></div>
+        <div class="cat-info-item"><span>📋</span><div><strong>Documentos verificados</strong><em>SOAT, póliza, RTM y TO revisados</em></div></div>
+        <div class="cat-info-item"><span>💳</span><div><strong>Crédito rápido</strong><em>Aprobación en 24h, cuotas a tu medida</em></div></div>
+        <div class="cat-info-item"><span>🤝</span><div><strong>Contacto directo</strong><em>Sin intermediarios ni comisiones ocultas</em></div></div>
+      </div>
     </div>
+  </div>
 
-    <div class="insurance-card">
-      <div class="ins-icon">🚗🛡️</div>
-      <span class="ins-type">Todo Riesgo</span>
-      <div class="ins-title">Seguro Todo Riesgo Básico</div>
-      <div class="ins-desc">Cobertura esencial para proteger tu vehículo contra los riesgos más frecuentes en Colombia.</div>
-      <ul class="ins-features">
-        <li>Daños por colisión</li>
-        <li>Hurto total</li>
-        <li>Daños a terceros (RC)</li>
-        <li>Asistencia en carretera</li>
-        <li>Grúa hasta 50 km</li>
-      </ul>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Todo Riesgo Básico','todo_riesgo')">Cotizar ahora →</button>
+  <!-- BOTONES FLOTANTES DEL CATÁLOGO -->
+  <div class="float-group-cat">
+    <div class="float-wrap">
+      <span class="float-tooltip">Publicar vehículo</span>
+      <button class="float-btn float-pub" onclick="openPublishModal()">📢</button>
     </div>
-
-    <div class="insurance-card">
-      <div class="ins-icon">📋✨</div>
-      <span class="ins-type">Póliza Extra</span>
-      <div class="ins-title">Póliza Extra — Amparo Plus</div>
-      <div class="ins-desc">Complementa tu seguro actual con coberturas adicionales para situaciones especiales no incluidas en pólizas estándar.</div>
-      <ul class="ins-features">
-        <li>Pérdida de llaves y chapas</li>
-        <li>Daños por mascotas o animales</li>
-        <li>Rotura de vidrios y lunas</li>
-        <li>Daños a rines y neumáticos</li>
-        <li>Cobertura de accesorios especiales</li>
-        <li>Extensión de RC voluntaria</li>
-      </ul>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Amparo Plus','poliza_extra')">Cotizar ahora →</button>
-    </div>
-
-    <div class="insurance-card">
-      <div class="ins-icon">🏍️🛡️</div>
-      <span class="ins-type">Póliza Extra</span>
-      <div class="ins-title">Póliza Extra — Motos</div>
-      <div class="ins-desc">Cobertura especializada para motocicletas. Protección ampliada ante los riesgos específicos del uso de moto en ciudad.</div>
-      <ul class="ins-features">
-        <li>Hurto total y parcial de moto</li>
-        <li>Accesorios (casco, maletín, etc.)</li>
-        <li>RC contra terceros ampliada</li>
-        <li>Asistencia médica al conductor</li>
-        <li>Transporte del vehículo</li>
-      </ul>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Extra Motos','poliza_extra')">Cotizar ahora →</button>
-    </div>
-
-    <div class="insurance-card">
-      <div class="ins-icon">📄🤝</div>
-      <span class="ins-type">Contractual</span>
-      <div class="ins-title">Póliza Contractual — Empresas</div>
-      <div class="ins-desc">Para flotas empresariales, transporte de carga y vehículos de servicio especial. Condiciones a medida según el contrato.</div>
-      <ul class="ins-features">
-        <li>Cobertura para flotas desde 2 vehículos</li>
-        <li>Responsabilidad civil contractual</li>
-        <li>Transporte de mercancías</li>
-        <li>Gastos de defensa jurídica</li>
-        <li>Gerencia de riesgos incluida</li>
-        <li>Facturación empresarial</li>
-      </ul>
-      <div class="ins-price"><strong>Cotización personalizada</strong></div>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Contractual Empresas','contractual')">Cotizar ahora →</button>
-    </div>
-
-    <div class="insurance-card">
-      <div class="ins-icon">🚛📋</div>
-      <span class="ins-type">Contractual</span>
-      <div class="ins-title">Póliza Contractual — Transporte</div>
-      <div class="ins-desc">Diseñada para empresas de transporte público y especial. Cumple con las exigencias legales del MinTransporte.</div>
-      <ul class="ins-features">
-        <li>RC contractual y extracontractual</li>
-        <li>Pasajeros y conductor</li>
-        <li>SOAT complementario</li>
-        <li>Cumplimiento normativo MinTransporte</li>
-        <li>Asesoría jurídica incluida</li>
-      </ul>
-      <div class="ins-price"><strong>Cotización personalizada</strong></div>
-      <button class="btn btn-insurance" onclick="openInsuranceModal('Póliza Contractual Transporte','contractual')">Cotizar ahora →</button>
-    </div>
-
   </div>
 </div>
 
-<!-- MODAL DETALLE -->
+<!-- MODALES del client.js (detalle vehículo + correo) -->
 <div class="overlay" id="detailModal">
   <div class="modal detail-modal" style="position:relative">
-    <button class="modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.4)" onclick="closeDetail()">✕</button>
+    <button class="modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.45)" onclick="closeDetail()">✕</button>
     <div class="detail-gallery" id="detailGallery"></div>
     <div class="detail-body" id="detailContent"></div>
   </div>
 </div>
 
-<!-- MODAL CORREO -->
 <div class="overlay" id="emailModal">
-  <div class="modal" style="max-width:480px">
+  <div class="modal" style="max-width:460px">
     <div class="modal-hdr">
       <h2>✉️ Enviar consulta</h2>
       <button class="modal-close" onclick="closeEmailModal()">✕</button>
     </div>
     <div class="modal-body">
-      <p style="color:var(--gray-600);font-size:14px;margin-bottom:16px">Sobre: <strong id="emailVehicleName"></strong></p>
-      <div class="form-group" style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu nombre</label>
-        <input id="emailName" class="fc" placeholder="Nombre completo"/>
-      </div>
-      <div class="form-group" style="margin-bottom:12px">
-        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu correo</label>
-        <input id="emailFrom" class="fc" type="email" placeholder="tu@correo.com"/>
-      </div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Mensaje</label>
-        <textarea id="emailMsg" class="fc" rows="4"></textarea>
-      </div>
+      <p style="color:var(--mid);font-size:13px;margin-bottom:14px;">Sobre: <strong id="emailVehicleName"></strong></p>
+      <div class="form-group"><label>Tu nombre</label><input id="emailName" class="fc" placeholder="Nombre completo"/></div>
+      <div class="form-group"><label>Tu correo</label><input id="emailFrom" class="fc" type="email" placeholder="tu@correo.com"/></div>
+      <div class="form-group"><label>Mensaje</label><textarea id="emailMsg" class="fc" rows="4"></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeEmailModal()">Cancelar</button>
@@ -280,142 +988,744 @@
   </div>
 </div>
 
-<!-- MODAL SEGUROS -->
-<div class="overlay" id="insuranceModal">
-  <div class="modal" style="max-width:520px;padding:0;overflow:hidden;border-radius:var(--r-lg)">
-    <div class="ins-form-header">
-      <button class="modal-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)" onclick="closeInsuranceModal()">✕</button>
-      <h3 id="insModalTitle">🛡️ Cotizar seguro</h3>
-      <p id="insModalSubtitle">Completa el formulario y un asesor te contactará pronto</p>
+<!-- MODAL PUBLICAR (independiente de client.js) -->
+<div class="pub-overlay" id="publishModal">
+  <div class="pub-modal">
+    <div class="pub-hdr">
+      <button class="pub-close" onclick="closePubModal()">✕</button>
+      <div style="font-size:24px;margin-bottom:6px;">📢</div>
+      <h3>Publica con nosotros</h3>
+      <p>Vende tu vehículo más rápido con el respaldo de Special CAR</p>
     </div>
-    <div class="modal-body" style="padding:22px 24px">
-      <input type="hidden" id="ins-type"/>
-      <div class="form-grid">
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Nombre completo <span class="req">*</span></label>
-          <input id="ins-name" class="fc" placeholder="Tu nombre completo"/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">WhatsApp / Teléfono <span class="req">*</span></label>
-          <input id="ins-phone" class="fc" placeholder="3001234567"/>
-        </div>
-        <div class="form-group form-full">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Correo electrónico <span class="req">*</span></label>
-          <input id="ins-email" class="fc" type="email" placeholder="tu@correo.com"/>
-        </div>
-        <div class="form-group form-full">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Vehículo a asegurar</label>
-          <input id="ins-vehicle" class="fc" placeholder="Ej: Toyota Corolla 2022, placa ABC-123"/>
-        </div>
-        <div class="form-group form-full">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Mensaje adicional</label>
-          <textarea id="ins-message" class="fc" rows="3" placeholder="Cuéntanos más sobre tu necesidad o pregunta específica..."></textarea>
-        </div>
+    <div class="pub-body">
+      <div class="pub-2col">
+        <div><label class="pub-label">Tu nombre *</label><input id="pub-name" class="pub-input" placeholder="Nombre completo"/></div>
+        <div><label class="pub-label">WhatsApp *</label><input id="pub-phone" class="pub-input" placeholder="3001234567"/></div>
+      </div>
+      <label class="pub-label">Correo electrónico</label><input id="pub-email" class="pub-input" type="email" placeholder="tu@correo.com"/>
+      <div class="pub-2col">
+        <div><label class="pub-label">Marca y modelo *</label><input id="pub-vehicle" class="pub-input" placeholder="Toyota Corolla 2022"/></div>
+        <div><label class="pub-label">Precio aproximado</label><input id="pub-price" class="pub-input" placeholder="$45.000.000"/></div>
+      </div>
+      <div class="pub-2col">
+        <div><label class="pub-label">Ciudad</label><input id="pub-city" class="pub-input" placeholder="Bogotá..."/></div>
+        <div><label class="pub-label">Kilometraje</label><input id="pub-km" class="pub-input" placeholder="45.000 km"/></div>
+      </div>
+      <label class="pub-label">Descripción</label>
+      <textarea id="pub-desc" class="pub-input" rows="3" placeholder="Estado, extras, historial..." style="resize:vertical;min-height:70px;"></textarea>
+      <div style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:10px 13px;font-size:12px;color:var(--blue);margin-top:4px;">
+        💡 <strong>¿Cómo funciona?</strong> Un asesor revisará tu info y te contactará para coordinar la publicación. ¡Es gratis!
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closeInsuranceModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="submitInsuranceLead()">🛡️ Solicitar cotización</button>
+    <div class="pub-foot">
+      <button class="btn-cancel" onclick="closePubModal()">Cancelar</button>
+      <button class="btn-pub" onclick="submitPub()">📢 Enviar solicitud</button>
     </div>
   </div>
 </div>
 
-<!-- LIGHTBOX -->
-<div class="lightbox-overlay hidden" id="lightbox" onclick="lightboxBgClick(event)">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <div class="lightbox-img-wrap">
-    <img id="lightboxImg" src="" alt="Foto del vehículo"/>
-  </div>
-  <div class="lightbox-counter" id="lightboxCounter"></div>
-  <div class="lightbox-thumbs" id="lightboxThumbs"></div>
-  <button class="lightbox-arrow prev" onclick="lightboxMove(-1)">‹</button>
-  <button class="lightbox-arrow next" onclick="lightboxMove(1)">›</button>
-</div>
+<!-- ══════ PAGE: CRÉDITO ══════ -->
+<div class="page" id="page-credito">
+  <section class="section">
+    <div class="section-inner">
 
-
-<!-- MODAL PUBLICA CON NOSOTROS -->
-<div class="overlay" id="publishModal">
-  <div class="modal" style="max-width:560px;padding:0;overflow:hidden;border-radius:var(--r-lg)">
-    <div style="background:linear-gradient(135deg,var(--blue) 0%,#243b8a 100%);padding:24px;color:#fff;position:relative">
-      <button class="modal-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)" onclick="closePublishModal()">✕</button>
-      <div style="font-size:28px;margin-bottom:8px">📢</div>
-      <h3 style="font-size:20px;font-weight:800;margin-bottom:4px">Publica con nosotros</h3>
-      <p style="font-size:13px;opacity:.8">Vende tu vehículo más rápido con el respaldo de SpecialUsadosMarket</p>
-    </div>
-    <div class="modal-body" style="padding:22px 24px">
-      <div class="form-grid">
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Tu nombre <span class="req">*</span></label>
-          <input id="pub-name" class="fc" placeholder="Nombre completo"/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">WhatsApp <span class="req">*</span></label>
-          <input id="pub-phone" class="fc" placeholder="3001234567"/>
-        </div>
-        <div class="form-group form-full">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Correo electrónico <span class="req">*</span></label>
-          <input id="pub-email" class="fc" type="email" placeholder="tu@correo.com"/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Marca y modelo <span class="req">*</span></label>
-          <input id="pub-vehicle" class="fc" placeholder="Toyota Corolla 2022"/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Precio aproximado</label>
-          <input id="pub-price" class="fc" placeholder="$45.000.000"/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Ciudad</label>
-          <input id="pub-city" class="fc" placeholder="Bogotá, Medellín..."/>
-        </div>
-        <div class="form-group">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Kilometraje</label>
-          <input id="pub-km" class="fc" placeholder="45.000 km"/>
-        </div>
-        <div class="form-group form-full">
-          <label style="font-size:12px;font-weight:700;text-transform:uppercase;color:var(--gray-600);display:block;margin-bottom:5px">Descripción del vehículo</label>
-          <textarea id="pub-desc" class="fc" rows="3" placeholder="Cuéntanos sobre el estado, extras, historial..."></textarea>
+      <!-- HERO ANIMADO CRÉDITO — sin imágenes externas -->
+      <div class="credit-hero-wrap">
+        <div class="credit-animated-bg">
+          <div class="credit-grid-deco"></div>
+          <div class="credit-light-sweep"></div>
+          <div class="credit-carousel-text">
+            <div class="credit-tabs">
+              <span class="credit-tab active">⚡ 24 horas</span>
+              <span class="credit-tab">🚗 Vehículos</span>
+              <span class="credit-tab">🏠 Libre inversión</span>
+              <span class="credit-tab">💼 Empresas</span>
+            </div>
+            <div class="credit-badge">✅ Respuesta garantizada en 24 horas</div>
+            <h2 style="font-family:var(--font-h);font-size:clamp(38px,5vw,64px);font-weight:900;color:var(--white);line-height:.92;margin-bottom:18px;">Financia lo que<br/><em style="font-style:normal;color:var(--gold);">quieras,</em><br/>donde quieras</h2>
+            <p style="font-size:16px;color:rgba(255,255,255,.85);max-width:500px;line-height:1.7;margin-bottom:28px;">Desde un electrodoméstico hasta tu vehículo soñado — Special CAR tiene el crédito perfecto para ti. Sin importar tu historial crediticio, siempre hay una solución.</p>
+            <!-- Contadores -->
+            <div class="credit-counters">
+              <div class="credit-counter"><span class="credit-counter-num">24h</span><span class="credit-counter-label">Respuesta</span></div>
+              <div class="credit-counter"><span class="credit-counter-num">72</span><span class="credit-counter-label">Meses plazo</span></div>
+              <div class="credit-counter"><span class="credit-counter-num">0%</span><span class="credit-counter-label">Sin cuota inicial*</span></div>
+              <div class="credit-counter"><span class="credit-counter-num">100%</span><span class="credit-counter-label">En línea</span></div>
+            </div>
+            <!-- Ítems destacados -->
+            <div class="credit-items">
+              <div class="credit-item"><div class="credit-item-icon">🚗</div><div><strong>Vehículo nuevo o usado</strong><span>Carros, motos, camiones, flotas</span></div></div>
+              <div class="credit-item"><div class="credit-item-icon">🏠</div><div><strong>Libre inversión</strong><span>Compra lo que necesites</span></div></div>
+              <div class="credit-item"><div class="credit-item-icon">💼</div><div><strong>Para empresas</strong><span>Flota completa financiada</span></div></div>
+              <div class="credit-item"><div class="credit-item-icon">📱</div><div><strong>100% digital</strong><span>Aplica desde tu celular</span></div></div>
+            </div>
+            <div class="credit-hero-btns" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;">
+              <a href="https://wa.me/573155004485?text=Hola!%20Quiero%20solicitar%20un%20crédito" target="_blank" class="btn-gold" style="font-size:15px;padding:14px 28px;">💬 Solicitar crédito ahora</a>
+              <button onclick="document.getElementById('simuladorAnchor').scrollIntoView({behavior:'smooth'})" style="border:2px solid rgba(255,255,255,.4);color:var(--white);background:transparent;font-family:var(--font-h);font-weight:700;font-size:14px;letter-spacing:.8px;text-transform:uppercase;padding:12px 22px;border-radius:var(--r-sm);cursor:pointer;transition:.25s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='transparent'">🧮 Simular cuota</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:12px 14px;margin-top:4px;font-size:12px;color:var(--blue)">
-        💡 <strong>¿Cómo funciona?</strong> Un asesor revisará tu información y te contactará para coordinar la publicación. ¡Es gratis!
+
+      <!-- QUÉ PUEDES FINANCIAR -->
+      <div class="finance-cats">
+        <div class="finance-cats-title">¿Qué puedes financiar?</div>
+        <div class="finance-cats-sub">Desde lo más pequeño hasta tu gran inversión — todo en un solo crédito</div>
+        <div class="finance-cats-grid">
+          <div class="finance-cat">
+            <div class="finance-cat-icon">🚗</div>
+            <div class="finance-cat-name">Vehículos</div>
+            <div class="finance-cat-range">Desde $20M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">🏍️</div>
+            <div class="finance-cat-name">Motos</div>
+            <div class="finance-cat-range">Desde $3M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">📱</div>
+            <div class="finance-cat-name">Tecnología</div>
+            <div class="finance-cat-range">Desde $500K</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">🏠</div>
+            <div class="finance-cat-name">Mejoras hogar</div>
+            <div class="finance-cat-range">Desde $2M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">✈️</div>
+            <div class="finance-cat-name">Viajes</div>
+            <div class="finance-cat-range">Desde $1M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">🎓</div>
+            <div class="finance-cat-name">Educación</div>
+            <div class="finance-cat-range">Desde $2M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">🏢</div>
+            <div class="finance-cat-name">Negocios</div>
+            <div class="finance-cat-range">Desde $5M</div>
+          </div>
+          <div class="finance-cat">
+            <div class="finance-cat-icon">💳</div>
+            <div class="finance-cat-name">Libre inversión</div>
+            <div class="finance-cat-range">Lo que necesites</div>
+          </div>
+        </div>
       </div>
+
+      <!-- ALIADOS FINANCIEROS -->
+      <div class="allies-section">
+        <div class="allies-title">🏦 Nuestros aliados financieros</div>
+        <div class="allies-sub">Trabajamos con las principales entidades financieras de Colombia para conseguirte la mejor tasa</div>
+        <div class="allies-img-wrap">
+          <img src="assets/financiera.png" alt="Aliados financieros Special CAR — bancos y financieras"
+            onerror="this.parentElement.innerHTML='<div style=padding:40px;text-align:center;color:var(--mid);font-size:14px;>🏦 Imagen de aliados financieros<br/><small>Agrega tu archivo financiera.png en la carpeta assets</small></div>'"/>
+        </div>
+      </div>
+
+      <!-- PROCESO PASO A PASO -->
+      <div class="credit-process">
+        <div class="process-title">¿Cómo funciona? Es muy sencillo</div>
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="process-num">1</div>
+            <h4>Solicita</h4>
+            <p>Escríbenos por WhatsApp o llena el formulario en línea — tarda solo 5 minutos</p>
+          </div>
+          <div class="process-step">
+            <div class="process-num">2</div>
+            <h4>Análisis</h4>
+            <p>Enviamos tu perfil a múltiples entidades financieras simultáneamente</p>
+          </div>
+          <div class="process-step">
+            <div class="process-num">3</div>
+            <h4>Respuesta 24h</h4>
+            <p>Recibes la mejor oferta disponible en menos de 24 horas hábiles</p>
+          </div>
+          <div class="process-step">
+            <div class="process-num">4</div>
+            <h4>¡Listo!</h4>
+            <p>Firma y recibe tu crédito. Empieza a disfrutar lo que compraste</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIMULADOR -->
+      <div class="simulator" id="simuladorAnchor">
+        <h3>🧮 Simulador de Cuota</h3>
+        <div class="sim-form-row">
+          <div class="form-group-b"><label>Valor a financiar</label><input type="number" id="simValor" placeholder="Ej: 50.000.000"/></div>
+          <div class="form-group-b"><label>Cuota inicial</label><input type="number" id="simInicial" placeholder="Ej: 10.000.000"/></div>
+        </div>
+        <div class="form-group-b"><label>Plazo</label>
+          <select id="simPlazo">
+            <option value="12">12 meses (1 año)</option>
+            <option value="24">24 meses (2 años)</option>
+            <option value="36" selected>36 meses (3 años)</option>
+            <option value="48">48 meses (4 años)</option>
+            <option value="60">60 meses (5 años)</option>
+            <option value="72">72 meses (6 años)</option>
+          </select>
+        </div>
+        <button class="btn-sim" onclick="simularCredito()">⚡ Calcular cuota mensual</button>
+        <div class="sim-result" id="simResult">
+          <em>Cuota mensual estimada</em>
+          <strong id="simCuota">$0</strong>
+          <em style="display:block;margin-top:8px;font-size:11px;opacity:.75;">*Tasa referencial 1.8% mensual. El valor final puede variar según la entidad financiera.</em>
+          <a href="https://wa.me/573155004485?text=Hola!%20Simulé%20mi%20crédito%20y%20quiero%20más%20información" target="_blank" style="display:inline-block;margin-top:14px;" class="btn-gold">💬 Hablar con un asesor</a>
+        </div>
+      </div>
+
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="closePublishModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="submitPublishRequest()">📢 Enviar solicitud</button>
-    </div>
-  </div>
+  </section>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ══════ PAGE: SERVICIOS ══════ -->
+<div class="page" id="page-servicios">
+  <section class="section">
+    <div class="section-inner">
+      <div style="background:var(--blue-dark);border-radius:18px;padding:50px;color:var(--white);text-align:center;margin-bottom:44px;">
+        <h2 style="font-family:var(--font-h);font-size:40px;font-weight:900;margin-bottom:10px;">🔧 Taller Mecánico Special CAR Usados</h2>
+        <p style="color:#c5cce8;font-size:15px;max-width:540px;margin:0 auto 20px;">Mantenimiento preventivo y correctivo con técnicos certificados y equipos de diagnóstico de última generación.</p>
+        <a href="https://pits.specialcar.com.co/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--blue-dark);font-family:var(--font-h);font-weight:800;font-size:14px;letter-spacing:.5px;text-transform:uppercase;padding:13px 28px;border-radius:var(--r-sm);transition:.2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">🌐 Visitar sitio web del taller — pits.specialcar.com.co</a>
+      </div>
+      <div class="workshop-grid">
+        <div class="work-card"><div class="icon">🔍</div><h3>Diagnóstico Computarizado</h3><p>Lectura de códigos de falla, escáner electrónico y diagnóstico completo del sistema del vehículo.</p><div class="price">Desde $35.000</div></div>
+        <div class="work-card"><div class="icon">🛢️</div><h3>Cambio de Aceite</h3><p>Aceites sintéticos, semisintéticos y convencionales. Incluye revisión de 25 puntos.</p><div class="price">Desde $80.000</div></div>
+        <div class="work-card"><div class="icon">🔋</div><h3>Sistema Eléctrico</h3><p>Diagnóstico y reparación de batería, alternador, motor de arranque y cableado eléctrico.</p><div class="price">Desde $60.000</div></div>
+        <div class="work-card"><div class="icon">🛞</div><h3>Frenos & Suspensión</h3><p>Revisión y cambio de pastillas, discos, amortiguadores y dirección hidráulica.</p><div class="price">Desde $120.000</div></div>
+        <div class="work-card"><div class="icon">❄️</div><h3>Aire Acondicionado</h3><p>Recarga de gas, limpieza de filtros, revisión de compresor y sistema de refrigeración.</p><div class="price">Desde $90.000</div></div>
+        <div class="work-card"><div class="icon">⚙️</div><h3>Motor & Transmisión</h3><p>Reparación de motor, caja de cambios automática y manual, diferencial y embrague.</p><div class="price">Consultar</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="background:var(--off);padding-top:0;">
+    <div class="section-inner">
+      <div class="section-header"><span class="tag">Protección</span><h2>Seguros, SOAT <em>& Pólizas</em></h2><div class="divider"></div></div>
+      <div class="seguros-grid">
+        <div class="seg-card"><div class="seg-icon">🛡️</div><h3>SOAT</h3><p>Tramitamos tu Seguro Obligatorio con las mejores tarifas. Proceso rápido y sin filas.</p><div><span class="seg-tag">Todos los vehículos</span><span class="seg-tag">Express</span></div><a href="https://wa.me/573155004485?text=Quiero%20tramitar%20mi%20SOAT" target="_blank" class="btn-gold" style="display:inline-block;margin-top:14px;font-size:13px;padding:10px 18px;">Solicitar SOAT</a></div>
+        <div class="seg-card"><div class="seg-icon">📋</div><h3>Pólizas Todo Riesgo</h3><p>Protege tu inversión con pólizas completas. Cotizamos con las principales aseguradoras.</p><div><span class="seg-tag">Sura</span><span class="seg-tag">Allianz</span><span class="seg-tag">Bolívar</span></div><a href="https://wa.me/573155004485?text=Quiero%20cotizar%20una%20póliza" target="_blank" class="btn-gold" style="display:inline-block;margin-top:14px;font-size:13px;padding:10px 18px;">Cotizar póliza</a></div>
+        <div class="seg-card"><div class="seg-icon">🏢</div><h3>Alianzas CDA</h3><p>Revisión técnico-mecánica y de gases en nuestros centros aliados. Agenda en línea sin filas.</p><div><span class="seg-tag">Sin esperas</span><span class="seg-tag">Agenda online</span></div><a href="https://cdaretemec.com.co/agenda-en-linea/" target="_blank" class="btn-gold" style="display:inline-block;margin-top:14px;font-size:13px;padding:10px 18px;">📅 Agendar revisión CDA</a></div>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0;">
+    <div class="section-inner">
+      <div class="transport-banner">
+        <div>
+          <h2>🚐 Transporte Especial</h2>
+          <p>Contratos de transporte escolar, empresarial y turístico. Flota moderna, conductores certificados y puntualidad garantizada.</p>
+          <a href="mailto:directortransporte@specialcar.com.co?subject=Solicitud%20Transporte%20Especial&body=Hola!%20Quiero%20información%20sobre%20contratos%20de%20transporte%20especial." class="btn-gold" style="margin-top:18px;display:inline-block;">✉️ Solicitar contrato</a>
+        </div>
+        <div style="font-size:78px;opacity:.25;">🚐</div>
+      </div>
+      <div class="transport-grid">
+        <div class="trans-card"><div class="icon">🏫</div><h3>Transporte Escolar</h3><p>Rutas seguras para colegios y jardines con conductores certificados por el MEN.</p></div>
+        <div class="trans-card"><div class="icon">🏢</div><h3>Corporativo</h3><p>Traslado de personal empresarial con contratos a medida y facturación mensual.</p></div>
+        <div class="trans-card"><div class="icon">✈️</div><h3>Transfer Aeropuerto</h3><p>Servicio de traslado al aeropuerto El Dorado. Reservas con anticipación.</p></div>
+        <div class="trans-card"><div class="icon">🏔️</div><h3>Turismo & Excursiones</h3><p>Alquiler de vehículos con conductor para grupos y viajes al interior del país.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
 
-<!-- BOTONES FLOTANTES -->
-<div class="float-group">
-  <div class="float-label-wrap">
-    <span class="float-tooltip">WhatsApp</span>
-    <a href="https://wa.me/573155004485?text=Hola%2C%20estoy%20interesado%20en%20un%20vehículo%20de%20SpecialUsadosMarket" target="_blank" rel="noopener">
-      <button class="float-btn float-wsp" aria-label="Contactar por WhatsApp">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.554 4.122 1.523 5.858L0 24l6.335-1.502A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.371l-.36-.214-3.727.883.936-3.618-.235-.372A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818 0 5.424-4.394 9.818-9.818 9.818z"/></svg>
-      </button>
+<!-- ══════ PAGE: QUIERO VENDER ══════ -->
+<div class="page" id="page-vender">
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header"><span class="tag">Compra tu carro</span><h2>¿Quieres vender <em>tu vehículo?</em></h2><div class="divider"></div><p>Te compramos tu carro al mejor precio del mercado. Proceso ágil, justo y sin complicaciones.</p></div>
+      <div class="sell-grid">
+        <div>
+          <div class="sell-steps">
+            <div class="step"><div class="step-num">1</div><div class="step-text"><h3>Diligencia el formulario</h3><p>Cuéntanos los datos básicos de tu vehículo: marca, modelo, año y kilometraje.</p></div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-text"><h3>Avalúo gratuito</h3><p>Un perito de Special CAR realizará el avalúo de tu vehículo sin ningún costo.</p></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-text"><h3>Oferta en el momento</h3><p>Te hacemos una oferta justa basada en el mercado actual. Tú decides si aceptas.</p></div></div>
+            <div class="step"><div class="step-num">4</div><div class="step-text"><h3>Pago inmediato</h3><p>Si aceptas, realizamos el pago el mismo día y gestionamos el traspaso.</p></div></div>
+          </div>
+          <div style="background:var(--off);border-radius:12px;padding:22px;margin-top:28px;">
+            <h4 style="font-family:var(--font-h);font-size:17px;font-weight:800;color:var(--blue-dark);margin-bottom:10px;">📋 Documentos necesarios</h4>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;">
+              <li style="font-size:13px;color:var(--mid);">✔ Tarjeta de propiedad original</li>
+              <li style="font-size:13px;color:var(--mid);">✔ Cédula del propietario</li>
+              <li style="font-size:13px;color:var(--mid);">✔ SOAT vigente</li>
+              <li style="font-size:13px;color:var(--mid);">✔ Revisión técnico-mecánica vigente</li>
+              <li style="font-size:13px;color:var(--mid);">✔ Paz y salvo de multas</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sell-form">
+          <h3>Quiero vender mi vehículo</h3>
+          <div class="form-row">
+            <div class="form-group-b"><label>Nombre completo</label><input type="text" placeholder="Tu nombre"/></div>
+            <div class="form-group-b"><label>Teléfono</label><input type="tel" placeholder="300 000 0000"/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group-b"><label>Marca</label><input type="text" placeholder="Chevrolet, Renault..."/></div>
+            <div class="form-group-b"><label>Modelo</label><input type="text" placeholder="Sail, Logan..."/></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group-b"><label>Año</label><input type="number" placeholder="2019"/></div>
+            <div class="form-group-b"><label>Kilometraje</label><input type="number" placeholder="60000"/></div>
+          </div>
+          <div class="form-group-b"><label>Color</label><input type="text" placeholder="Blanco, negro..."/></div>
+          <div class="form-group-b"><label>Descripción adicional</label><textarea placeholder="Estado del vehículo, accesorios, etc."></textarea></div>
+          <button class="btn-send" onclick="enviarVentaCorreo()">Enviar al director comercial ✉️</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════ PAGE: CONTACTO ══════ -->
+<div class="page" id="page-contacto">
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header"><span class="tag">Estamos para ti</span><h2>Ponte en <em>contacto</em></h2><div class="divider"></div><p>Resolvemos tus dudas y te ayudamos a encontrar la mejor solución automotriz.</p></div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="contact-item"><div class="contact-icon">📍</div><div><h4>Sede Principal</h4><p>Cra 69F #19a-91, Bogotá DC (Kennedy)</p></div></div>
+          <div class="contact-item"><div class="contact-icon">📍</div><div><h4>Sede Norte</h4><p>Cra 45 #144-21, Bogotá DC (Usaquén)</p></div></div>
+          <div class="contact-item"><div class="contact-icon">📍</div><div><h4>Special Pits Taller</h4><p>Cra 69F #19a-91, Bogotá DC (Kennedy)</p></div></div>
+          <div class="contact-item"><div class="contact-icon">📞</div><div><h4>WhatsApp & Teléfono</h4><a href="tel:+573155004485">+57 315 500 4485</a><br/><a href="tel:+573023130024" style="color:var(--mid);font-size:13px;">+57 302 313 0024</a></div></div>
+          <div class="contact-item"><div class="contact-icon">📧</div><div><h4>Director Comercial</h4><a href="mailto:directorcomercial@rodandoexpress.com.co">directorcomercial@rodandoexpress.com.co</a></div></div>
+          <div class="contact-item"><div class="contact-icon">📧</div><div><h4>Director de Transporte</h4><a href="mailto:directortransporte@specialcar.com.co">directortransporte@specialcar.com.co</a></div></div>
+          <div class="contact-item"><div class="contact-icon">🕐</div><div><h4>Horario de atención</h4><p>Lun – Sáb: 8:00 am – 6:00 pm<br/>Dom: 9:00 am – 2:00 pm</p></div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+            <a href="https://allmylinks.com/specialcar" target="_blank" class="btn-gold" style="font-size:13px;padding:10px 18px;">📱 Redes sociales</a>
+            <a href="https://wa.me/573155004485" target="_blank" class="btn-primary" style="font-size:13px;padding:10px 18px;background:var(--blue);color:var(--white);border-radius:var(--r-sm);font-family:var(--font-h);font-weight:700;display:inline-flex;align-items:center;">💬 WhatsApp</a>
+          </div>
+        </div>
+        <div class="contact-form-wrap">
+          <h3>Envíanos un mensaje</h3>
+          <div class="form-row">
+            <div class="form-group-b"><label>Nombre</label><input type="text" placeholder="Tu nombre completo"/></div>
+            <div class="form-group-b"><label>Teléfono</label><input type="tel" placeholder="300 000 0000"/></div>
+          </div>
+          <div class="form-group-b"><label>Correo</label><input type="email" placeholder="tu@email.com"/></div>
+          <div class="form-group-b"><label>Servicio de interés</label>
+            <select><option>Compra de vehículo</option><option>Crédito vehicular</option><option>Taller mecánico</option><option>Transporte especial</option><option>Seguros & SOAT</option><option>Quiero vender mi carro</option><option>Otro</option></select>
+          </div>
+          <div class="form-group-b"><label>Mensaje</label><textarea placeholder="¿En qué podemos ayudarte?"></textarea></div>
+          <button class="btn-send" onclick="enviarMensaje()">Enviar mensaje</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ BOTONES FLOTANTES GLOBALES ══ -->
+<div class="sc-float-global">
+
+  <!-- WHATSAPP -->
+  <div class="sc-float-item">
+    <span class="sc-float-label">WhatsApp</span>
+    <a href="https://wa.me/573155004485?text=Hola%20Special%20CAR%20Usados!%20Quiero%20más%20información." target="_blank" class="sc-fab-btn sc-fab-wsp" aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
   </div>
-  <div class="float-label-wrap">
-    <span class="float-tooltip">Cotizar seguro</span>
-    <button class="float-btn float-ins" aria-label="Cotizar seguro" onclick="switchTab('insurance', document.getElementById('tab-btn-insurance'));window.scrollTo({top:0,behavior:'smooth'})">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/><path d="M9 12l2 2 4-4"/></svg>
+
+  <!-- CHAT / CORREO -->
+  <div class="sc-float-item">
+    <span class="sc-float-label">Enviar mensaje</span>
+    <button class="sc-fab-btn sc-fab-chat" onclick="openChatModal()" aria-label="Chat por correo">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
     </button>
   </div>
-  <div class="float-label-wrap">
-    <span class="float-tooltip">Publica con nosotros</span>
-    <button class="float-btn float-pub" aria-label="Publica con nosotros" onclick="openPublishModal()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
-    </button>
+
+</div>
+
+<!-- MODAL CHAT / CONTACTO POR CORREO -->
+<div class="sc-chat-overlay" id="chatModal">
+  <div class="sc-chat-modal">
+    <div class="sc-chat-hdr">
+      <div class="sc-chat-hdr-left">
+        <div class="sc-chat-avatar">
+          <img src="assets/logo.png" alt="Special CAR" onerror="this.outerHTML='<span>SC</span>'" style="width:32px;height:32px;object-fit:contain;mix-blend-mode:multiply;"/>
+        </div>
+        <div>
+          <div class="sc-chat-name">Special CAR Usados</div>
+          <div class="sc-chat-status"><span class="sc-chat-dot"></span> En línea</div>
+        </div>
+      </div>
+      <button class="sc-chat-close" onclick="closeChatModal()">✕</button>
+    </div>
+    <div class="sc-chat-bubble-wrap">
+      <div class="sc-chat-bubble">
+        👋 ¡Hola! Soy el equipo de <strong>Special CAR Usados</strong>.<br/>
+        ¿En qué podemos ayudarte hoy? Escríbenos y te respondemos muy pronto.
+      </div>
+    </div>
+    <div class="sc-chat-form" id="chatFormWrap">
+      <div class="sc-chat-field-row">
+        <input id="chatName" class="sc-chat-input" type="text" placeholder="Tu nombre *" required/>
+        <input id="chatPhone" class="sc-chat-input" type="tel" placeholder="Tu teléfono"/>
+      </div>
+      <input id="chatEmail" class="sc-chat-input" type="email" placeholder="Tu correo electrónico *" required/>
+      <select id="chatSubject" class="sc-chat-input">
+        <option value="">Asunto *</option>
+        <option>Compra de vehículo</option>
+        <option>Crédito vehicular</option>
+        <option>Taller mecánico</option>
+        <option>Transporte especial</option>
+        <option>Seguros & SOAT</option>
+        <option>Quiero vender mi carro</option>
+        <option>Información general</option>
+        <option>Otro</option>
+      </select>
+      <textarea id="chatMsg" class="sc-chat-input sc-chat-textarea" placeholder="Escribe tu mensaje... *" rows="3" required></textarea>
+      <button class="sc-chat-send" onclick="sendChatMessage()">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        Enviar mensaje
+      </button>
+      <p class="sc-chat-alt">¿Prefieres WhatsApp? <a href="https://wa.me/573155004485" target="_blank">Escríbenos ahora →</a></p>
+    </div>
+    <div class="sc-chat-success" id="chatSuccess" style="display:none;">
+      <div style="font-size:48px;margin-bottom:12px;">✅</div>
+      <h3>¡Mensaje enviado!</h3>
+      <p>Te responderemos a la brevedad al correo que nos dejaste.<br/>También puedes escribirnos por WhatsApp.</p>
+      <a href="https://wa.me/573155004485" target="_blank" class="sc-chat-send" style="display:inline-flex;margin-top:16px;text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Abrir WhatsApp
+      </a>
+    </div>
   </div>
 </div>
 
+<style>
+/* ── BOTONES FLOTANTES GLOBALES ── */
+.sc-float-global{position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;gap:12px;z-index:600;}
+.sc-float-item{position:relative;display:flex;align-items:center;justify-content:flex-end;}
+.sc-float-label{display:none;position:absolute;right:68px;background:var(--blue-dark);color:var(--white);font-family:var(--font-h);font-size:11px;font-weight:700;padding:6px 12px;border-radius:6px;white-space:nowrap;box-shadow:var(--sh-md);}
+.sc-float-label::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-left-color:var(--blue-dark);border-right:none;}
+.sc-float-item:hover .sc-float-label{display:block;}
+.sc-fab-btn{width:58px;height:58px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;box-shadow:0 6px 20px rgba(0,0,0,.25);}
+.sc-fab-btn:hover{transform:scale(1.1);box-shadow:0 8px 28px rgba(0,0,0,.3);}
+.sc-fab-wsp{background:#25d366;color:var(--white);}
+.sc-fab-wsp:hover{background:#1ebe5d;}
+.sc-fab-chat{background:var(--blue);color:var(--white);}
+.sc-fab-chat:hover{background:var(--blue-light);}
+
+/* ── MODAL CHAT ── */
+.sc-chat-overlay{display:none;position:fixed;inset:0;z-index:700;align-items:flex-end;justify-content:flex-end;padding:0 28px 104px;}
+.sc-chat-overlay.open{display:flex;}
+.sc-chat-modal{background:var(--white);border-radius:18px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;animation:chatIn .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes chatIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}
+.sc-chat-hdr{background:linear-gradient(135deg,var(--blue-dark),var(--blue));padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.sc-chat-hdr-left{display:flex;align-items:center;gap:12px;}
+.sc-chat-avatar{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(255,255,255,.3);}
+.sc-chat-name{color:var(--white);font-family:var(--font-h);font-size:16px;font-weight:800;}
+.sc-chat-status{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.75);font-size:11px;margin-top:2px;}
+.sc-chat-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:chatDot 2s ease infinite;}
+@keyframes chatDot{0%,100%{opacity:1}50%{opacity:.4}}
+.sc-chat-close{background:rgba(255,255,255,.15);border:none;color:var(--white);width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.sc-chat-close:hover{background:rgba(255,255,255,.3);}
+.sc-chat-bubble-wrap{padding:16px 18px 8px;background:var(--off);}
+.sc-chat-bubble{background:var(--white);border-radius:0 12px 12px 12px;padding:13px 16px;font-size:13px;color:var(--text);line-height:1.6;box-shadow:var(--sh-sm);border:1px solid var(--border);max-width:90%;}
+.sc-chat-form{padding:14px 18px 18px;background:var(--off);}
+.sc-chat-field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.sc-chat-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:13px;color:var(--text);outline:none;background:var(--white);transition:.2s;margin-bottom:8px;}
+.sc-chat-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,60,142,.08);}
+.sc-chat-input::placeholder{color:var(--mid);}
+.sc-chat-textarea{resize:none;margin-bottom:8px;line-height:1.5;}
+.sc-chat-send{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:var(--white);border:none;font-family:var(--font-h);font-weight:800;font-size:14px;letter-spacing:.5px;text-transform:uppercase;padding:13px;border-radius:var(--r-sm);cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.sc-chat-send:hover{opacity:.9;transform:translateY(-1px);}
+.sc-chat-alt{font-size:12px;color:var(--mid);text-align:center;margin-top:10px;}
+.sc-chat-alt a{color:var(--blue);font-weight:700;}
+.sc-chat-success{padding:28px 20px;background:var(--off);text-align:center;}
+.sc-chat-success h3{font-family:var(--font-h);font-size:20px;font-weight:900;color:var(--blue-dark);margin-bottom:8px;}
+.sc-chat-success p{font-size:13px;color:var(--mid);line-height:1.6;}
+/* Botón catálogo flotante (publicar) */
+.float-group-cat{position:fixed;bottom:110px;right:34px;z-index:590;}
+.float-group-cat .float-btn{width:48px;height:48px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:.2s;box-shadow:var(--sh-lg);background:var(--gold);color:var(--blue-dark);}
+.float-group-cat .float-btn:hover{transform:scale(1.1);}
+.float-group-cat .float-wrap{position:relative;display:flex;align-items:center;justify-content:flex-end;}
+.float-group-cat .float-tooltip{display:none;position:absolute;right:58px;background:var(--blue-dark);color:var(--white);font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;white-space:nowrap;font-family:var(--font-h);}
+.float-group-cat .float-wrap:hover .float-tooltip{display:block;}
+</style>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/logo2.png" alt="Special CAR Usados" class="footer-brand-img" onerror="this.style.display='none'"/>
+        <p style="font-size:13px;color:#8898cc;line-height:1.75;max-width:240px;margin-bottom:18px;">Tu aliado automotriz en Bogotá. Venta de vehículos, crédito, taller mecánico, transporte especial y todos los servicios que necesitas.</p>
+        <div class="footer-social">
+          <a href="https://allmylinks.com/specialcar" target="_blank" title="Facebook" style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.887v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>Facebook</a>
+          <a href="https://allmylinks.com/specialcar" target="_blank" title="Instagram" style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>Instagram</a>
+          <a href="https://allmylinks.com/specialcar" target="_blank" title="TikTok" style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>TikTok</a>
+          <a href="https://allmylinks.com/specialcar" target="_blank" title="YouTube" style="display:flex;align-items:center;gap:6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Servicios</h5>
+        <ul>
+          <li><a href="#" onclick="showPage('catalogo',null)">Venta de vehículos</a></li>
+          <li><a href="#" onclick="showPage('credito',null)">Crédito rápido</a></li>
+          <li><a href="#" onclick="showPage('servicios',null)">Taller mecánico</a></li>
+          <li><a href="#" onclick="showPage('servicios',null)">Transporte especial</a></li>
+          <li><a href="#" onclick="showPage('servicios',null)">Seguros & SOAT</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Empresa</h5>
+        <ul>
+          <li><a href="#" onclick="showPage('quienes',null)">Quiénes somos</a></li>
+          <li><a href="#" onclick="showPage('sedes',null)">Nuestras sedes</a></li>
+          <li><a href="#" onclick="showPage('vender',null)">Quiero vender</a></li>
+          <li><a href="admin.html">Panel admin</a></li>
+          <li><a href="#" onclick="showPage('contacto',null)">Contáctanos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <p>📍 Cra 69F #19a-91<br/>Kennedy, Bogotá</p>
+        <p>📍 Cra 45 #144-21<br/>Usaquén, Bogotá</p>
+        <p>📞 <a href="tel:+573155004485">+57 315 500 4485</a></p>
+        <p>📞 <a href="tel:+573023130024">+57 302 313 0024</a></p>
+        <p>📧 <a href="mailto:directorcomercial@rodandoexpress.com.co" style="font-size:11px;">directorcomercial@rodandoexpress.com.co</a></p>
+        <p>📧 <a href="mailto:directortransporte@specialcar.com.co" style="font-size:11px;">directortransporte@specialcar.com.co</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Special CAR — Todos los derechos reservados</span>
+      <span>Bogotá, Colombia 🇨🇴</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<!-- LIGHTBOX FOTOS COMPLETAS -->
+<div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <span class="lightbox-counter" id="lbCounter">1 / 1</span>
+  <button class="lightbox-prev" onclick="lbMove(-1)">&#8249;</button>
+  <div class="lightbox-img-wrap">
+    <img id="lbMainImg" src="" alt="Foto vehículo"/>
+  </div>
+  <button class="lightbox-next" onclick="lbMove(1)">&#8250;</button>
+  <div class="lightbox-thumbs" id="lbThumbs"></div>
+</div>
+
+<!-- SCRIPTS: SDK Supabase → supabase.js → client.js (del ZIP) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/client.js"></script>
+
+<script>
+/* ── LIGHTBOX ── */
+let lbImgs = [], lbIdx = 0;
+function openLightbox(imgs, idx) {
+  lbImgs = imgs; lbIdx = idx;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderLightbox();
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbMove(dir) {
+  if (!lbImgs.length) return;
+  lbIdx = (lbIdx + dir + lbImgs.length) % lbImgs.length;
+  renderLightbox();
+}
+function renderLightbox() {
+  document.getElementById('lbMainImg').src = lbImgs[lbIdx];
+  document.getElementById('lbCounter').textContent = (lbIdx+1) + ' / ' + lbImgs.length;
+  const th = document.getElementById('lbThumbs');
+  th.innerHTML = lbImgs.map(function(src,i) {
+    return '<img src="'+src+'" class="lightbox-thumb'+(i===lbIdx?' active':'')+'" onclick="lbIdx='+i+';renderLightbox()" loading="lazy"/>';
+  }).join('');
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+/* ── CARRUSELES ── */
+const carousels = {};
+function initCarousel(id, count) {
+  carousels[id] = { idx:0, count:count, timer:null };
+  const capId = id.charAt(0).toUpperCase() + id.slice(1);
+  const dotsEl = document.getElementById('dots' + capId);
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i=0; i<count; i++) {
+    const d = document.createElement('button');
+    d.className = 'car-dot' + (i===0?' active':'');
+    (function(idx){ d.onclick = function(){ goCarousel(id, idx); }; })(i);
+    dotsEl.appendChild(d);
+  }
+  startAutoplay(id);
+}
+function goCarousel(id, idx) {
+  const c = carousels[id]; if (!c) return;
+  c.idx = (idx + c.count) % c.count;
+  const capId = id.charAt(0).toUpperCase() + id.slice(1);
+  const track = document.getElementById('track' + capId);
+  if (track) track.style.transform = 'translateX(-' + (c.idx * 100) + '%)';
+  document.querySelectorAll('#dots'+capId+' .car-dot').forEach(function(d,i){ d.classList.toggle('active', i===c.idx); });
+  restartAutoplay(id);
+}
+function moveCarousel(id, dir) { const c=carousels[id]; if(c) goCarousel(id, c.idx+dir); }
+function startAutoplay(id) {
+  const c=carousels[id]; if(!c) return;
+  c.timer = setInterval(function(){ goCarousel(id, c.idx+1); }, 4500);
+}
+function restartAutoplay(id) {
+  const c=carousels[id]; if(!c) return;
+  clearInterval(c.timer); startAutoplay(id);
+}
+
+/* ── NAVEGACIÓN ── */
+let catalogoIniciado = false;
+
+function showPage(id, triggerEl) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('nav ul li a').forEach(function(a){ a.classList.remove('active'); });
+  if (triggerEl) triggerEl.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  document.getElementById('navMenu').classList.remove('open');
+
+  if (id === 'catalogo' && !catalogoIniciado) {
+    catalogoIniciado = true;
+    sb = initSupabase();
+    var dm = document.getElementById('detailModal');
+    var em = document.getElementById('emailModal');
+    if (dm) dm.addEventListener('click', function(e){ if(e.target===this) closeDetail(); });
+    if (em) em.addEventListener('click', function(e){ if(e.target===this) closeEmailModal(); });
+    if (typeof loadVehiclesWithSold === 'function') loadVehiclesWithSold();
+    else loadVehicles();
+  }
+  if (id === 'quienes' && !carousels['about'])  initCarousel('about',  5);
+  if (id === 'sedes') {
+    if (!carousels['sede1']) initCarousel('sede1', 3);
+    if (!carousels['sede2']) initCarousel('sede2', 3);
+    if (!carousels['sede3']) initCarousel('sede3', 3);
+  }
+}
+
+/* openGallery ya está actualizada en js/supabase.js con lightbox y object-fit:contain */
+
+/* ── HAMBURGER ── */
+document.getElementById('hamburger').addEventListener('click', function() {
+  document.getElementById('navMenu').classList.toggle('open');
+});
+
+/* ── TECLADO ── */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closePubModal();
+    closeLightbox();
+    closeChatModal();
+    if (typeof closeDetail === 'function') closeDetail();
+    if (typeof closeEmailModal === 'function') closeEmailModal();
+  }
+  if (e.key === 'ArrowLeft')  lbMove(-1);
+  if (e.key === 'ArrowRight') lbMove(1);
+});
+
+/* ── SIMULADOR CRÉDITO ── */
+function simularCredito() {
+  const valor    = parseFloat(document.getElementById('simValor').value)   || 0;
+  const inicial  = parseFloat(document.getElementById('simInicial').value) || 0;
+  const meses    = parseInt(document.getElementById('simPlazo').value);
+  const financiar = valor - inicial;
+  if (financiar <= 0) { alert('El valor a financiar debe ser mayor a 0'); return; }
+  const tasa  = 0.018;
+  const cuota = financiar * (tasa * Math.pow(1+tasa,meses)) / (Math.pow(1+tasa,meses)-1);
+  document.getElementById('simCuota').textContent = '$' + Math.round(cuota).toLocaleString('es-CO');
+  const res = document.getElementById('simResult');
+  res.style.display = 'block';
+  res.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ── WHATSAPP HELPERS ── */
+function enviarVenta() {
+  window.open('https://wa.me/573155004485?text=Hola!%20Quiero%20vender%20mi%20vehículo.', '_blank');
+}
+function enviarVentaCorreo() {
+  // Recoger datos del formulario
+  const campos = ['Nombre','Teléfono','Marca','Modelo','Año','Kilometraje','Color'];
+  const inputs = document.querySelectorAll('.sell-form input, .sell-form textarea');
+  let body = 'Solicitud de venta de vehículo:%0A%0A';
+  inputs.forEach((inp, i) => {
+    if (inp.value.trim()) {
+      body += (campos[i] || 'Descripción') + ': ' + encodeURIComponent(inp.value.trim()) + '%0A';
+    }
+  });
+  window.location.href = 'mailto:directorcomercial@rodandoexpress.com.co?subject=Quiero%20vender%20mi%20vehículo%20—%20Special%20CAR%20Usados&body=' + body;
+}
+function enviarMensaje() {
+  window.open('https://wa.me/573155004485?text=Hola%20Special%20CAR!%20Quiero%20más%20información.', '_blank');
+}
+
+/* ── MODAL CHAT ── */
+function openChatModal() {
+  document.getElementById('chatModal').classList.add('open');
+  document.getElementById('chatFormWrap').style.display = 'block';
+  document.getElementById('chatSuccess').style.display  = 'none';
+  setTimeout(function(){ document.getElementById('chatName').focus(); }, 150);
+}
+function closeChatModal() {
+  document.getElementById('chatModal').classList.remove('open');
+}
+document.getElementById('chatModal').addEventListener('click', function(e) {
+  if (e.target === this) closeChatModal();
+});
+function sendChatMessage() {
+  var name    = document.getElementById('chatName').value.trim();
+  var email   = document.getElementById('chatEmail').value.trim();
+  var phone   = document.getElementById('chatPhone').value.trim();
+  var subject = document.getElementById('chatSubject').value;
+  var msg     = document.getElementById('chatMsg').value.trim();
+  if (!name)    { showToast('⚠️ Ingresa tu nombre', 'error');    document.getElementById('chatName').focus();    return; }
+  if (!email || !email.includes('@')) { showToast('⚠️ Ingresa un correo válido', 'error'); document.getElementById('chatEmail').focus(); return; }
+  if (!subject) { showToast('⚠️ Selecciona un asunto', 'error'); document.getElementById('chatSubject').focus(); return; }
+  if (!msg)     { showToast('⚠️ Escribe tu mensaje', 'error');   document.getElementById('chatMsg').focus();     return; }
+
+  var bodyText = 'Nombre: ' + name
+    + '\nCorreo: ' + email
+    + '\nTeléfono: ' + (phone || 'No indicado')
+    + '\nAsunto: ' + subject
+    + '\n\nMensaje:\n' + msg;
+
+  var mailLink = 'mailto:directorcomercial@rodandoexpress.com.co'
+    + '?cc=directortransporte@specialcar.com.co'
+    + '&subject=' + encodeURIComponent('[Special CAR Web] ' + subject + ' — ' + name)
+    + '&body=' + encodeURIComponent(bodyText);
+
+  window.location.href = mailLink;
+
+  // Mostrar pantalla de éxito
+  document.getElementById('chatFormWrap').style.display = 'none';
+  document.getElementById('chatSuccess').style.display  = 'block';
+  showToast('✅ ¡Mensaje listo para enviar!');
+}
+
+/* ── MODAL PUBLICAR ── */
+function openPublishModal()  { document.getElementById('publishModal').classList.add('open'); }
+function closePubModal()     { document.getElementById('publishModal').classList.remove('open'); }
+document.getElementById('publishModal').addEventListener('click', function(e) {
+  if (e.target === this) closePubModal();
+});
+function submitPub() {
+  const name    = document.getElementById('pub-name').value.trim();
+  const phone   = document.getElementById('pub-phone').value.trim();
+  const vehicle = document.getElementById('pub-vehicle').value.trim();
+  if (!name || !phone || !vehicle) { showToast('⚠️ Completa los campos obligatorios','error'); return; }
+  const msg = 'Hola Special CAR! Quiero publicar mi vehículo.%0A*Nombre:* ' + encodeURIComponent(name)
+    + '%0A*Tel:* ' + encodeURIComponent(phone)
+    + '%0A*Vehículo:* ' + encodeURIComponent(vehicle)
+    + '%0A*Precio:* ' + encodeURIComponent(document.getElementById('pub-price').value)
+    + '%0A*Ciudad:* ' + encodeURIComponent(document.getElementById('pub-city').value)
+    + '%0A*Km:* ' + encodeURIComponent(document.getElementById('pub-km').value)
+    + '%0A*Descripción:* ' + encodeURIComponent(document.getElementById('pub-desc').value);
+  window.open('https://wa.me/573155004485?text='+msg,'_blank');
+  closePubModal();
+  showToast('✅ ¡Solicitud enviada! Un asesor te contactará pronto.');
+}
+</script>
 </body>
 </html>
