@@ -96,6 +96,20 @@ img { max-width:100%; display:block; }
 .btn-email:hover { background:var(--blue-pale); border-color:var(--blue); }
 .btn-danger-sm { background:var(--danger-bg); color:var(--danger); border-color:transparent; padding:6px 10px; font-size:11px; border-radius:var(--r-sm); }
 .btn-danger-sm:hover { background:var(--danger); color:var(--white); }
+/* Botón Vendido / Disponible */
+.btn-sold-off { background:#dcfce7; color:#16a34a; border-color:#bbf7d0; font-size:11px; padding:6px 10px; }
+.btn-sold-off:hover { background:#16a34a; color:var(--white); border-color:#16a34a; }
+.btn-sold-on  { background:#fee2e2; color:#dc2626; border-color:#fecaca; font-size:11px; padding:6px 10px; }
+.btn-sold-on:hover  { background:#dc2626; color:var(--white); border-color:#dc2626; }
+/* Badge VENDIDO sobre la tarjeta */
+.v-card.sold-card { opacity:.75; }
+.v-card.sold-card .v-card-img::after {
+  content:'VENDIDO'; position:absolute; inset:0;
+  background:rgba(220,38,38,.55);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-h); font-size:26px; font-weight:900;
+  color:var(--white); letter-spacing:3px;
+}
 .btn-sm  { padding:6px 13px; font-size:12px; }
 .btn-lg  { padding:12px 28px; font-size:14px; }
 .btn-block { width:100%; }
