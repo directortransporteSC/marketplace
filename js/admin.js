@@ -148,10 +148,11 @@ function buildAdminCard(v) {
     :`<div class="v-card-img"><div class="v-card-no-img">${getEmoji(v.type)}<span>${hasVideo?'📷 Sin fotos · 🎬 Con video':'Sin fotos'}</span></div></div>`;
 
   return `
-  <div class="v-card" onclick="openDetail('${v.id}')">
+  <div class="v-card ${v.sold ? 'sold-card' : ''}" onclick="openDetail('${v.id}')">
     <div style="position:relative">
       ${imgHtml}
       <span class="v-badge ${v.condition==='Nuevo'?'badge-new':'badge-used'}">${v.condition}</span>
+      ${v.sold ? '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(220,38,38,.85);color:#fff;font-family:var(--font-h);font-size:14px;font-weight:900;letter-spacing:2px;padding:6px 14px;border-radius:6px;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3);">🔴 VENDIDO</span>' : ''}
       <span style="position:absolute;bottom:10px;left:10px;background:rgba(26,47,110,.7);color:#fff;font-size:10px;padding:3px 8px;border-radius:6px">${timeAgo(v.created_at)}</span>
     </div>
     <div class="v-body">
@@ -166,6 +167,7 @@ function buildAdminCard(v) {
       </div>
       <div class="v-footer">
         <button class="btn btn-primary btn-sm" style="flex:2" onclick="event.stopPropagation();editVehicle('${v.id}')">✏️ Editar</button>
+        <button class="btn btn-sm ${v.sold ? 'btn-sold-on' : 'btn-sold-off'}" onclick="event.stopPropagation();toggleSold('${v.id}',${!!v.sold})" title="${v.sold ? 'Marcar disponible' : 'Marcar vendido'}">${v.sold ? '🔴 Vendido' : '✅ Disp.'}</button>
         <button class="btn btn-danger-sm" onclick="event.stopPropagation();deleteVehicle('${v.id}')">🗑</button>
       </div>
     </div>
@@ -190,18 +192,24 @@ function editVehicle(id) {
     'f-brand':v.brand,'f-model':v.model,'f-year':v.year,'f-price':v.price,
     'f-type':v.type,'f-condition':v.condition,'f-km':v.km,'f-fuel':v.fuel,
     'f-trans':v.trans,'f-color':v.color,'f-engine':v.engine,'f-city':v.city,
-    'f-whatsapp':v.whatsapp,'f-phone':v.phone,'f-email':v.email,
-    'f-seller':v.seller_name,'f-desc':v.description
+    'f-desc':v.description
   };
   Object.entries(map).forEach(([k,val])=>{const el=document.getElementById(k);if(el)el.value=val||'';});
+  // Cargar testimonio
+  var t = v.testimony || {};
+  var tn = document.getElementById('f-test-name');  if(tn) tn.value = t.name||'';
+  var ts = document.getElementById('f-test-stars'); if(ts) ts.value = t.stars||5;
+  var tt = document.getElementById('f-test-text');  if(tt) tt.value = t.text||'';
+  // Cargar vendedores
+  const sellers = v.sellers || (v.seller_name ? [{name:v.seller_name,whatsapp:v.whatsapp||'',phone:v.phone||'',email:v.email||''}] : []);
+  initSellersUI(sellers);
   renderImgPreview();
   renderVideoPreview();
   document.getElementById('addModal').classList.add('open');
 }
 
 function clearForm() {
-  ['f-brand','f-model','f-year','f-price','f-km','f-color','f-engine',
-   'f-city','f-whatsapp','f-phone','f-email','f-seller','f-desc'].forEach(id=>{
+  ['f-brand','f-model','f-year','f-price','f-km','f-color','f-engine','f-city','f-desc'].forEach(id=>{
     const el=document.getElementById(id); if(el)el.value='';
   });
   document.getElementById('f-type').value='';
@@ -209,7 +217,73 @@ function clearForm() {
   document.getElementById('f-fuel').value='Gasolina';
   document.getElementById('f-trans').value='Automática';
   document.getElementById('imgPreview').innerHTML='';
+  initSellersUI([]);
   renderVideoPreview();
+}
+
+/* ── MULTI-VENDEDORES ── */
+function initSellersUI(sellers) {
+  const container = document.getElementById('sellersContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  const list = sellers.length ? sellers : [{}];
+  list.forEach((s,i) => addSellerRow(s, i));
+  updateAddSellerBtn();
+}
+
+function addSellerRow(data, idx) {
+  const container = document.getElementById('sellersContainer');
+  if (!container) return;
+  const count = container.querySelectorAll('.seller-row').length;
+  if (count >= 5) return;
+  const i = idx !== undefined ? idx : count;
+  const d = data && typeof data === 'object' && !data.target ? data : {};
+  const row = document.createElement('div');
+  row.className = 'seller-row';
+  row.style.cssText = 'background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--r);padding:14px;margin-bottom:10px;position:relative;';
+  row.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-family:var(--font-h);font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;">
+        ${i===0?'👤 Vendedor principal':'👤 Vendedor '+(i+1)}
+      </span>
+      ${i>0?`<button type="button" onclick="removeSellerRow(this)" style="background:var(--danger-bg);border:none;color:var(--danger);border-radius:var(--r-sm);padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;">✕ Quitar</button>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;">Nombre</label>
+        <input class="fc seller-name" value="${d.name||''}" placeholder="Nombre o empresa" style="margin-bottom:0;"/></div>
+      <div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;">WhatsApp (sin +57)</label>
+        <input class="fc seller-whatsapp" value="${d.whatsapp||''}" placeholder="3155004485" style="margin-bottom:0;"/></div>
+      <div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;">Teléfono adicional</label>
+        <input class="fc seller-phone" value="${d.phone||''}" placeholder="3001234567" style="margin-bottom:0;"/></div>
+      <div><label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;">Correo electrónico</label>
+        <input class="fc seller-email" type="email" value="${d.email||''}" placeholder="vendedor@correo.com" style="margin-bottom:0;"/></div>
+    </div>`;
+  container.appendChild(row);
+  updateAddSellerBtn();
+}
+
+function removeSellerRow(btn) {
+  btn.closest('.seller-row').remove();
+  updateAddSellerBtn();
+}
+
+function updateAddSellerBtn() {
+  const container = document.getElementById('sellersContainer');
+  const btn = document.getElementById('btnAddSeller');
+  if (!container||!btn) return;
+  const count = container.querySelectorAll('.seller-row').length;
+  btn.style.display = count >= 5 ? 'none' : '';
+  btn.textContent = `+ Agregar vendedor (${count}/5)`;
+}
+
+function getSellersData() {
+  const rows = document.querySelectorAll('.seller-row');
+  return Array.from(rows).map(row => ({
+    name:     row.querySelector('.seller-name')?.value.trim()    || '',
+    whatsapp: row.querySelector('.seller-whatsapp')?.value.trim()|| '',
+    phone:    row.querySelector('.seller-phone')?.value.trim()   || '',
+    email:    row.querySelector('.seller-email')?.value.trim()   || ''
+  })).filter(s => s.name || s.whatsapp || s.email);
 }
 
 // ─── Manejo de fotos ───────────────────────────
@@ -390,7 +464,12 @@ async function saveVehicle() {
       videoUrl = null;
     }
 
-    // 3. Armar objeto
+    // 3. Armar objeto — sellers/docs/testimony vienen de window._adminExtra (inyectado por admin.html)
+    const extra = window._adminExtra || {};
+    const sellersList = extra.sellers && extra.sellers.length ? extra.sellers
+      : (typeof getSellersData === 'function' ? getSellersData() : []);
+
+    // Objeto base siempre funciona (columnas que siempre existen)
     const v = {
       brand, model, year, price,
       type:        document.getElementById('f-type').value||null,
@@ -401,18 +480,41 @@ async function saveVehicle() {
       color:       document.getElementById('f-color').value.trim()||null,
       engine:      document.getElementById('f-engine').value.trim()||null,
       city:        document.getElementById('f-city').value.trim()||null,
-      whatsapp:    document.getElementById('f-whatsapp').value.trim()||null,
-      phone:       document.getElementById('f-phone').value.trim()||null,
-      email:       document.getElementById('f-email').value.trim()||null,
-      seller_name: document.getElementById('f-seller').value.trim()||null,
       description: document.getElementById('f-desc').value.trim()||null,
       images:      imageUrls,
       video_url:   videoUrl,
+      seller_name: sellersList[0]?.name    || null,
+      whatsapp:    sellersList[0]?.whatsapp || null,
+      phone:       sellersList[0]?.phone    || null,
+      email:       sellersList[0]?.email    || null,
     };
 
-    let error;
-    if (editId) { ({ error } = await sb.from('vehicles').update(v).eq('id', editId)); }
-    else        { ({ error } = await sb.from('vehicles').insert([v])); }
+    // Intentar agregar columnas nuevas (solo si ya fueron creadas en Supabase)
+    // Si no existen, el error 400 se captura y se reintenta sin ellas
+    const vFull = {
+      ...v,
+      sellers:   sellersList,
+      docs:      extra.docs     || null,
+      testimony: extra.testimony|| null,
+      sold:      false,
+    };
+    window._adminExtra = null;
+
+    let error, result;
+    // Intento 1: con todas las columnas nuevas
+    if (editId) { result = await sb.from('vehicles').update(vFull).eq('id', editId); }
+    else        { result = await sb.from('vehicles').insert([vFull]); }
+    error = result.error;
+
+    // Si falla por columnas inexistentes, reintenta solo con columnas base
+    if (error && (error.code === 'PGRST204' || error.message?.includes('column'))) {
+      console.warn('Columnas nuevas no existen aún. Guardando solo campos base. Ejecuta el SQL de supabase_setup.sql');
+      if (editId) { result = await sb.from('vehicles').update(v).eq('id', editId); }
+      else        { result = await sb.from('vehicles').insert([v]); }
+      error = result.error;
+      if (!error) showToast('⚠️ Guardado sin docs/sellers. Ejecuta el SQL en Supabase.', 'error');
+    }
+
     if (error) throw error;
 
     await loadVehicles();
@@ -493,11 +595,37 @@ function openDetail(id) {
     </div>
     <div class="detail-actions">
       <button class="btn btn-primary" style="flex:2" onclick="closeDetail();editVehicle('${v.id}')">✏️ Editar</button>
+      <button class="btn ${v.sold ? 'btn-sold-on' : 'btn-sold-off'}" style="flex:2" id="soldToggleBtn" onclick="toggleSold('${v.id}',${!!v.sold})">${v.sold ? '🔴 Marcar disponible' : '✅ Marcar como vendido'}</button>
       <button class="btn btn-danger-sm" style="flex:1;padding:12px" onclick="deleteVehicle('${v.id}')">🗑 Eliminar</button>
     </div>`;
   document.getElementById('detailModal').classList.add('open');
 }
 function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+
+// ─── Marcar como Vendido / Disponible ──────────
+async function toggleSold(id, currentSold) {
+  const newSold = !currentSold;
+  const label   = newSold ? 'vendido' : 'disponible';
+  if (!confirm('¿Marcar este vehículo como ' + label + '?')) return;
+
+  showSpinner(newSold ? 'Marcando como vendido...' : 'Marcando como disponible...');
+  try {
+    const { error } = await sb.from('vehicles').update({ sold: newSold }).eq('id', id);
+    if (error) throw error;
+
+    // Actualizar en memoria
+    const v = vehicles.find(x => x.id === id);
+    if (v) v.sold = newSold;
+
+    showToast(newSold ? '🔴 Marcado como vendido' : '✅ Marcado como disponible');
+    closeDetail();
+    applyFilters();
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    hideSpinner();
+  }
+}
 
 // ─── Init ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {

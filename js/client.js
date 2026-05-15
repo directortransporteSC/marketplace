@@ -27,6 +27,10 @@ async function loadVehicles() {
     applyFilters();
     var st = document.getElementById('statTotal');
     if (st) st.textContent = vehicles.length;
+    // Actualizar contador de vendidos (base 100 + reales)
+    var svEl = document.getElementById('heroStatVendidos');
+    if (svEl) { var sc = 100 + vehicles.filter(function(v){ return v.sold; }).length; svEl.textContent = sc + '+'; }
+    if (typeof updateDynamicStats === 'function') updateDynamicStats();
   } catch(e) {
     showToast('Error al cargar: ' + e.message, 'error');
   } finally {
@@ -224,7 +228,7 @@ function buildSoldCard(v) {
   var imgHtml = imgs.length
     ? '<div class="v-card-img"><img src="' + imgs[0] + '" alt="' + (v.brand||'') + ' ' + (v.model||'') + '" loading="lazy"/><div class="sold-badge">VENDIDO</div></div>'
     : '<div class="v-card-img"><div class="v-card-no-img">' + getEmoji(v.type) + '</div><div class="sold-badge">VENDIDO</div></div>';
-  return '<div class="v-card sold" style="cursor:default;">'
+  return '<div class="v-card sold" onclick="if(typeof openSoldModal===\'function\') openSoldModal(\'' + v.id + '\')" title="Ver detalles y testimonio" style="cursor:pointer;">'
     + '<div style="position:relative">' + imgHtml + '</div>'
     + '<div class="v-body">'
     + '<div class="v-header"><div class="v-title">' + (v.brand||'') + ' ' + (v.model||'') + '</div><span class="v-year">' + (v.year||'') + '</span></div>'
@@ -234,7 +238,9 @@ function buildSoldCard(v) {
     + (v.km!=null ? '<span class="spec-tag">🛣 ' + formatKm(v.km) + '</span>' : '')
     + (v.fuel  ? '<span class="spec-tag">⛽ ' + v.fuel  + '</span>' : '')
     + (v.trans ? '<span class="spec-tag">⚙️ ' + v.trans + '</span>' : '')
-    + '</div></div></div>';
+    + '</div>'
+    + '<div style="text-align:center;padding:8px 0 4px;font-size:12px;color:var(--mid);">👆 Clic para ver detalles y testimonio</div>'
+    + '</div></div>';
 }
 
 /* ── Favoritos ────────────────────────────────── */
@@ -290,12 +296,14 @@ function openDetail(id) {
     + (v.engine ? '<div class="d-spec"><div class="sl">Motor</div><div class="sv">' + v.engine + '</div></div>' : '')
     + (v.color  ? '<div class="d-spec"><div class="sl">Color</div><div class="sv">' + v.color  + '</div></div>' : '')
     + (v.type   ? '<div class="d-spec"><div class="sl">Tipo</div><div class="sv">' + v.type   + '</div></div>' : '')
+    + (v.docs && v.docs.tipo_servicio === 'publico' && v.docs.ingresos ? '<div class="d-spec" style="background:#dcfce7;border-color:#bbf7d0;"><div class="sl" style="color:#16a34a;">Ingresos/mes</div><div class="sv" style="color:#16a34a;">$' + parseInt(v.docs.ingresos).toLocaleString('es-CO') + '</div></div>' : '')
+    + (v.docs && v.docs.tipo_servicio === 'publico' && v.docs.empresa ? '<div class="d-spec"><div class="sl">Empresa</div><div class="sv">' + v.docs.empresa + '</div></div>' : '')
+    + (v.docs && v.docs.tipo_servicio === 'publico' && v.docs.contrato ? '<div class="d-spec"><div class="sl">Contrato</div><div class="sv">' + v.docs.contrato + '</div></div>' : '')
     + '</div>'
     + (v.description ? '<div class="detail-desc">' + v.description.replace(/\n/g,'<br>') + '</div>' : '')
     + videoHtml
-    + '<div class="seller-card"><div class="seller-avatar">' + ((v.seller_name||'V').charAt(0).toUpperCase()) + '</div>'
-    + '<div><div class="seller-name">' + (v.seller_name||'Vendedor') + '</div>' + (v.city ? '<div class="seller-loc">📍 ' + v.city + '</div>' : '') + '</div></div>'
-    + '<div class="contact-card"><div class="contact-methods">' + waHtml + emailHtml + '</div></div>'
+    + (typeof buildDocsHTML === 'function' ? buildDocsHTML(v) : '')
+    + (typeof buildSellersHTML === 'function' ? buildSellersHTML(v) : '')
     + '<div class="detail-actions">'
     + '<button class="btn ' + (isFav?'btn-primary':'btn-outline') + '" style="flex:1" id="detailFavBtn" onclick="toggleDetailFav(\'' + v.id + '\')">' + (isFav?'♥ Guardado':'♡ Guardar') + '</button>'
     + '</div>';
