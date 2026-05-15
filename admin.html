@@ -6,44 +6,62 @@
 <title>Special CAR Usados — Panel Admin</title>
 <link rel="icon" href="assets/logo.png"/>
 <link rel="stylesheet" href="css/styles.css"/>
+<style>
+.tipo-toggle{display:flex;gap:0;border-radius:var(--r-sm);overflow:hidden;border:1.5px solid var(--border);margin-bottom:14px;}
+.tipo-btn{flex:1;padding:10px;border:none;font-family:var(--font-h);font-size:13px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;transition:.2s;background:var(--off);color:var(--mid);}
+.tipo-btn.active{color:var(--white);}
+.tipo-btn.pub.active{background:#1a6b2a;}
+.tipo-btn.par.active{background:var(--blue);}
+.docs-box{background:var(--off);border-radius:var(--r);padding:18px;margin-top:10px;border:1.5px solid var(--border);}
+.docs-box-title{font-family:var(--font-h);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:14px;}
+.docs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.docs-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+.df label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;}
+.df input,.df select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:13px;color:var(--text);outline:none;transition:.2s;background:var(--white);}
+.df input:focus,.df select:focus{border-color:var(--blue);}
+.docs-optional{background:var(--blue-pale);border-radius:var(--r-sm);padding:14px;margin-top:10px;border:1px solid var(--blue-soft);}
+.docs-optional-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-family:var(--font-h);}
+.btn-sold-off{background:#dcfce7;color:#16a34a;border-color:#bbf7d0;}
+.btn-sold-off:hover{background:#16a34a;color:var(--white);}
+.btn-sold-on{background:#fee2e2;color:#dc2626;border-color:#fecaca;}
+.btn-sold-on:hover{background:#dc2626;color:var(--white);}
+.seller-row{background:var(--off);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.seller-row-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.seller-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sf label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);display:block;margin-bottom:4px;}
+.sf input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:var(--font-b);font-size:13px;color:var(--text);outline:none;background:var(--white);transition:.2s;}
+.sf input:focus{border-color:var(--blue);}
+/* Vendido badge overlay */
+.sold-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(220,38,38,.88);color:#fff;font-family:var(--font-h);font-size:13px;font-weight:900;letter-spacing:2px;padding:6px 16px;border-radius:6px;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:5;}
+.v-card.sold-card{opacity:.75;filter:grayscale(15%);}
+/* fecha vencida / próxima */
+.doc-expired{color:var(--danger);font-weight:700;}
+.doc-soon{color:#d97706;font-weight:700;}
+</style>
 </head>
 <body>
 
-<!-- ══ LOGIN SCREEN ══ -->
+<!-- LOGIN -->
 <div id="loginScreen" class="sc-login-screen">
   <div class="sc-login-card">
     <div class="sc-login-logo">
-      <img src="assets/logo2.png" alt="Special CAR Usados" onerror="this.style.display='none'" style="mix-blend-mode:screen;"/>
+      <img src="assets/logo2.png" alt="Special CAR Usados" onerror="this.style.display='none'" style="mix-blend-mode:screen;height:40px;"/>
       Special <span style="color:var(--gold)">CAR</span> Usados
     </div>
     <p class="sc-login-sub">Panel de administración</p>
-    <div class="login-hint" style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:16px;">
-      🔐 Acceso exclusivo para administradores autorizados
-    </div>
+    <div style="background:var(--blue-pale);border:1px solid var(--blue-soft);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:16px;">🔐 Acceso exclusivo para administradores autorizados</div>
     <div id="loginError" class="sc-login-error"></div>
     <div class="sc-login-form">
-      <div class="form-group">
-        <label>Correo electrónico</label>
-        <input id="loginUser" type="email" placeholder="admin@specialcar.com.co"
-          onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"/>
-      </div>
-      <div class="form-group" style="margin-bottom:20px;">
-        <label>Contraseña</label>
-        <input id="loginPass" type="password" placeholder="••••••••"
-          onkeydown="if(event.key==='Enter')doLogin()"/>
-      </div>
-      <button class="btn btn-primary btn-block btn-lg" onclick="doLogin()" style="font-size:15px;">
-        Iniciar sesión →
-      </button>
+      <div class="form-group"><label>Correo electrónico</label><input id="loginUser" type="email" placeholder="admin@specialcar.com.co" onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()"/></div>
+      <div class="form-group" style="margin-bottom:20px;"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="doLogin()" style="font-size:15px;">Iniciar sesión →</button>
     </div>
     <a href="index.html" class="sc-login-back">← Volver al catálogo</a>
   </div>
 </div>
 
-<!-- ══ ADMIN PANEL ══ -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel" style="display:none">
-
-  <!-- TOPBAR -->
   <div class="sc-topbar">
     <div style="display:flex;align-items:center;gap:16px;">
       <a href="index.html" style="color:#b8c4ee;font-size:12px;">← Catálogo</a>
@@ -52,50 +70,27 @@
     <button onclick="doLogout()" class="btn btn-ghost btn-sm">Cerrar sesión</button>
   </div>
 
-  <!-- HEADER ADMIN -->
   <header class="sc-header">
     <div class="sc-header-inner">
       <a href="index.html" class="sc-logo">
-        <img src="assets/logo2.png" alt="Special CAR Usados" onerror="this.style.display='none'" style="mix-blend-mode:screen;"/>
-        <div class="sc-logo-name">Special <span>CAR</span> <span style="font-size:12px;background:var(--gold);color:var(--blue-dark);padding:2px 8px;border-radius:4px;margin-left:6px;letter-spacing:.3px;">ADMIN</span></div>
+        <img src="assets/logo2.png" alt="Special CAR" onerror="this.style.display='none'" style="mix-blend-mode:screen;height:42px;"/>
+        <div class="sc-logo-name">Special <span>CAR</span> <span style="font-size:12px;background:var(--gold);color:var(--blue-dark);padding:2px 8px;border-radius:4px;margin-left:6px;">ADMIN</span></div>
       </a>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Publicar vehículo</button>
-      </div>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Publicar vehículo</button>
     </div>
   </header>
 
-  <!-- STATS BAR -->
   <div class="sc-stats-bar">
     <div class="sc-stats-inner">
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Total anuncios</div>
-        <div class="sc-stat-value" id="statTotal">0</div>
-      </div>
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Nuevos</div>
-        <div class="sc-stat-value" id="statNew">0</div>
-      </div>
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Usados</div>
-        <div class="sc-stat-value" id="statUsed">0</div>
-      </div>
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Precio promedio</div>
-        <div class="sc-stat-value" id="statAvg">—</div>
-      </div>
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Con fotos</div>
-        <div class="sc-stat-value" id="statPhotos">0</div>
-      </div>
-      <div class="sc-stat-card">
-        <div class="sc-stat-label">Hoy</div>
-        <div class="sc-stat-value" id="statToday">0</div>
-      </div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Total</div><div class="sc-stat-value" id="statTotal">0</div></div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Disponibles</div><div class="sc-stat-value" id="statNew">0</div></div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Vendidos</div><div class="sc-stat-value" id="statUsed">0</div></div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Precio promedio</div><div class="sc-stat-value" id="statAvg">—</div></div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Con fotos</div><div class="sc-stat-value" id="statPhotos">0</div></div>
+      <div class="sc-stat-card"><div class="sc-stat-label">Hoy</div><div class="sc-stat-value" id="statToday">0</div></div>
     </div>
   </div>
 
-  <!-- FILTERS BAR -->
   <div class="sc-filters-bar">
     <button class="sc-filter-chip active" onclick="setOrder('reciente',this)">🕐 Recientes</button>
     <button class="sc-filter-chip" onclick="setOrder('precio_asc',this)">💰 Menor precio</button>
@@ -103,11 +98,9 @@
     <button class="sc-filter-chip" onclick="setOrder('km',this)">🛣 Menos km</button>
     <select class="sc-filter-select" onchange="setYear(this.value)">
       <option value="">📅 Año</option>
-      <option value="2024">2024</option><option value="2023">2023</option>
-      <option value="2022">2022</option><option value="2021">2021</option>
-      <option value="2020">2020</option><option value="2019">2019</option>
-      <option value="2018">2018</option><option value="2015">2015+</option>
-      <option value="2010">2010 o anterior</option>
+      <option>2024</option><option>2023</option><option>2022</option><option>2021</option>
+      <option>2020</option><option>2019</option><option>2018</option>
+      <option value="2015">2015+</option><option value="2010">2010 o anterior</option>
     </select>
     <select class="sc-filter-select" onchange="setPrice(this.value)">
       <option value="">💵 Precio</option>
@@ -118,8 +111,7 @@
       <option value="200000000-9999999999">Más de $200M</option>
     </select>
     <div class="sc-filters-right">
-      <input id="searchInput" type="text" placeholder="🔍 Buscar..." oninput="applyFilters()"
-        style="background:var(--gray-50);border:1.5px solid var(--gray-200);padding:6px 12px;border-radius:20px;font-size:12px;outline:none;width:160px;font-family:var(--font-b);"/>
+      <input id="searchInput" type="text" placeholder="🔍 Buscar..." oninput="applyFilters()" style="background:var(--gray-50);border:1.5px solid var(--gray-200);padding:6px 12px;border-radius:20px;font-size:12px;outline:none;width:160px;font-family:var(--font-b);"/>
       <select id="brandFilter" class="sc-filter-select" onchange="applyFilters()"><option value="">Marcas</option></select>
       <select id="typeFilter" class="sc-filter-select" onchange="applyFilters()">
         <option value="">Tipo</option>
@@ -134,7 +126,6 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="sc-main">
     <div class="sc-section-header">
       <h2>Anuncios publicados</h2>
@@ -150,106 +141,144 @@
   </div>
 </div>
 
-<!-- MODAL AGREGAR / EDITAR VEHÍCULO -->
+<!-- MODAL AGREGAR / EDITAR -->
 <div class="sc-overlay" id="addModal">
-  <div class="sc-modal" style="max-width:700px">
+  <div class="sc-modal" style="max-width:720px">
     <div class="sc-modal-hdr">
       <h2 id="modalTitle">🚗 Publicar vehículo</h2>
       <button class="sc-modal-close" onclick="closeAddModal()">✕</button>
     </div>
-    <div class="sc-modal-body" style="max-height:75vh;overflow-y:auto;">
+    <div class="sc-modal-body" style="max-height:80vh;overflow-y:auto;">
 
-      <!-- DATOS BÁSICOS -->
+      <!-- TIPO SERVICIO -->
+      <div style="margin-bottom:4px;">
+        <div style="font-family:var(--font-h);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:8px;">Tipo de servicio</div>
+        <div class="tipo-toggle">
+          <button type="button" class="tipo-btn par active" id="btnParticular" onclick="setTipoServicio('particular')">🚗 Particular</button>
+          <button type="button" class="tipo-btn pub" id="btnPublico" onclick="setTipoServicio('publico')">🚌 Público / Con ingresos</button>
+        </div>
+        <input type="hidden" id="f-tipo-servicio" value="particular"/>
+      </div>
+
+      <!-- INFO VEHÍCULO -->
       <div class="form-section">
         <div class="form-sec-title">Información del vehículo</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Marca <span class="req">*</span></label>
-            <input id="f-brand" class="fc" placeholder="Chevrolet, Toyota..."/>
-          </div>
-          <div class="form-group">
-            <label>Modelo <span class="req">*</span></label>
-            <input id="f-model" class="fc" placeholder="Sail, Corolla..."/>
-          </div>
-          <div class="form-group">
-            <label>Año <span class="req">*</span></label>
-            <input id="f-year" class="fc" type="number" placeholder="2022" min="1980" max="2026"/>
-          </div>
-          <div class="form-group">
-            <label>Precio COP <span class="req">*</span></label>
-            <input id="f-price" class="fc" type="number" placeholder="45000000"/>
-          </div>
-          <div class="form-group">
-            <label>Tipo</label>
+          <div class="form-group"><label>Marca <span class="req">*</span></label><input id="f-brand" class="fc" placeholder="Chevrolet, Toyota..."/></div>
+          <div class="form-group"><label>Modelo <span class="req">*</span></label><input id="f-model" class="fc" placeholder="Sail, Corolla..."/></div>
+          <div class="form-group"><label>Año <span class="req">*</span></label><input id="f-year" class="fc" type="number" placeholder="2022" min="1980" max="2030"/></div>
+          <div class="form-group"><label>Precio venta COP <span class="req">*</span></label><input id="f-price" class="fc" type="number" placeholder="45000000"/></div>
+          <div class="form-group"><label>Tipo de vehículo</label>
             <select id="f-type" class="fc">
               <option value="">Selecciona...</option>
               <option>Sedán</option><option>SUV</option><option>Camioneta</option>
               <option>Deportivo</option><option>Eléctrico</option><option>Camión</option><option>Van</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Condición</label>
+          <div class="form-group"><label>Condición</label>
             <select id="f-condition" class="fc">
               <option>Usado</option><option>Nuevo</option><option>Con ingresos</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Kilometraje</label>
-            <input id="f-km" class="fc" type="number" placeholder="45000"/>
-          </div>
-          <div class="form-group">
-            <label>Combustible</label>
+          <div class="form-group"><label>Kilometraje</label><input id="f-km" class="fc" type="number" placeholder="45000"/></div>
+          <div class="form-group"><label>Combustible</label>
             <select id="f-fuel" class="fc">
               <option>Gasolina</option><option>Diesel</option><option>Híbrido</option>
               <option>Eléctrico</option><option>GNV</option><option>GNV + Gasolina</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Transmisión</label>
+          <div class="form-group"><label>Transmisión</label>
             <select id="f-trans" class="fc">
               <option>Automática</option><option>Manual</option><option>Secuencial</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Color</label>
-            <input id="f-color" class="fc" placeholder="Blanco, Negro..."/>
+          <div class="form-group"><label>Color</label><input id="f-color" class="fc" placeholder="Blanco, Negro..."/></div>
+          <div class="form-group"><label>Motor</label><input id="f-engine" class="fc" placeholder="1.4L, 2.0 Turbo..."/></div>
+          <div class="form-group"><label>Ciudad</label><input id="f-city" class="fc" placeholder="Bogotá"/></div>
+          <div class="form-group form-full"><label>Descripción</label><textarea id="f-desc" class="fc" rows="3" placeholder="Estado, accesorios, historial de mantenimiento..."></textarea></div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTOS OBLIGATORIOS -->
+      <div class="form-section">
+        <div class="form-sec-title">📋 Documentos del vehículo</div>
+
+        <!-- PÚBLICO -->
+        <div id="docsPublico" style="display:none;">
+          <div class="docs-box">
+            <div class="docs-box-title">🚌 Obligatorios — Vehículo público / con ingresos</div>
+            <div class="docs-grid">
+              <div class="df"><label>SOAT — Vence</label><input type="date" id="d-soat"/></div>
+              <div class="df"><label>RTM (Tecnomecánica) — Vence</label><input type="date" id="d-rtm"/></div>
+            </div>
+            <div class="docs-grid">
+              <div class="df"><label>Póliza RCC — Vence</label><input type="date" id="d-rcc"/></div>
+              <div class="df"><label>Póliza RCE — Vence</label><input type="date" id="d-rce"/></div>
+            </div>
+            <div class="docs-grid">
+              <div class="df"><label>Tarjeta de Operación — Vence</label><input type="date" id="d-top"/></div>
+              <div class="df"><label>Empresa Afiliadora</label><input type="text" id="d-empresa" placeholder="Nombre empresa de transporte..."/></div>
+            </div>
+            <div class="docs-grid">
+              <div class="df"><label>Tiempo de contrato</label>
+                <select id="d-contrato">
+                  <option value="">Sin definir</option>
+                  <option>Sin contrato</option><option>6 meses</option>
+                  <option>1 año</option><option>2 años</option>
+                  <option>3 años</option><option>Indefinido</option>
+                </select>
+              </div>
+              <div class="df"><label>Ingresos mensuales aprox. (COP)</label><input type="number" id="d-ingresos" placeholder="Ej: 3500000"/></div>
+            </div>
+            <div class="docs-optional">
+              <div class="docs-optional-title">💰 Costos adicionales de documentación (opcional)</div>
+              <div class="docs-grid">
+                <div class="df"><label>Valor renovación SOAT</label><input type="number" id="d-val-soat" placeholder="350000"/></div>
+                <div class="df"><label>Valor renovación RTM</label><input type="number" id="d-val-rtm" placeholder="120000"/></div>
+                <div class="df"><label>Valor póliza RCC / año</label><input type="number" id="d-val-rcc" placeholder="1200000"/></div>
+                <div class="df"><label>Valor póliza RCE / año</label><input type="number" id="d-val-rce" placeholder="800000"/></div>
+                <div class="df"><label>Traspaso (Runt)</label><input type="number" id="d-val-traspaso" placeholder="350000"/></div>
+                <div class="df"><label>Revisión de documentos</label><input type="number" id="d-val-docs" placeholder="80000"/></div>
+                <div class="df"><label>Cesión de derechos</label><input type="number" id="d-val-cesion" placeholder="200000"/></div>
+                <div class="df"><label>Otros documentos</label><input type="number" id="d-val-otros" placeholder="150000"/></div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Motor</label>
-            <input id="f-engine" class="fc" placeholder="1.4L, 2.0 Turbo..."/>
-          </div>
-          <div class="form-group">
-            <label>Ciudad</label>
-            <input id="f-city" class="fc" placeholder="Bogotá"/>
-          </div>
-          <div class="form-group form-full">
-            <label>Descripción</label>
-            <textarea id="f-desc" class="fc" rows="3" placeholder="Descripción detallada del vehículo, estado, accesorios, historial..."></textarea>
+        </div>
+
+        <!-- PARTICULAR -->
+        <div id="docsParticular">
+          <div class="docs-box">
+            <div class="docs-box-title">🚗 Obligatorios — Vehículo particular</div>
+            <div class="docs-grid">
+              <div class="df"><label>SOAT — Vence</label><input type="date" id="dp-soat"/></div>
+              <div class="df"><label>RTM (Tecnomecánica) — Vence</label><input type="date" id="dp-rtm"/></div>
+            </div>
+            <div class="docs-optional">
+              <div class="docs-optional-title">🛡️ Seguros & costos opcionales (si aplica)</div>
+              <div class="docs-grid">
+                <div class="df"><label>Póliza RCE — Vence</label><input type="date" id="dp-rce"/></div>
+                <div class="df"><label>Todo Riesgo — Vence</label><input type="date" id="dp-todo-riesgo"/></div>
+                <div class="df"><label>Costo renovación SOAT</label><input type="number" id="dp-val-soat" placeholder="250000"/></div>
+                <div class="df"><label>Costo RTM</label><input type="number" id="dp-val-rtm" placeholder="120000"/></div>
+                <div class="df"><label>Traspaso (Runt)</label><input type="number" id="dp-val-traspaso" placeholder="350000"/></div>
+                <div class="df"><label>Revisión de documentos</label><input type="number" id="dp-val-docs" placeholder="80000"/></div>
+                <div class="df"><label>Cesión de derechos</label><input type="number" id="dp-val-cesion" placeholder="200000"/></div>
+                <div class="df"><label>Otros documentos</label><input type="number" id="dp-val-otros" placeholder="150000"/></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- CONTACTO VENDEDOR -->
+      <!-- VENDEDORES -->
       <div class="form-section">
-        <div class="form-sec-title">Datos del vendedor</div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nombre vendedor</label>
-            <input id="f-seller" class="fc" placeholder="Nombre o empresa"/>
-          </div>
-          <div class="form-group">
-            <label>WhatsApp</label>
-            <input id="f-whatsapp" class="fc" placeholder="3155004485 (sin +57)"/>
-          </div>
-          <div class="form-group">
-            <label>Teléfono adicional</label>
-            <input id="f-phone" class="fc" placeholder="3001234567"/>
-          </div>
-          <div class="form-group">
-            <label>Correo electrónico</label>
-            <input id="f-email" class="fc" type="email" placeholder="vendedor@correo.com"/>
-          </div>
+        <div class="form-sec-title" style="display:flex;justify-content:space-between;align-items:center;">
+          Vendedores de contacto
+          <button type="button" class="btn btn-outline btn-sm" id="btnAddSeller" onclick="addSellerRow()">+ Agregar vendedor</button>
         </div>
+        <div id="sellersContainer"></div>
+        <p style="font-size:11px;color:var(--gray-400);margin-top:4px;">Hasta 5 vendedores. El primero será el principal.</p>
       </div>
 
       <!-- FOTOS -->
@@ -276,15 +305,35 @@
         <div id="videoPreview" style="margin-top:10px;"></div>
       </div>
 
+      <!-- TESTIMONIO -->
+      <div class="form-section">
+        <div class="form-sec-title">💬 Testimonio del nuevo dueño <span style="font-size:10px;font-weight:400;color:var(--gray-400);text-transform:none;">(opcional — solo para vendidos)</span></div>
+        <div class="form-grid">
+          <div class="form-group"><label>Nombre del nuevo dueño</label><input id="f-test-name" class="fc" placeholder="Ej: Carlos Rodríguez"/></div>
+          <div class="form-group"><label>Calificación</label>
+            <select id="f-test-stars" class="fc">
+              <option value="5">★★★★★ — 5 estrellas</option>
+              <option value="4">★★★★☆ — 4 estrellas</option>
+              <option value="3">★★★☆☆ — 3 estrellas</option>
+              <option value="2">★★☆☆☆ — 2 estrellas</option>
+              <option value="1">★☆☆☆☆ — 1 estrella</option>
+            </select>
+          </div>
+          <div class="form-group form-full"><label>Texto del testimonio</label>
+            <textarea id="f-test-text" class="fc" rows="3" placeholder="'El proceso fue muy rápido y el vehículo llegó en perfectas condiciones...'"></textarea>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div class="sc-modal-foot">
       <button class="btn btn-outline" onclick="closeAddModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveVehicle()">💾 Guardar anuncio</button>
+      <button class="btn btn-primary" onclick="saveVehicleAdmin()">💾 Guardar anuncio</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL DETALLE ADMIN -->
+<!-- MODAL DETALLE -->
 <div class="sc-overlay" id="detailModal">
   <div class="sc-modal detail-modal" style="position:relative">
     <button class="sc-modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.45)" onclick="closeDetail()">✕</button>
@@ -293,19 +342,202 @@
   </div>
 </div>
 
-<!-- FAB mobile -->
-<button class="sc-fab" onclick="openAddModal()" title="Agregar vehículo (N)">+</button>
-
+<button class="sc-fab" onclick="openAddModal()" title="Agregar vehículo">+</button>
 <div id="toast" class="sc-toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/admin.js"></script>
+
 <script>
-// Close modals on click outside
-['addModal','detailModal'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el) el.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+/* ════════════════════════════════════════════════
+   FUNCIONES INLINE (evitan ReferenceError antes de que admin.js cargue)
+   ════════════════════════════════════════════════ */
+
+/* ── TIPO SERVICIO ── */
+function setTipoServicio(tipo) {
+  document.getElementById('f-tipo-servicio').value = tipo;
+  document.getElementById('btnParticular').className = 'tipo-btn par' + (tipo==='particular'?' active':'');
+  document.getElementById('btnPublico').className    = 'tipo-btn pub' + (tipo==='publico'?' active':'');
+  document.getElementById('docsParticular').style.display = tipo==='particular' ? '' : 'none';
+  document.getElementById('docsPublico').style.display    = tipo==='publico'    ? '' : 'none';
+  if (tipo==='publico') {
+    document.getElementById('f-condition').value = 'Con ingresos';
+  } else {
+    if (document.getElementById('f-condition').value === 'Con ingresos')
+      document.getElementById('f-condition').value = 'Usado';
+  }
+}
+
+/* ── VENDEDORES ── */
+function addSellerRow(data, idx) {
+  var container = document.getElementById('sellersContainer');
+  if (!container) return;
+  var count = container.querySelectorAll('.seller-row').length;
+  if (count >= 5) return;
+  var i = (idx !== undefined && idx !== null && typeof idx === 'number') ? idx : count;
+  var d = (data && typeof data === 'object' && !data.target && !data.currentTarget) ? data : {};
+  var row = document.createElement('div');
+  row.className = 'seller-row';
+  row.innerHTML =
+    '<div class="seller-row-hdr">'
+    + '<span style="font-family:var(--font-h);font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;">'
+    + (i===0 ? '👤 Vendedor principal' : '👤 Vendedor '+(i+1)) + '</span>'
+    + (i>0 ? '<button type="button" onclick="removeSellerRow(this)" style="background:var(--danger-bg);border:none;color:var(--danger);border-radius:var(--r-sm);padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;">✕ Quitar</button>' : '')
+    + '</div>'
+    + '<div class="seller-grid">'
+    + '<div class="sf"><label>Nombre</label><input class="seller-name" value="'+(d.name||'')+'" placeholder="Nombre o empresa"/></div>'
+    + '<div class="sf"><label>WhatsApp (sin +57)</label><input class="seller-whatsapp" value="'+(d.whatsapp||'')+'" placeholder="3155004485"/></div>'
+    + '<div class="sf"><label>Teléfono adicional</label><input class="seller-phone" value="'+(d.phone||'')+'" placeholder="3001234567"/></div>'
+    + '<div class="sf"><label>Correo electrónico</label><input class="seller-email" type="email" value="'+(d.email||'')+'" placeholder="vendedor@correo.com"/></div>'
+    + '</div>';
+  container.appendChild(row);
+  _updateSellerBtn();
+}
+function removeSellerRow(btn) { btn.closest('.seller-row').remove(); _updateSellerBtn(); }
+function _updateSellerBtn() {
+  var c = document.getElementById('sellersContainer');
+  var b = document.getElementById('btnAddSeller');
+  if (!c||!b) return;
+  var n = c.querySelectorAll('.seller-row').length;
+  b.style.display  = n>=5 ? 'none' : '';
+  b.textContent = '+ Agregar vendedor ('+n+'/5)';
+}
+function initSellersUI(sellers) {
+  var c = document.getElementById('sellersContainer'); if(!c) return;
+  c.innerHTML = '';
+  var list = (sellers && sellers.length) ? sellers : [{}];
+  list.forEach(function(s,i){ addSellerRow(s,i); });
+}
+function getSellersData() {
+  return Array.from(document.querySelectorAll('.seller-row')).map(function(r){
+    return {
+      name:     (r.querySelector('.seller-name')?.value     ||'').trim(),
+      whatsapp: (r.querySelector('.seller-whatsapp')?.value ||'').trim(),
+      phone:    (r.querySelector('.seller-phone')?.value    ||'').trim(),
+      email:    (r.querySelector('.seller-email')?.value    ||'').trim()
+    };
+  }).filter(function(s){ return s.name||s.whatsapp||s.email; });
+}
+
+/* ── DOCUMENTOS ── */
+function getDocsData() {
+  var tipo = document.getElementById('f-tipo-servicio').value;
+  if (tipo==='publico') {
+    return {
+      tipo_servicio: 'publico',
+      soat:     document.getElementById('d-soat').value     ||null,
+      rtm:      document.getElementById('d-rtm').value      ||null,
+      rcc:      document.getElementById('d-rcc').value      ||null,
+      rce:      document.getElementById('d-rce').value      ||null,
+      top:      document.getElementById('d-top').value      ||null,
+      empresa:  document.getElementById('d-empresa').value  ||null,
+      contrato: document.getElementById('d-contrato').value ||null,
+      ingresos: parseInt(document.getElementById('d-ingresos').value)||null,
+      val_soat: parseInt(document.getElementById('d-val-soat').value)||null,
+      val_rtm:  parseInt(document.getElementById('d-val-rtm').value) ||null,
+      val_rcc:  parseInt(document.getElementById('d-val-rcc').value) ||null,
+      val_rce:  parseInt(document.getElementById('d-val-rce').value) ||null,
+      val_traspaso: parseInt(document.getElementById('d-val-traspaso').value)||null,
+      val_docs:     parseInt(document.getElementById('d-val-docs').value)    ||null,
+      val_cesion:   parseInt(document.getElementById('d-val-cesion').value)  ||null,
+      val_otros:    parseInt(document.getElementById('d-val-otros').value)   ||null,
+    };
+  } else {
+    return {
+      tipo_servicio: 'particular',
+      soat:        document.getElementById('dp-soat').value        ||null,
+      rtm:         document.getElementById('dp-rtm').value         ||null,
+      rce:         document.getElementById('dp-rce').value         ||null,
+      todo_riesgo: document.getElementById('dp-todo-riesgo').value ||null,
+      val_soat:    parseInt(document.getElementById('dp-val-soat').value)||null,
+      val_rtm:     parseInt(document.getElementById('dp-val-rtm').value) ||null,
+      val_traspaso:parseInt(document.getElementById('dp-val-traspaso').value)||null,
+      val_docs:    parseInt(document.getElementById('dp-val-docs').value)    ||null,
+      val_cesion:  parseInt(document.getElementById('dp-val-cesion').value)  ||null,
+      val_otros:   parseInt(document.getElementById('dp-val-otros').value)   ||null,
+    };
+  }
+}
+function loadDocsData(docs) {
+  if (!docs) { setTipoServicio('particular'); return; }
+  setTipoServicio(docs.tipo_servicio||'particular');
+  var m = {
+    'd-soat':docs.soat,'d-rtm':docs.rtm,'d-rcc':docs.rcc,'d-rce':docs.rce,
+    'd-top':docs.top,'d-empresa':docs.empresa,'d-contrato':docs.contrato,
+    'd-ingresos':docs.ingresos,'d-val-soat':docs.val_soat,'d-val-rtm':docs.val_rtm,
+    'd-val-rcc':docs.val_rcc,'d-val-rce':docs.val_rce,
+    'dp-soat':docs.soat,'dp-rtm':docs.rtm,'dp-rce':docs.rce,
+    'dp-todo-riesgo':docs.todo_riesgo,'dp-val-soat':docs.val_soat,'dp-val-rtm':docs.val_rtm
+  };
+  Object.entries(m).forEach(function(e){ var el=document.getElementById(e[0]); if(el&&e[1]) el.value=e[1]; });
+}
+function clearDocsData() {
+  ['d-soat','d-rtm','d-rcc','d-rce','d-top','d-empresa','d-ingresos','d-val-soat','d-val-rtm','d-val-rcc','d-val-rce',
+   'd-val-traspaso','d-val-docs','d-val-cesion','d-val-otros',
+   'dp-soat','dp-rtm','dp-rce','dp-todo-riesgo','dp-val-soat','dp-val-rtm',
+   'dp-val-traspaso','dp-val-docs','dp-val-cesion','dp-val-otros'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  var dc=document.getElementById('d-contrato'); if(dc) dc.value='';
+  setTipoServicio('particular');
+}
+
+/* ── GUARDAR VEHÍCULO (wrapper sobre saveVehicle de admin.js) ── */
+async function saveVehicleAdmin() {
+  // Inyectar datos extra en un objeto global que admin.js puede leer
+  window._adminExtra = {
+    sellers:   getSellersData(),
+    docs:      getDocsData(),
+    testimony: (function(){
+      var text  = (document.getElementById('f-test-text')?.value  ||'').trim();
+      var name  = (document.getElementById('f-test-name')?.value  ||'').trim();
+      var stars = parseInt(document.getElementById('f-test-stars')?.value||5);
+      return text ? {text,name,stars} : null;
+    })()
+  };
+  await saveVehicle(); // llama la función de admin.js
+}
+
+/* ── BOTÓN VENDIDO (se usa desde admin.js via tarjeta) ── */
+// toggleSold ya definida en admin.js
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  initSellersUI([]);
+  ['addModal','detailModal'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('click',function(e){ if(e.target===this) this.classList.remove('open'); });
+  });
+});
+
+/* Parche: al abrir modal nuevo, limpiar docs/sellers/testimony */
+document.addEventListener('DOMContentLoaded', function(){
+  var origOpen = window.openAddModal;
+  window.openAddModal = function(){
+    origOpen();
+    clearDocsData();
+    initSellersUI([]);
+    ['f-test-name','f-test-text'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+    var ts=document.getElementById('f-test-stars'); if(ts) ts.value=5;
+  };
+
+  /* Parche: al editar, cargar docs/sellers/testimony */
+  var origEdit = window.editVehicle;
+  window.editVehicle = function(id){
+    origEdit(id);
+    setTimeout(function(){
+      var v=(window.vehicles||[]).find(function(x){ return x.id===id; });
+      if(!v) return;
+      loadDocsData(v.docs||null);
+      var sels = v.sellers||(v.seller_name?[{name:v.seller_name,whatsapp:v.whatsapp||'',phone:v.phone||'',email:v.email||''}]:[]);
+      initSellersUI(sels);
+      var t=v.testimony||{};
+      var tn=document.getElementById('f-test-name'); if(tn) tn.value=t.name||'';
+      var ts=document.getElementById('f-test-stars'); if(ts) ts.value=t.stars||5;
+      var tt=document.getElementById('f-test-text'); if(tt) tt.value=t.text||'';
+    }, 80);
+  };
 });
 </script>
 </body>
